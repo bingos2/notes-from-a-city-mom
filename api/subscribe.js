@@ -1,3 +1,5 @@
+import { Resend } from 'resend';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed.' });
@@ -9,6 +11,7 @@ export default async function handler(req, res) {
   if (website) return res.status(200).json({ ok: true });
 
   const normalizedEmail = String(email || '').trim().toLowerCase();
+
   if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
     return res.status(400).json({ error: 'Please enter a valid email.' });
   }
@@ -23,28 +26,26 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://api.resend.com/contacts', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: normalizedEmail,
-        unsubscribed: false,
-        segments: [{ id: segmentId }]
-      })
+    const resend = new Resend(apiKey);
+
+    const { error } = await resend.contacts.create({
+      email: normalizedEmail,
+      unsubscribed: false,
+      segmentIds: [segmentId]
     });
 
-    const data = await response.json().catch(() => ({}));
+    if (error) {
+      // Duplicate signups should still feel successful to the visitor.
+      if (error.statusCode === 409 || error.name === 'conflict_error') {
+        return res.status(200).json({ ok: true, alreadySubscribed: true });
+      }
 
-    // A repeat signup should feel successful to the visitor.
-    if (response.status === 409) {
-      return res.status(200).json({ ok: true, alreadySubscribed: true });
-    }
+      console.error('Resend subscribe error', {
+        name: error.name,
+        statusCode: error.statusCode,
+        message: error.message
+      });
 
-    if (!response.ok) {
-      console.error('Resend subscribe error', response.status, data);
       return res.status(502).json({
         error: 'Could not subscribe right now. Please try again.'
       });
