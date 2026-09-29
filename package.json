@@ -1,0 +1,8 @@
+{
+  "name": "notes-from-a-city-mom",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "resend": "^6.1.2"
+  }
+}
