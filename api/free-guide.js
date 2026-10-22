@@ -10,6 +10,10 @@ function validEmail(value) {
   return /^\S+@\S+\.\S+$/.test(value);
 }
 
+function isConflict(error) {
+  return error?.statusCode === 409 || error?.name === 'conflict_error';
+}
+
 function signedSubscribeUrl(email, secret) {
   const expires = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30;
   const payload = `${email}.${expires}`;
@@ -40,7 +44,7 @@ export default async function handler(req, res) {
       segmentIds: [FREE_GUIDE_SEGMENT]
     });
 
-    if (createError && createError.statusCode !== 409 && createError.name !== 'conflict_error') {
+    if (createError && !isConflict(createError)) {
       throw createError;
     }
 
@@ -50,7 +54,8 @@ export default async function handler(req, res) {
         email: normalizedEmail,
         segmentId: FREE_GUIDE_SEGMENT
       });
-      if (segmentError) throw segmentError;
+      // A repeat request can already belong to this segment; the email may still be sent.
+      if (segmentError && !isConflict(segmentError)) throw segmentError;
     }
 
     const { error: sendError } = await resend.emails.send({
