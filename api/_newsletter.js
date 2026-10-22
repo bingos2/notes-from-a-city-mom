@@ -57,6 +57,17 @@ async function addSegment(resend, email, segmentId) {
   }
 }
 
+async function updateSubscriptionStatus(resend, email, unsubscribed) {
+  const { error } = await resend.contacts.update({ email, unsubscribed });
+  if (error) throw new SubscriptionError('We could not update this subscription. Please try again.', 502);
+
+  const updated = await getContact(resend, email);
+  if (!updated || Boolean(updated.unsubscribed) !== unsubscribed) {
+    throw new SubscriptionError('We could not confirm this subscription. Please try again.', 502);
+  }
+  return updated;
+}
+
 async function createContact(resend, email, { unsubscribed, segmentId }) {
   const { error } = await resend.contacts.create({
     email,
@@ -74,7 +85,7 @@ export async function registerGuideRequest(email) {
   let contact = await getContact(resend, email);
 
   if (!contact) {
-    await createContact(resend, email, { unsubscribed: true, segmentId: FREE_GUIDE_SEGMENT });
+    await createContact(resend, email, { unsubscribed: false, segmentId: FREE_GUIDE_SEGMENT });
     contact = await getContact(resend, email);
     if (!contact) throw new SubscriptionError('We could not save your request. Please try again.', 502);
   } else if (!(await hasSegment(resend, email, FREE_GUIDE_SEGMENT))) {
@@ -90,7 +101,8 @@ export async function registerGuideRequest(email) {
 
 /**
  * Returns newSubscription only after actual Subscribers segment membership is confirmed.
- * A globally-unsubscribed contact is never silently re-subscribed.
+ * This function is only called after explicit consent. That consent may re-subscribe
+ * a globally-unsubscribed contact; ordinary guide requests never change that status.
  */
 export async function registerNewsletterConsent(email, source) {
   if (!source) throw new SubscriptionError('Newsletter consent is required.', 400);
@@ -100,7 +112,7 @@ export async function registerNewsletterConsent(email, source) {
   const existed = Boolean(contact);
 
   if (contact?.unsubscribed) {
-    throw new SubscriptionError('This address is currently unsubscribed. Please contact hello@citymomnotes.com to rejoin.', 409);
+    contact = await updateSubscriptionStatus(resend, email, false);
   }
 
   const wasSubscriber = contact ? await hasSegment(resend, email, SUBSCRIBERS_SEGMENT) : false;
