@@ -2,7 +2,8 @@ import {
   emitWelcomeOnce,
   registerNewsletterConsent,
   SubscriptionError,
-  verifyWeeklyOptIn
+  verifyWeeklyOptIn,
+  requireWelcomeStore
 } from './_newsletter.js';
 
 export default async function handler(req, res) {
@@ -19,6 +20,8 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Do not create a subscriber if the durable one-time Welcome guard is unavailable.
+    requireWelcomeStore();
     // The POST is the explicit affirmative action; the email link alone never subscribes anyone.
     const subscription = await registerNewsletterConsent(email, 'guide-email-opt-in');
 
