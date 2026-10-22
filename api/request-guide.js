@@ -18,9 +18,13 @@ export default async function handler(req, res) {
     const { error: sendError } = await resend.emails.send({
       from: process.env.NCFM_FROM_EMAIL,
       to: [email],
-      subject: "Your 15-month milestone guide is here!",
-      html: `<!doctype html><html><body style="background:#fffaf2;color:#26374c;font-family:'Trebuchet MS',Verdana,Arial,sans-serif;margin:0;padding:32px 16px"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;width:100%;margin:auto"><tr><td style="padding:24px;background:#fff0c7;border-radius:18px"><h1 style="font-size:28px;margin:0 0 18px">My Toddler's Little Wins</h1><p style="font-size:15px;line-height:25px">Hi,</p><p style="font-size:15px;line-height:25px">Your little one is learning something new every day. Here's your free 15-month milestone guide based on the CDC checklist.</p><p style="margin:28px 0"><a href="${PDF_URL}" style="background:#17a66b;color:white;text-decoration:none;padding:14px 24px;border-radius:28px;font-weight:bold">Download A4 PDF</a></p><h2 style="font-size:20px">A little note, every week</h2><p style="font-size:15px;line-height:25px">One helpful parenting note in your inbox, once a week. Click below to opt in. One note a week, no spam.</p><p style="margin:26px 0"><a href="${subscribeUrl}" style="background:#ffe6a4;color:#26374c;text-decoration:none;padding:14px 22px;border-radius:28px;font-weight:bold">Yes, send me the weekly note</a></p><p style="font-size:12px">Notes from a City Mom</p></td></tr></table></body></html>`,
-      text: `Your 15-month guide (A4): ${PDF_URL}\n\nWant a weekly parenting note? Opt in: ${subscribeUrl}`
+      template: {
+        id: '4c247693-1c61-49a0-a3c3-87f726baf4a8',
+        variables: {
+          A4_PDF_URL: PDF_URL,
+          SIGNED_SUBSCRIBE_URL: subscribeUrl
+        }
+      }
     });
     if (sendError) {
       console.error('Guide email failed', sendError);
