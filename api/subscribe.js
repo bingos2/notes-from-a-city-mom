@@ -21,13 +21,12 @@ export default async function handler(req, res) {
     requireWelcomeStore();
     const subscription = await registerNewsletterConsent(normalizedEmail, 'website-newsletter-form');
 
-    if (subscription.newSubscription) {
-      await emitWelcomeOnce({
+    // The durable store, not a repeated click, decides whether a Welcome event is new.
+    await emitWelcomeOnce({
         resend: subscription.resend,
         email: normalizedEmail,
         source: 'website-newsletter-form'
       });
-    }
 
     return res.status(200).json({
       ok: true,
