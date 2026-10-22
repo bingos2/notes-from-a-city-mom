@@ -25,13 +25,12 @@ export default async function handler(req, res) {
     // The POST is the explicit affirmative action; the email link alone never subscribes anyone.
     const subscription = await registerNewsletterConsent(email, 'guide-email-opt-in');
 
-    if (subscription.newSubscription) {
-      await emitWelcomeOnce({
+    // The durable store, not a repeated click, decides whether a Welcome event is new.
+    await emitWelcomeOnce({
         resend: subscription.resend,
         email,
         source: 'guide-email-opt-in'
       });
-    }
 
     return res.status(200).json({ ok: true, alreadySubscribed: !subscription.newSubscription });
   } catch (error) {
