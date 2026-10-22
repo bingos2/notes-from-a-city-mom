@@ -13,3 +13,24 @@
 .product-safety .source a{color:#a66b00;font-weight:900;text-decoration-color:var(--yellow);text-decoration-thickness:3px;text-underline-offset:3px}
 @media(max-width:900px){.product-notes,.product-safety{grid-template-columns:1fr!important;gap:30px}.product-notes{background:var(--blue)!important;padding-left:24px!important;padding-right:24px!important}.notes-copy{max-width:620px}.notes-preview,.safety-preview{max-width:min(520px,100%)}.product-safety .safety-preview{order:2}}
 @media(max-width:480px){.product-intro h1{font-size:clamp(24px,7.1vw,33px)!important;letter-spacing:-1px!important}.product-safety h2{font-size:clamp(20px,6vw,27px)!important;letter-spacing:-.8px!important}}
+
+/* Calm interactions and resilient Little Wins layout */
+.inside-nav a{position:relative;transition:color .16s ease}
+.inside-nav a::after{content:"";position:absolute;right:0;bottom:-8px;left:0;height:4px;border-radius:99px;background:var(--yellow);transform:scaleX(0);transform-origin:center;transition:transform .16s ease}
+.inside-nav a:hover{color:#a66b00}
+.inside-nav a:hover::after{transform:scaleX(1)}
+.inside-nav a[aria-current=page]{text-decoration:none}
+.inside-nav a[aria-current=page]::after{transform:scaleX(1)}
+
+.product-deck{font-size:clamp(16px,1.55vw,18px)!important;line-height:1.52!important;font-weight:600!important;color:#45617b!important}
+.product-promise p{font-size:14px!important;line-height:1.56!important;font-weight:600!important;color:#45617b!important}
+.notes-copy>p:last-child,.product-safety>div>p{font-size:16px!important;line-height:1.6!important;font-weight:600!important;color:#45617b!important}
+
+.product-safety .source a{color:var(--ink)!important;font-weight:800!important;text-decoration:none!important;transition:color .16s ease,text-decoration-color .16s ease}
+.product-safety .source a:hover{color:#a66b00!important;text-decoration:underline!important;text-decoration-color:var(--yellow)!important;text-decoration-thickness:3px!important;text-underline-offset:3px}
+
+/* Full-width blue panel prevents its two columns from collapsing at intermediate viewport widths. */
+.product-notes{width:100%!important;max-width:none!important;margin:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(280px,460px)!important;gap:clamp(36px,8vw,100px)!important;background:var(--blue)!important;padding:68px max(calc((100vw - 1088px)/2),24px)!important}
+.product-notes .notes-copy{width:100%!important;max-width:540px!important}
+.product-notes .notes-preview{width:100%!important;max-width:460px!important;margin:0!important}
+@media(max-width:960px){.product-notes{grid-template-columns:1fr!important;padding:48px max(20px,calc((100vw - 620px)/2))!important;gap:30px!important}.product-notes .notes-copy,.product-notes .notes-preview{max-width:620px!important;margin:0 auto!important}}
