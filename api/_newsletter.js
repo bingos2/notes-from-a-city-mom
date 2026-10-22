@@ -132,8 +132,14 @@ export function requireWelcomeStore() {
 }
 
 function kvConfig() {
-  const url = process.env.NCFM_WELCOME_KV_REST_API_URL || process.env.KV_REST_API_URL;
-  const token = process.env.NCFM_WELCOME_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN;
+  const url =
+    process.env.NCFM_WELCOME_KV_REST_API_URL ||
+    process.env.KV_REST_API_URL ||
+    process.env.UPSTASH_REDIS_REST_URL;
+  const token =
+    process.env.NCFM_WELCOME_KV_REST_API_TOKEN ||
+    process.env.KV_REST_API_TOKEN ||
+    process.env.UPSTASH_REDIS_REST_TOKEN;
   if (!url || !token) {
     throw new SubscriptionError('Newsletter delivery is being set up. Please try again soon.', 503);
   }
