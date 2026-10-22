@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Weekly Note | Notes from a City Mom</title>
+<style>body{margin:0;background:#fff9ef;color:#213047;font-family:"Trebuchet MS",Verdana,Arial,sans-serif}main{max-width:480px;margin:12vh auto;padding:30px;text-align:center}h1{font-size:30px}p{font-size:16px;line-height:1.7}button{background:#ffe28a;color:#213047;border:0;border-radius:30px;padding:16px 26px;font:700 16px "Trebuchet MS",sans-serif;cursor:pointer}button:hover{background:#ffd21f}button:disabled{opacity:.65;cursor:wait}.msg{margin-top:22px}</style></head>
+<body><main><h1>A little note, every week</h1><p>One helpful parenting note in your inbox, once a week.<br>No spam. Unsubscribe anytime.</p><button id="confirm" type="button">Yes, subscribe me!</button><p id="message" class="msg" role="status" aria-live="polite"></p></main>
+<script>
+const params=new URLSearchParams(location.search),token=params.get('token');
+const button=document.getElementById('confirm'),message=document.getElementById('message');
+if(!token){button.disabled=true;message.textContent='This subscription link is missing. Please request a new email.';}
+button.addEventListener('click',async()=>{
+ button.disabled=true;message.textContent='Just a moment...';
+ try{const response=await fetch('/api/weekly-opt-in',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Please try again.');
+ button.hidden=true;message.textContent="You're subscribed! Your weekly parenting notes are on their way.";
+ history.replaceState(null,'',location.pathname);
+ }catch(error){message.textContent=error.message;button.disabled=false;}
+});
+</script></body></html>
