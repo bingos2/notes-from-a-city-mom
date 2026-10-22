@@ -1,0 +1,33 @@
+import { createHmac, timingSafeEqual } from 'node:crypto';
+import { Resend } from 'resend';
+
+function verifyToken(token) {
+  const secret = process.env.NCFM_SUBSCRIBE_SECRET;
+  if (!secret || !token || typeof token !== 'string') return null;
+  const parts = token.split('.');
+  if (parts.length !== 2) return null;
+  const [payload, signature] = parts;
+  const expected = createHmac('sha256', secret).update(payload).digest('base64url');
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+  try {
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    if (!data.email || !/^\S+@\S+\.\S+$/.test(data.email) || !Number.isFinite(data.exp) || Date.now() > data.exp) return null;
+    return data.email.toLowerCase();
+  } catch { return null; }
+}
+
+export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
+  const email = verifyToken(req.body?.token);
+  if (!email) return res.status(400).json({ error: 'This subscription link is invalid or expired.' });
+  if (!process.env.RESEND_API_KEY || !process.env.RESEND_SEGMENT_ID) return res.status(503).json({ error: 'Subscriptions are not configured yet.' });
+  try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { error } = await resend.contacts.create({ email, unsubscribed: false, segmentIds: [process.env.RESEND_SEGMENT_ID] });
+    if (error && error.statusCode !== 409) return res.status(502).json({ error: 'Could not subscribe. Please try again.' });
+    return res.status(200).json({ ok: true });
+  } catch { return res.status(500).json({ error: 'Could not subscribe. Please try again.' }); }
+}
