@@ -18,7 +18,7 @@
   "redirects": [
     {
       "source": "/tools/my-toddlers-little-wins-15-months",
-      "destination": "/guide",
+      "destination": "/tools/my-toddlers-little-wins-15-months",
       "permanent": true
     }
   ]
