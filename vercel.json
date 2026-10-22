@@ -14,12 +14,5 @@
         }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "/guide",
-      "destination": "/tools/my-toddlers-little-wins-15-months",
-      "permanent": true
-    }
   ]
 }
