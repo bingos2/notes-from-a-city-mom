@@ -127,6 +127,10 @@ function welcomeKey(email) {
   return 'ncfm:welcome:v1:' + crypto.createHash('sha256').update(email).digest('hex');
 }
 
+export function requireWelcomeStore() {
+  kvConfig();
+}
+
 function kvConfig() {
   const url = process.env.NCFM_WELCOME_KV_REST_API_URL || process.env.KV_REST_API_URL;
   const token = process.env.NCFM_WELCOME_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN;
