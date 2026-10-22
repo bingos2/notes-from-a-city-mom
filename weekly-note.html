@@ -57,9 +57,9 @@
 
         button.hidden = true;
         message.className = 'form-status success';
-        message.textContent = data.alreadySubscribed
-          ? 'You’re already on the list.'
-          : 'You’re subscribed! Your weekly notes are on their way.';
+        message.innerHTML = data.alreadySubscribed
+          ? 'You’re already<br>on the list.'
+          : 'You’re subscribed!<br>Your weekly notes are on their way.';
         history.replaceState(null, '', location.pathname);
       } catch (error) {
         message.className = 'form-status error';
