@@ -44,9 +44,14 @@ function segmentsFrom(data) {
 }
 
 async function hasSegment(resend, email, segmentId) {
-  const { data, error } = await resend.contacts.segments.list({ email });
-  if (error) throw new SubscriptionError('We could not verify this subscription. Please try again.', 502);
-  return segmentsFrom(data).some((segment) => segment?.id === segmentId);
+  // Segment membership can take a short moment to appear after a create/add call.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const { data, error } = await resend.contacts.segments.list({ email });
+    if (error) throw new SubscriptionError('We could not verify this subscription. Please try again.', 502);
+    if (segmentsFrom(data).some((segment) => segment?.id === segmentId)) return true;
+    if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 250 * (attempt + 1)));
+  }
+  return false;
 }
 
 async function addSegment(resend, email, segmentId) {
@@ -174,7 +179,7 @@ async function kvRequest(path) {
  */
 export async function emitWelcomeOnce({ resend, email, source }) {
   const key = welcomeKey(email);
-  const claim = await kvRequest('/set/' + encodeURIComponent(key) + '/pending?NX=true&EX=315360000');
+  const claim = await kvRequest('/set/' + encodeURIComponent(key) + '/pending/NX/EX/315360000');
   if (claim !== 'OK') return { emitted: false, alreadyClaimed: true };
 
   const { error } = await resend.events.send({
@@ -184,11 +189,11 @@ export async function emitWelcomeOnce({ resend, email, source }) {
   });
 
   if (error) {
-    await kvRequest('/set/' + encodeURIComponent(key) + '/event-uncertain?EX=315360000').catch(() => {});
+    await kvRequest('/set/' + encodeURIComponent(key) + '/event-uncertain/EX/315360000').catch(() => {});
     throw new SubscriptionError('Your subscription was saved, but we could not confirm the welcome email. Please contact hello@citymomnotes.com.', 502);
   }
 
-  await kvRequest('/set/' + encodeURIComponent(key) + '/sent?EX=315360000');
+  await kvRequest('/set/' + encodeURIComponent(key) + '/sent/EX/315360000');
   return { emitted: true, alreadyClaimed: false };
 }
 
