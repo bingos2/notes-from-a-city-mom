@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Weekly Notes | Notes from a City Mom</title>
+  <link rel="stylesheet" href="/inside.css">
+  <style>
+    .optin{width:min(620px,calc(100% - 40px));margin:0 auto;padding:78px 0;text-align:center}
+    .optin-card{padding:52px 42px;border:2px solid var(--yellow);border-radius:26px;background:#fffdf8;box-shadow:8px 8px 0 rgba(7,27,61,.08)}
+    .optin h1{margin:0;font:700 clamp(39px,6vw,56px)/1 Fredoka,sans-serif;letter-spacing:-1.8px}
+    .optin p{max-width:420px;margin:18px auto 28px;color:#45617b;font-size:18px;line-height:1.5;font-weight:700}
+    .optin button{border:2px solid var(--ink);border-radius:12px;padding:14px 22px;background:var(--ink);color:#fff;font:800 16px Nunito,sans-serif;cursor:pointer;transition:background .15s,color .15s,transform .12s}
+    .optin button:hover{background:var(--yellow);color:var(--ink);transform:translate(-2px,-2px)}
+    .optin button:disabled{opacity:.65;cursor:wait;transform:none}
+    .optin .form-status{margin-top:18px}
+    @media(max-width:560px){.optin{width:min(100% - 32px,520px);padding:46px 0}.optin-card{padding:42px 24px}.optin p{font-size:16px}.optin button{width:100%}}
+  </style>
+</head>
+<body>
+  <header class="inside-wrap inside-top">
+    <a class="inside-logo" href="/">Notes from a City Mom<span class="spark"></span></a>
+  </header>
+  <main class="optin">
+    <section class="optin-card">
+      <p class="kicker">Weekly notes</p>
+      <h1>A little note,<br><span class="brush">every week.</span></h1>
+      <p>Warm words and useful ideas for the people raising little ones.</p>
+      <button id="confirm" type="button">Yes, send me the weekly notes</button>
+      <p id="message" class="form-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const email = params.get('e'), expires = params.get('x'), signature = params.get('s');
+    const button = document.querySelector('#confirm'), message = document.querySelector('#message');
+
+    if (!email || !expires || !signature) {
+      button.disabled = true;
+      message.className = 'form-status error';
+      message.textContent = 'This subscription link is missing. Please request a new guide email.';
+    }
+
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      button.textContent = 'Just a moment…';
+      message.textContent = '';
+
+      try {
+        const response = await fetch('/api/weekly-opt-in', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, expires, signature })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Please try again.');
+
+        button.hidden = true;
+        message.className = 'form-status success';
+        message.textContent = data.alreadySubscribed
+          ? 'You’re already on the list.'
+          : 'You’re subscribed! Your weekly notes are on their way.';
+        history.replaceState(null, '', location.pathname);
+      } catch (error) {
+        message.className = 'form-status error';
+        message.textContent = error.message || 'Please try again.';
+        button.disabled = false;
+        button.textContent = 'Yes, send me the weekly notes';
+      }
+    });
+  </script>
+</body>
+</html>

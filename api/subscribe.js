@@ -1,61 +1,41 @@
-import { Resend } from 'resend';
+import {
+  emitWelcomeOnce,
+  registerNewsletterConsent,
+  SubscriptionError,
+  validEmail,
+  requireWelcomeStore
+} from './_newsletter.js';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed.' });
-  }
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed.' });
 
-  const { email, website } = req.body || {};
-
-  // Honeypot: quietly accept bot submissions without storing them.
+  const { email, consent, website } = req.body || {};
   if (website) return res.status(200).json({ ok: true });
 
   const normalizedEmail = String(email || '').trim().toLowerCase();
-
-  if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
-    return res.status(400).json({ error: 'Please enter a valid email.' });
-  }
-
-  const apiKey = process.env.RESEND_API_KEY;
-  const segmentId = process.env.RESEND_SEGMENT_ID;
-
-  if (!apiKey || !segmentId) {
-    return res.status(503).json({
-      error: 'Subscriptions are being set up. Please try again soon.'
-    });
-  }
+  if (!validEmail(normalizedEmail)) return res.status(400).json({ error: 'Please enter a valid email.' });
+  if (consent !== true) return res.status(400).json({ error: 'Please confirm that you would like to receive the weekly notes.' });
 
   try {
-    const resend = new Resend(apiKey);
+    // Do not create a subscriber if the durable one-time Welcome guard is unavailable.
+    requireWelcomeStore();
+    const subscription = await registerNewsletterConsent(normalizedEmail, 'website-newsletter-form');
 
-    const { error } = await resend.contacts.create({
-      email: normalizedEmail,
-      unsubscribed: false,
-      segmentIds: [segmentId]
-    });
-
-    if (error) {
-      // Duplicate signups should still feel successful to the visitor.
-      if (error.statusCode === 409 || error.name === 'conflict_error') {
-        return res.status(200).json({ ok: true, alreadySubscribed: true });
-      }
-
-      console.error('Resend subscribe error', {
-        name: error.name,
-        statusCode: error.statusCode,
-        message: error.message
-      });
-
-      return res.status(502).json({
-        error: 'Could not subscribe right now. Please try again.'
+    if (subscription.newSubscription) {
+      await emitWelcomeOnce({
+        resend: subscription.resend,
+        email: normalizedEmail,
+        source: 'website-newsletter-form'
       });
     }
 
-    return res.status(200).json({ ok: true });
-  } catch (error) {
-    console.error('Subscribe function error', error);
-    return res.status(500).json({
-      error: 'Could not subscribe right now. Please try again.'
+    return res.status(200).json({
+      ok: true,
+      alreadySubscribed: !subscription.newSubscription
     });
+  } catch (error) {
+    const status = error instanceof SubscriptionError ? error.statusCode : 502;
+    console.error('Newsletter subscription error', { name: error?.name, message: error?.message });
+    return res.status(status).json({ error: error?.message || 'Could not subscribe right now. Please try again.' });
   }
 }

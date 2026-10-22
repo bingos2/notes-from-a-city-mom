@@ -37,3 +37,6 @@
 
 /* Editorial titles must wrap within the reading column; only product headings need fixed one-line treatment. */
 .reading h1{white-space:normal!important;overflow-wrap:normal!important;max-width:100%!important}
+
+/* Explicit newsletter consent */
+.newsletter-consent{display:flex;gap:8px;align-items:flex-start;margin:12px 0 0;line-height:1.35;color:#45617b;cursor:pointer}.newsletter-consent input{width:16px;height:16px;margin:1px 0 0;accent-color:var(--ink)}
