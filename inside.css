@@ -34,3 +34,6 @@
 .product-notes .notes-copy{width:100%!important;max-width:540px!important}
 .product-notes .notes-preview{width:100%!important;max-width:460px!important;margin:0!important}
 @media(max-width:960px){.product-notes{grid-template-columns:1fr!important;padding:48px max(20px,calc((100vw - 620px)/2))!important;gap:30px!important}.product-notes .notes-copy,.product-notes .notes-preview{max-width:620px!important;margin:0 auto!important}}
+
+/* Editorial titles must wrap within the reading column; only product headings need fixed one-line treatment. */
+.reading h1{white-space:normal!important;overflow-wrap:normal!important;max-width:100%!important}
