@@ -2,7 +2,8 @@ import {
   emitWelcomeOnce,
   registerNewsletterConsent,
   SubscriptionError,
-  validEmail
+  validEmail,
+  requireWelcomeStore
 } from './_newsletter.js';
 
 export default async function handler(req, res) {
@@ -16,6 +17,8 @@ export default async function handler(req, res) {
   if (consent !== true) return res.status(400).json({ error: 'Please confirm that you would like to receive the weekly notes.' });
 
   try {
+    // Do not create a subscriber if the durable one-time Welcome guard is unavailable.
+    requireWelcomeStore();
     const subscription = await registerNewsletterConsent(normalizedEmail, 'website-newsletter-form');
 
     if (subscription.newSubscription) {
