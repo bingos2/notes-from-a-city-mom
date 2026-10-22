@@ -52,5 +52,25 @@
   </section>
 </main>
 <footer class="inside-footer"><div class="inside-wrap"><span>© Notes from a City Mom</span><nav><a href="/about">About</a><a href="/privacy">Privacy</a></nav></div></footer>
-<script>const form=document.querySelector('#guide-form'),status=document.querySelector('#guide-status');form.addEventListener('submit',e=>{e.preventDefault();status.textContent='Guide delivery is being connected now.';status.className='form-status'})</script>
+<script>
+const form=document.querySelector('#guide-form'),status=document.querySelector('#guide-status');
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const button=form.querySelector('button'),email=form.email.value;
+  button.disabled=true;button.textContent='Sending…';status.textContent='';
+  try{
+    const response=await fetch('/api/free-guide',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||'Please try again.');
+    status.textContent='It’s on its way — check your inbox.';
+    status.className='form-status success';
+    form.reset();
+  }catch(error){
+    status.textContent=error.message||'We could not send the guide right now. Please try again.';
+    status.className='form-status error';
+  }finally{
+    button.disabled=false;button.textContent='Send it to me';
+  }
+});
+</script>
 </body></html>
