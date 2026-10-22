@@ -167,3 +167,26 @@ export async function emitWelcomeOnce({ resend, email, source }) {
   await kvRequest('/set/' + encodeURIComponent(key) + '/sent?EX=315360000');
   return { emitted: true, alreadyClaimed: false };
 }
+
+export function makeWeeklyOptInUrl(email) {
+  const secret = process.env.SUBSCRIBE_TOKEN_SECRET;
+  if (!secret) throw new SubscriptionError('Newsletter delivery is being set up. Please try again soon.', 503);
+  const expires = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30;
+  const payload = `${email}.${expires}`;
+  const signature = crypto.createHmac('sha256', secret).update(payload).digest('base64url');
+  const base = (process.env.SITE_URL || 'https://citymomnotes.com').replace(/\/$/, '');
+  return `${base}/weekly-note?e=${encodeURIComponent(email)}&x=${expires}&s=${encodeURIComponent(signature)}`;
+}
+
+export function verifyWeeklyOptIn({ email, expires, signature }) {
+  const secret = process.env.SUBSCRIBE_TOKEN_SECRET;
+  if (!email || !expires || !signature || !secret || !validEmail(email)) return null;
+  if (Number(expires) < Math.floor(Date.now() / 1000)) return null;
+  const expected = crypto.createHmac('sha256', secret).update(`${email}.${expires}`).digest('base64url');
+  try {
+    if (!crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature))) return null;
+  } catch {
+    return null;
+  }
+  return String(email).trim().toLowerCase();
+}
