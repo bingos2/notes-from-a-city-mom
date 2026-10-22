@@ -20,8 +20,8 @@ function verify(email, expires, signature, secret) {
 
 function page(title, message, isSuccess = false) {
   const action = isSuccess
-    ? '<a class="home-link" href="/">Back to Notes from a City Mom <span aria-hidden="true">→</span></a>'
-    : '<a class="home-link" href="/tools/my-toddlers-little-wins-15-months">Back to the free guide <span aria-hidden="true">→</span></a>';
+    ? '<a class="home-link" href="/">Back to Notes from a City Mom</a>'
+    : '<a class="home-link" href="/tools/my-toddlers-little-wins-15-months">Back to the free guide</a>';
 
   return `<!doctype html>
   <html lang="en">
