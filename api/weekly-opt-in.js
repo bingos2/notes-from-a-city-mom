@@ -29,6 +29,7 @@ export default async function handler(req, res) {
     await emitWelcomeOnce({
         resend: subscription.resend,
         email,
+        contactId: subscription.contact.id,
         source: 'guide-email-opt-in'
       });
 
