@@ -71,6 +71,7 @@ async function saveChartImage() {
   button.disabled = true;
   button.textContent = 'Preparing image…';
   try {
+    await document.fonts.ready;
     const images = await Promise.all(chosen.map((id) => loadImage(iconData(id))));
     const canvas = document.createElement('canvas');
     canvas.width = 1200; canvas.height = 1800;
@@ -78,19 +79,19 @@ async function saveChartImage() {
     ctx.fillStyle = '#fffaf0'; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = '#ffcc32'; ctx.lineWidth = 12; ctx.strokeRect(48, 48, 1104, 1704);
     ctx.fillStyle = '#071b3d'; ctx.textAlign = 'center';
-    ctx.font = '800 30px sans-serif'; ctx.fillText('OUR BEDTIME ROUTINE', 600, 132);
-    ctx.font = '800 72px sans-serif'; ctx.fillText('Our five little steps', 600, 230); ctx.fillText('before sleep.', 600, 315);
-    ctx.fillStyle = '#45617b'; ctx.font = '700 25px sans-serif'; ctx.fillText('Print it to check off the steps, or cut along the dotted lines.', 600, 370);
+    ctx.font = '800 30px Nunito, sans-serif'; ctx.fillText('OUR BEDTIME ROUTINE', 600, 132);
+    ctx.font = '700 72px Fredoka, sans-serif'; ctx.fillText('Our five little steps', 600, 230); ctx.fillText('before sleep.', 600, 315);
+    ctx.fillStyle = '#45617b'; ctx.font = '700 25px Nunito, sans-serif'; ctx.fillText('Print it to check off the steps, or cut along the dotted lines.', 600, 370);
     chosen.forEach((id, index) => {
       const [, label] = activityFor(id);
       const y = 430 + index * 245;
       ctx.fillStyle = '#fff'; ctx.strokeStyle = '#c7bbab'; ctx.lineWidth = 3; ctx.setLineDash([11, 9]);
       ctx.beginPath(); ctx.roundRect(82, y, 1036, 198, 27); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = '#ffcc32'; ctx.beginPath(); ctx.arc(193, y + 99, 38, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#071b3d'; ctx.font = '800 30px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(String(index + 1), 193, y + 110);
+      ctx.fillStyle = '#071b3d'; ctx.font = '800 30px Nunito, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(String(index + 1), 193, y + 110);
       ctx.fillStyle = '#dceefa'; ctx.beginPath(); ctx.roundRect(270, y + 25, 148, 148, 22); ctx.fill();
       ctx.drawImage(images[index], 282, y + 37, 124, 124);
-      ctx.textAlign = 'left'; ctx.fillStyle = '#071b3d'; ctx.font = '800 43px sans-serif'; ctx.fillText(label, 470, y + 112);
+      ctx.textAlign = 'left'; ctx.fillStyle = '#071b3d'; ctx.font = '700 43px Fredoka, sans-serif'; ctx.fillText(label, 470, y + 112);
       ctx.strokeStyle = '#071b3d'; ctx.lineWidth = 6; ctx.strokeRect(1016, y + 70, 56, 56);
     });
     const link = document.createElement('a');
