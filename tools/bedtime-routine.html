@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bedtime Routine Builder — Notes from a City Mom</title>
+  <link rel="stylesheet" href="/inside.css">
+  <link rel="stylesheet" href="/bedtime-routine.css">
+</head>
+<body>
+  <header class="inside-wrap inside-top no-print">
+    <a class="inside-logo" href="/">Notes from a City Mom<span class="spark"></span></a>
+    <nav class="inside-nav"><a href="/newsletters">Newsletter</a><a href="/watch">Videos</a><a href="/tools" aria-current="page">Tools</a></nav>
+  </header>
+  <main id="builder" class="routine-shell">
+    <section class="intro">
+      <p class="eyebrow">Bedtime routine</p>
+      <div class="progress"><b>1</b><i></i><span>2</span></div>
+      <p class="eyebrow">Step 1 of 2</p>
+      <h1>Choose your 5 steps</h1>
+      <p>Tap the stickers your little one knows. Pick five that feel most like your night.</p>
+      <strong id="count">0 of 5 chosen</strong>
+    </section>
+    <div class="layout">
+      <section id="picker" class="picker"></section>
+      <aside class="panel"><p class="eyebrow">Tonight's routine</p><ol id="list"></ol><button id="clear" class="text">Clear all</button><button id="make" class="gold" disabled>Make our chart</button></aside>
+    </div>
+    <button id="next" class="mobile-next" disabled>Put them in order</button>
+  </main>
+  <main id="chart" hidden>
+    <section class="actions no-print"><button id="edit" class="text">← Edit routine</button><span><button id="png" class="outline">Save as image</button><button id="print" class="gold">Print / Save as PDF</button></span></section>
+    <section class="chart"><p class="eyebrow">Our bedtime routine</p><h1>Our five little steps<br>before sleep.</h1><div id="steps"></div><p>One gentle step at a time.</p><small>NOTES FROM A CITY MOM</small></section>
+  </main>
+  <img id="sheet" src="/assets/bedtime-stickers/bedtime-sticker-sheet.webp" alt="" aria-hidden="true">
+  <script src="/bedtime-routine.js"></script>
+</body>
+</html>
