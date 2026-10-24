@@ -3,6 +3,6 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "resend": "^6.1.2"
+    "resend": "6.34.1"
   }
 }
