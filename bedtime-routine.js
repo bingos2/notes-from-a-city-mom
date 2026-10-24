@@ -3,7 +3,7 @@ const activities = [
   ['pajamas', 'Pajamas', '/assets/bedtime-stickers/pajamas.svg'],
   ['brush', 'Brush teeth', '/assets/bedtime-stickers/brush.svg'],
   ['toilet', 'Toilet', '/assets/bedtime-stickers/toilet.svg'],
-  ['book', 'Book', '/assets/bedtime-stickers/book.svg'],
+  ['book', 'Story time', '/assets/bedtime-stickers/book.svg'],
   ['cuddle', 'Cuddle', '/assets/bedtime-stickers/cuddle.svg'],
   ['song', 'Song', '/assets/bedtime-stickers/song.svg'],
   ['white', 'White noise', '/assets/bedtime-stickers/white.svg'],
@@ -14,6 +14,16 @@ const chosen = [];
 const picker = document.querySelector('#picker');
 const list = document.querySelector('#list');
 const activityFor = (id) => activities.find(([activityId]) => activityId === id);
+let draggedId = null;
+
+function moveItem(fromId, toId) {
+  const from = chosen.indexOf(fromId);
+  const to = chosen.indexOf(toId);
+  if (from < 0 || to < 0 || from === to) return;
+  chosen.splice(from, 1);
+  chosen.splice(to, 0, fromId);
+  render();
+}
 
 function render() {
   const selected = new Set(chosen);
@@ -21,16 +31,13 @@ function render() {
     <button class="sticker ${selected.has(id) ? 'selected' : ''}" data-id="${id}" aria-pressed="${selected.has(id)}">
       <img src="${image}" alt="${label}"><em>${label}</em><b aria-hidden="true">✓</b>
     </button>`).join('');
-
   document.querySelector('#count').textContent = `${chosen.length} of 5 chosen`;
   const complete = chosen.length === 5;
   document.querySelector('#make').disabled = !complete;
   document.querySelector('#next').disabled = !complete;
   list.innerHTML = chosen.length ? chosen.map((id, index) => {
     const [, label, image] = activityFor(id);
-    return `<li class="row"><span>${index + 1}</span><img src="${image}" alt=""><strong>${label}</strong>
-      <button aria-label="Move ${label} earlier" data-m="-1" data-i="${index}" ${index ? '' : 'disabled'}>↑</button>
-      <button aria-label="Move ${label} later" data-m="1" data-i="${index}" ${index === chosen.length - 1 ? 'disabled' : ''}>↓</button></li>`;
+    return `<li class="row" draggable="true" data-id="${id}"><span>${index + 1}</span><img src="${image}" alt=""><strong>${label}</strong><button class="drag-handle" type="button" aria-label="Drag to reorder ${label}">⋮⋮</button></li>`;
   }).join('') : '<li class="empty">Pick five stickers to make a little routine your child can follow.</li>';
 }
 
@@ -38,7 +45,7 @@ function showChart() {
   if (chosen.length !== 5) return;
   document.querySelector('#steps').innerHTML = chosen.map((id, index) => {
     const [, label, image] = activityFor(id);
-    return `<article class="step"><b>${index + 1}</b><img src="${image}" alt="${label}"><span>${label}</span></article>`;
+    return `<article class="step"><b>${index + 1}</b><img src="${image}" alt="${label}"><span>${label}</span><input class="check" type="checkbox" aria-label="Mark ${label} complete"></article>`;
   }).join('');
   document.querySelector('#builder').hidden = true;
   document.querySelector('#chart').hidden = false;
@@ -61,42 +68,26 @@ async function saveChartImage() {
   try {
     const images = await Promise.all(chosen.map((id) => loadImage(activityFor(id)[2])));
     const canvas = document.createElement('canvas');
-    canvas.width = 1200;
-    canvas.height = 1650;
+    canvas.width = 1200; canvas.height = 1700;
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#fffaf0';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#ffcc32';
-    ctx.lineWidth = 12;
-    ctx.strokeRect(48, 48, 1104, 1554);
-    ctx.fillStyle = '#071b3d';
-    ctx.font = '800 30px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('OUR BEDTIME ROUTINE', 600, 130);
-    ctx.font = '800 72px sans-serif';
-    ctx.fillText('Our five little steps', 600, 220);
-    ctx.fillText('before sleep.', 600, 304);
+    ctx.fillStyle = '#fffaf0'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#ffcc32'; ctx.lineWidth = 12; ctx.strokeRect(48, 48, 1104, 1604);
+    ctx.fillStyle = '#071b3d'; ctx.textAlign = 'center';
+    ctx.font = '800 30px sans-serif'; ctx.fillText('OUR BEDTIME ROUTINE', 600, 125);
+    ctx.font = '800 72px sans-serif'; ctx.fillText('Our five little steps', 600, 220); ctx.fillText('before sleep.', 600, 304);
     chosen.forEach((id, index) => {
       const [, label] = activityFor(id);
       const y = 370 + index * 224;
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#e9e1d4';
-      ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.roundRect(108, y, 984, 180, 26); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#ffcc32';
-      ctx.beginPath(); ctx.arc(112, y + 90, 34, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#071b3d';
-      ctx.font = '800 28px sans-serif';
-      ctx.fillText(String(index + 1), 112, y + 100);
-      ctx.drawImage(images[index], 160, y + 12, 200, 156);
-      ctx.textAlign = 'left';
-      ctx.font = '800 40px sans-serif';
-      ctx.fillText(label, 405, y + 103);
-      ctx.textAlign = 'center';
+      ctx.fillStyle = '#fff'; ctx.strokeStyle = '#c7bbab'; ctx.lineWidth = 3; ctx.setLineDash([10, 8]);
+      ctx.beginPath(); ctx.roundRect(108, y, 984, 180, 26); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = '#ffcc32'; ctx.beginPath(); ctx.arc(140, y + 90, 31, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#071b3d'; ctx.font = '800 27px sans-serif'; ctx.fillText(String(index + 1), 140, y + 100);
+      ctx.drawImage(images[index], 205, y + 13, 205, 154);
+      ctx.textAlign = 'left'; ctx.font = '800 40px sans-serif'; ctx.fillText(label, 455, y + 103);
+      ctx.strokeStyle = '#071b3d'; ctx.lineWidth = 4; ctx.strokeRect(1015, y + 61, 42, 42); ctx.textAlign = 'center';
     });
-    ctx.fillStyle = '#45617b';
-    ctx.font = '700 28px sans-serif';
-    ctx.fillText('One gentle step at a time.', 600, 1540);
+    ctx.fillStyle = '#45617b'; ctx.font = '700 25px sans-serif';
+    ctx.fillText('Print it to check off the steps, or cut along the dotted lines.', 600, 1580);
     const link = document.createElement('a');
     link.download = 'our-bedtime-routine.png';
     link.href = canvas.toDataURL('image/png');
@@ -117,13 +108,37 @@ picker.addEventListener('click', (event) => {
   else if (chosen.length < 5) chosen.push(button.dataset.id);
   render();
 });
-list.addEventListener('click', (event) => {
-  const button = event.target.closest('[data-m]');
-  if (!button) return;
-  const index = Number(button.dataset.i);
-  const nextIndex = index + Number(button.dataset.m);
-  [chosen[index], chosen[nextIndex]] = [chosen[nextIndex], chosen[index]];
-  render();
+list.addEventListener('dragstart', (event) => {
+  const row = event.target.closest('.row');
+  if (!row) return;
+  draggedId = row.dataset.id;
+  event.dataTransfer.effectAllowed = 'move';
+});
+list.addEventListener('dragover', (event) => {
+  const row = event.target.closest('.row');
+  if (!row || !draggedId) return;
+  event.preventDefault();
+  list.querySelectorAll('.row').forEach((item) => item.classList.remove('drag-over'));
+  row.classList.add('drag-over');
+});
+list.addEventListener('drop', (event) => {
+  event.preventDefault();
+  const row = event.target.closest('.row');
+  if (row && draggedId) moveItem(draggedId, row.dataset.id);
+  draggedId = null;
+});
+list.addEventListener('dragend', () => {
+  draggedId = null;
+  list.querySelectorAll('.row').forEach((item) => item.classList.remove('drag-over'));
+});
+list.addEventListener('pointerdown', (event) => {
+  const row = event.target.closest('.row');
+  if (row) draggedId = row.dataset.id;
+});
+list.addEventListener('pointerup', (event) => {
+  const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.row');
+  if (draggedId && target && target.dataset.id !== draggedId) moveItem(draggedId, target.dataset.id);
+  draggedId = null;
 });
 document.querySelector('#clear').addEventListener('click', () => { chosen.length = 0; render(); });
 document.querySelector('#make').addEventListener('click', showChart);
