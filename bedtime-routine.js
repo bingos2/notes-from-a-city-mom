@@ -37,18 +37,18 @@ function render() {
     <button class="sticker ${selected.has(id) ? 'selected' : ''}" data-id="${id}" aria-pressed="${selected.has(id)}">
       <span class="icon-tile">${iconIllustration(id, label)}</span><em>${label}</em><b aria-hidden="true">✓</b>
     </button>`).join('');
-  document.querySelector('#count').textContent = `${chosen.length} of 5 chosen`;
-  const complete = chosen.length === 5;
+  document.querySelector('#count').textContent = chosen.length ? `${chosen.length} chosen` : 'Choose up to 5';
+  const complete = chosen.length >= 1;
   document.querySelector('#make').disabled = !complete;
   document.querySelector('#next').disabled = !complete;
   list.innerHTML = chosen.length ? chosen.map((id, index) => {
     const [, label] = activityFor(id);
     return `<li class="row" draggable="true" data-id="${id}"><span>${index + 1}</span><i class="row-icon">${iconIllustration(id, label)}</i><strong>${label}</strong><button class="drag-handle" type="button" aria-label="Drag to reorder ${label}">⋮⋮</button></li>`;
-  }).join('') : '<li class="empty">Pick five stickers to make a little routine your child can follow.</li>';
+  }).join('') : '<li class="empty">Pick one to five stickers to make a little routine your child can follow.</li>';
 }
 
 function showChart() {
-  if (chosen.length !== 5) return;
+  if (chosen.length < 1) return;
   document.querySelector('#steps').innerHTML = chosen.map((id, index) => {
     const [, label] = activityFor(id);
     return `<article class="step"><b>${index + 1}</b><i class="step-icon">${iconIllustration(id, label)}</i><span>${label}</span><input class="check" type="checkbox" aria-label="Mark ${label} complete"></article>`;
