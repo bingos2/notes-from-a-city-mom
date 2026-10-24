@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     await emitWelcomeOnce({
         resend: subscription.resend,
         email: normalizedEmail,
+        contactId: subscription.contact.id,
         source: 'website-newsletter-form'
       });
 
