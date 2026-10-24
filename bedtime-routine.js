@@ -1,36 +1,25 @@
 const activities = [
-  ['bath', 'Bath', [0, 190, 405, 292]],
-  ['pajamas', 'Pajamas', [364, 30, 430, 445]],
-  ['brush', 'Brush teeth', [765, 50, 410, 420]],
-  ['toilet', 'Toilet', [1155, 0, 380, 465]],
-  ['book', 'Book', [0, 470, 378, 335]],
-  ['cuddle', 'Cuddle', [375, 470, 390, 335]],
-  ['song', 'Song', [720, 470, 380, 345]],
-  ['white', 'White noise', [950, 470, 335, 345]],
-  ['lights', 'Lights out', [1200, 465, 336, 350]],
+  ['bath', 'Bath', '/assets/bedtime-stickers/bath.svg'],
+  ['pajamas', 'Pajamas', '/assets/bedtime-stickers/pajamas.svg'],
+  ['brush', 'Brush teeth', '/assets/bedtime-stickers/brush.svg'],
+  ['toilet', 'Toilet', '/assets/bedtime-stickers/toilet.svg'],
+  ['book', 'Book', '/assets/bedtime-stickers/book.svg'],
+  ['cuddle', 'Cuddle', '/assets/bedtime-stickers/cuddle.svg'],
+  ['song', 'Song', '/assets/bedtime-stickers/song.svg'],
+  ['white', 'White noise', '/assets/bedtime-stickers/white.svg'],
+  ['lights', 'Lights out', '/assets/bedtime-stickers/lights.svg'],
 ];
 
 const chosen = [];
-const sheet = document.querySelector('#sheet');
-const images = new Map();
 const picker = document.querySelector('#picker');
 const list = document.querySelector('#list');
 const activityFor = (id) => activities.find(([activityId]) => activityId === id);
 
-function cropActivity(activity) {
-  const [, , [x, y, width, height]] = activity;
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  canvas.getContext('2d').drawImage(sheet, x, y, width, height, 0, 0, width, height);
-  return canvas.toDataURL('image/png');
-}
-
 function render() {
   const selected = new Set(chosen);
-  picker.innerHTML = activities.map(([id, label]) => `
+  picker.innerHTML = activities.map(([id, label, image]) => `
     <button class="sticker ${selected.has(id) ? 'selected' : ''}" data-id="${id}" aria-pressed="${selected.has(id)}">
-      <img src="${images.get(id)}" alt="${label}">
+      <img src="${image}" alt="${label}">
       <em>${label}</em><b aria-hidden="true">✓</b>
     </button>`).join('');
 
@@ -40,8 +29,8 @@ function render() {
   document.querySelector('#next').disabled = !complete;
 
   list.innerHTML = chosen.length ? chosen.map((id, index) => {
-    const [, label] = activityFor(id);
-    return `<li class="row"><span>${index + 1}</span><img src="${images.get(id)}" alt=""><strong>${label}</strong>
+    const [, label, image] = activityFor(id);
+    return `<li class="row"><span>${index + 1}</span><img src="${image}" alt=""><strong>${label}</strong>
       <button aria-label="Move ${label} earlier" data-m="-1" data-i="${index}" ${index ? '' : 'disabled'}>↑</button>
       <button aria-label="Move ${label} later" data-m="1" data-i="${index}" ${index === chosen.length - 1 ? 'disabled' : ''}>↓</button></li>`;
   }).join('') : '<li class="empty">Pick five stickers to make a little routine your child can follow.</li>';
@@ -50,8 +39,8 @@ function render() {
 function showChart() {
   if (chosen.length !== 5) return;
   document.querySelector('#steps').innerHTML = chosen.map((id, index) => {
-    const [, label] = activityFor(id);
-    return `<article class="step"><b>${index + 1}</b><img src="${images.get(id)}" alt="${label}"><span>${label}</span></article>`;
+    const [, label, image] = activityFor(id);
+    return `<article class="step"><b>${index + 1}</b><img src="${image}" alt="${label}"><span>${label}</span></article>`;
   }).join('');
   document.querySelector('#builder').hidden = true;
   document.querySelector('#chart').hidden = false;
@@ -85,8 +74,9 @@ document.querySelector('#edit').addEventListener('click', () => {
   window.scrollTo(0, 0);
 });
 document.querySelector('#print').addEventListener('click', () => window.print());
-
-sheet.addEventListener('load', () => {
-  activities.forEach((activity) => images.set(activity[0], cropActivity(activity)));
-  render();
+document.querySelector('#png').addEventListener('click', () => {
+  document.querySelector('#png').textContent = 'Use Print / Save as PDF';
+  window.setTimeout(() => { document.querySelector('#png').textContent = 'Save as image'; }, 2600);
 });
+
+render();
