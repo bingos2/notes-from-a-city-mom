@@ -13,12 +13,13 @@
     <nav class="inside-nav"><a href="/newsletters">Newsletter</a><a href="/watch">Videos</a><a href="/tools" aria-current="page">Tools</a></nav>
   </header>
   <main id="builder" class="routine-shell">
+    <a class="back-link no-print" href="/tools">← Back to tools</a>
     <section class="intro">
       <p class="eyebrow">Bedtime routine</p>
       <div class="progress"><b>1</b><i></i><span>2</span></div>
       <p class="eyebrow">Step 1 of 2</p>
       <h1>Choose your 5 steps</h1>
-      <p>Tap the stickers your little one knows. Pick five that feel most like your night.</p>
+      <p>Tap the icons your little one knows. Pick five that feel most like your night.</p>
       <strong id="count">0 of 5 chosen</strong>
     </section>
     <div class="layout">
@@ -28,7 +29,7 @@
     <button id="next" class="mobile-next" disabled>Put them in order</button>
   </main>
   <main id="chart" hidden>
-    <section class="actions no-print"><button id="edit" class="soft">Edit routine</button><span><button id="png" class="outline">Save as image</button><button id="print" class="gold">Print / Save as PDF</button></span></section>
+    <section class="actions no-print"><a id="edit" class="back-link" href="#builder">← Edit routine</a><span><button id="png" class="outline">Save as image</button><button id="print" class="gold">Print / Save as PDF</button></span></section>
     <section class="chart"><p class="eyebrow">Our bedtime routine</p><h1>Our five little steps<br>before sleep.</h1><p class="chart-note">Print this page to check off the steps, or cut along the dotted lines to make five routine cards.</p><div id="steps"></div><small>NOTES FROM A CITY MOM</small></section>
   </main>
   <script src="/bedtime-routine.js"></script>
