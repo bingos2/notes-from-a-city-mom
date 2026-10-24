@@ -143,8 +143,8 @@ export async function registerNewsletterConsent(email, source) {
   return { resend, contact, newSubscription: !wasSubscriber, existed };
 }
 
-function welcomeKey(email) {
-  return 'ncfm:welcome:v1:' + crypto.createHash('sha256').update(email).digest('hex');
+function welcomeKey(contactId) {
+  return 'ncfm:welcome:v2:contact:' + crypto.createHash('sha256').update(contactId).digest('hex');
 }
 
 export function requireWelcomeStore() {
@@ -180,8 +180,9 @@ async function kvRequest(path) {
  * Atomically claims a contact's one-and-only welcome event before it is emitted.
  * An unknown/failed event response remains claimed to prevent duplicate welcomes.
  */
-export async function emitWelcomeOnce({ resend, email, source }) {
-  const key = welcomeKey(email);
+export async function emitWelcomeOnce({ resend, email, contactId, source }) {
+  if (!contactId) throw new SubscriptionError('We could not confirm this subscription. Please try again.', 502);
+  const key = welcomeKey(contactId);
   const claim = await kvRequest('/set/' + encodeURIComponent(key) + '/pending/NX/EX/315360000');
   if (claim !== 'OK') return { emitted: false, alreadyClaimed: true };
 
