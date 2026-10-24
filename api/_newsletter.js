@@ -74,12 +74,15 @@ async function updateSubscriptionStatus(resend, email, unsubscribed) {
 }
 
 async function createContact(resend, email, { unsubscribed, segmentId }) {
-  const { error } = await resend.contacts.create({
-    email,
-    unsubscribed,
-    segmentIds: [segmentId]
-  });
+  // Do not rely on segmentIds during contact creation. Add membership explicitly,
+  // then confirm it through Resend before reporting success to the website.
+  const { error } = await resend.contacts.create({ email, unsubscribed });
   if (error && !isConflict(error)) throw new SubscriptionError('We could not save this subscription. Please try again.', 502);
+
+  const contact = await getContact(resend, email);
+  if (!contact) throw new SubscriptionError('We could not save this subscription. Please try again.', 502);
+  await addSegment(resend, email, segmentId);
+  return contact;
 }
 
 /**
