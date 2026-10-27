@@ -49,3 +49,6 @@
 
 /* Keep the newsletter teaser compact and readable: two intentional lines. */
 .newsletter-gate-copy p:not(.issue){max-width:560px;font-size:15px;line-height:1.5}
+
+/* Match the rounded NCFM card language in the newsletter CTA. */
+.gate-button{border-radius:14px}
