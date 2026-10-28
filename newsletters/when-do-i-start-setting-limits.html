@@ -27,7 +27,38 @@
       <h2>When do toddlers push back?</h2>
       <p>When something unsafe is taken away. When playtime ends. When they want to do it <em>all by themselves</em>. Hunger, tiredness, and transitions can make things harder, too.</p>
     </section>
-    <section class="newsletter-gate">
+
+    <div id="published-article" hidden>
+      <section class="note-box" style="margin-top:22px">
+        <h2>What should we do?</h2>
+        <p><strong>1. Name the feeling:</strong> “You’re upset.”<br><strong>2. Hold the limit:</strong> “I won’t let you hit.”<br><strong>3. Show what to do:</strong> “Gentle hands.”</p>
+        <p>Gently stop unsafe behavior and keep your response predictable.</p>
+      </section>
+      <section class="note-box" style="margin-top:22px">
+        <h2>How many times?</h2>
+        <p>There’s no magic number. Understanding “no” can come before the self-control to stop. <strong>Repeating the lesson isn’t failing.</strong></p>
+      </section>
+      <section class="note-box" style="margin-top:22px">
+        <h2>How do we avoid burnout?</h2>
+        <p>Choose your battles. Save a firm “no” for safety and important limits. Let the small things go—and take a break when you can.</p>
+      </section>
+      <section class="note-box" style="margin-top:22px;text-align:center">
+        <p class="issue">THIS WEEK’S VIDEO</p>
+        <a href="https://youtu.be/a8C1xqg7SF8"><img src="/newsletters/2026-10-28/it_s_not_defiance_cozy_playtime.png?v=20261026-2" alt="Toddler boundaries video on YouTube" style="display:block;width:100%;max-width:350px;height:auto;margin:0 auto 16px"></a>
+        <h2>Why Does My 1-Year-Old Keep Doing It After I Say No?</h2>
+        <p>A practical way to respond when your toddler keeps testing the same limit.</p>
+        <p><a class="gate-button" href="https://youtu.be/a8C1xqg7SF8">Watch on YouTube</a></p>
+      </section>
+      <section class="note-box" style="margin-top:22px">
+        <h2>A little note for you</h2>
+        <p>“There is no shame, failure or lack of love in needing time for yourself.”</p>
+        <p><small>— Amanda “Bird” Hoffert Gilmartin, MD, FAAP · <a href="https://www.healthychildren.org/English/tips-tools/ask-the-pediatrician/Pages/is-it-ok-to-need-a-break-from-my-kids.aspx">HealthyChildren.org (AAP)</a></small></p>
+      </section>
+      <p>You aren’t failing because you have to repeat yourself. Your toddler is learning—and so are you.</p>
+      <p>See you next week,<br><strong>Notes from a City Mom</strong></p>
+    </div>
+
+    <section class="newsletter-gate" id="newsletter-gate">
       <div class="newsletter-wave" aria-hidden="true"></div>
       <div class="newsletter-gate-copy">
         <span class="gate-mark" aria-hidden="true">✦</span>
@@ -40,5 +71,20 @@
     </section>
   </main>
   <footer class="inside-footer"><div class="inside-wrap"><span>© Notes from a City Mom</span><nav><a href="/about">About</a><a href="/privacy">Privacy</a></nav></div></footer>
+  <script>
+    (() => {
+      const publishAt = Date.parse("2026-10-28T16:00:00Z");
+      const article = document.getElementById("published-article");
+      const gate = document.getElementById("newsletter-gate");
+      const reveal = () => {
+        if (Date.now() < publishAt) return;
+        article.hidden = false;
+        gate.hidden = true;
+      };
+      reveal();
+      const wait = publishAt - Date.now();
+      if (wait > 0) window.setTimeout(reveal, wait);
+    })();
+  </script>
 </body>
 </html>
