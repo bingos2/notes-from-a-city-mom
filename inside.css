@@ -56,3 +56,6 @@
 /* Distinct breathing room between individual Tools cards */
 .tool-grid{display:grid;row-gap:32px;column-gap:24px;padding-bottom:34px}
 @media(max-width:720px){.tool-grid{row-gap:24px}}
+/* Editorial text links: calm at rest, warm yellow on hover. */
+.reading p a,.reading li a,.reading .source a,.product-safety .source a{color:inherit!important;text-decoration:none!important;transition:color .16s ease}
+.reading p a:hover,.reading li a:hover,.reading .source a:hover,.product-safety .source a:hover{color:#a66b00!important;text-decoration:none!important}
