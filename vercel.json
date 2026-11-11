@@ -17,6 +17,10 @@
   ],
   "rewrites": [
     {
+      "source": "/newsletters/my-1-year-old-isnt-walking-yet",
+      "destination": "/api/walking-newsletter"
+    },
+    {
       "source": "/newsletters/why-does-my-toddler-bang-his-head",
       "destination": "/api/head-banging-newsletter"
     }
