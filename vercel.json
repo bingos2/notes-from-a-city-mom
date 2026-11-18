@@ -17,6 +17,10 @@
   ],
   "rewrites": [
     {
+      "source": "/newsletters/why-does-my-toddler-scream-so-much",
+      "destination": "/api/screaming-newsletter"
+    },
+    {
       "source": "/newsletters/my-1-year-old-isnt-walking-yet",
       "destination": "/api/walking-newsletter"
     },
