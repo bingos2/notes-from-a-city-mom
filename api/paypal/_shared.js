@@ -3,8 +3,8 @@ const LIVE = process.env.PAYPAL_MODE === 'live';
 export const mode = LIVE ? 'live' : 'sandbox';
 export const base = LIVE ? 'https://api-m.paypal.com' : 'https://api-m.sandbox.paypal.com';
 export function credentials(){
- const clientId=process.env.PAYPAL_CLIENT_ID;
- const secret=process.env.PAYPAL_CLIENT_SECRET_KEY || process.env.PAYPAL_CLIENT_SECRET;
+ const clientId=process.env.PAYPAL_SANDBOX_CLIENT_ID || process.env.PAYPAL_CLIENT_ID;
+ const secret=process.env.PAYPAL_SANDBOX_CLIENT_SECRET_KEY || process.env.PAYPAL_CLIENT_SECRET_KEY || process.env.PAYPAL_CLIENT_SECRET;
  if(!clientId || !secret) throw new Error('PayPal credentials unavailable in this environment');
  if(LIVE) throw new Error('Live checkout disabled until paid PDF delivery is protected');
  return {clientId,secret};
