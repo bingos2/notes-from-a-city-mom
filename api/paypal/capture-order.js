@@ -7,7 +7,7 @@ export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
  try{
   const data=await orderRequest('/v2/checkout/orders/'+id+'/capture','POST');
-  if(!validateCapture(data))return res.status(409).json({error:'Payment has not been captured for $9.99 USD'});
+  if(!validateCapture(data))return res.status(409).json({error:'Payment has not been captured for $9.90 USD'});
   return res.status(200).json({paid:true,mode:'sandbox'});
  }catch(err){return errorResponse(res,err)}
 }
