@@ -27,8 +27,8 @@ export async function orderRequest(path,method='GET',body){
 export function validateCapture(data){
  const units=Array.isArray(data.purchase_units)?data.purchase_units:[];
  const captures=units.flatMap(u=>u.payments?.captures||[]);
- return data.status==='COMPLETED'&&units.length===1&&units[0].amount?.currency_code==='USD'&&units[0].amount?.value==='9.99'&&
- captures.some(c=>c.status==='COMPLETED'&&c.amount?.currency_code==='USD'&&c.amount?.value==='9.99');
+ return data.status==='COMPLETED'&&units.length===1&&units[0].amount?.currency_code==='USD'&&units[0].amount?.value==='9.90'&&
+ captures.some(c=>c.status==='COMPLETED'&&c.amount?.currency_code==='USD'&&c.amount?.value==='9.90');
 }
 export function errorResponse(res,err){
  console.error('PayPal checkout',{name:err.name,message:err.message});
