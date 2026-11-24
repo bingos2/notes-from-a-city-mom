@@ -1,16 +1,17 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baby Journal — PayPal Sandbox Test</title>
 <style>body{font-family:Arial,sans-serif;background:#fff9f1;color:#453127;margin:0;min-height:100vh;display:grid;place-items:center}.card{max-width:480px;width:calc(100% - 36px);background:white;border:1px solid #eadbc8;border-radius:18px;padding:32px;box-sizing:border-box}h1{font-size:26px;line-height:1.2;margin:0 0 12px}p{line-height:1.55}small{color:#826e5d}.price{font-size:28px;font-weight:800;margin:20px 0}.status{background:#fff4db;padding:12px;border-radius:9px;font-size:14px;margin:16px 0;word-break:break-word}.test{font-weight:bold;color:#7a5333}</style></head>
-<body><main class="card"><small>NOTES FROM A CITY MOM · PAYMENT TEST</small><h1>My Baby's Little Days</h1><p><span class="test">Sandbox only — no real money is charged.</span> This is a technical test of PayPal checkout, not the finished journal editor.</p><div class="price">$9.99 USD</div><div id="status" class="status">Checking sandbox configuration…</div><div id="paypal"></div><small>Use a PayPal sandbox buyer account. No PDF is delivered from this test page. For safety, live payments are disabled.</small></main>
+<body><main class="card"><small>NOTES FROM A CITY MOM · PAYMENT TEST</small><h1>My Baby's Little Days</h1><p><span class="test">Sandbox only — no real money is charged.</span> This is a technical test of PayPal checkout, not the finished journal editor.</p><div class="price">$9.90 USD</div><div id="status" class="status">Checking sandbox configuration…</div><div id="paypal"></div><small>Use a PayPal sandbox buyer account. No PDF is delivered from this test page. For safety, live payments are disabled.</small></main>
 <script>
 const show=t=>document.querySelector('#status').textContent=t;
 (async()=>{
 try {
 let res=await fetch('/api/paypal/config',{cache:'no-store'});let cfg=await res.json();
 if(!res.ok||!cfg.clientId||cfg.mode!=='sandbox')throw Error(cfg.error||'Sandbox configuration unavailable');
-await new Promise((ok,no)=>{let s=document.createElement('script');s.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(cfg.clientId)+'&currency=USD&intent=capture';s.onload=ok;s.onerror=()=>no(Error('PayPal sandbox SDK failed to load'));document.head.appendChild(s)});
-show('Sandbox connected. You can place a test order.');
-paypal.Buttons({
+await new Promise((ok,no)=>{let s=document.createElement('script');s.src='https://www.paypal.com/sdk/js?client-id='+encodeURIComponent(cfg.clientId)+'&currency=USD&intent=capture&components=buttons';s.onload=ok;s.onerror=()=>no(Error('PayPal sandbox SDK failed to load'));document.head.appendChild(s)});
+if(typeof window.paypal?.Buttons!=='function')throw Error('PayPal SDK did not provide Buttons. Please use a Sandbox App Client ID and matching Secret, and refresh.');
+show('Sandbox connected. You can place a $9.90 test order.');
+window.paypal.Buttons({
 createOrder:async()=>{
 let r=await fetch('/api/paypal/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});let j=await r.json();if(!r.ok)throw Error(j.error||'Order creation failed');return j.id;
 },
