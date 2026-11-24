@@ -19,16 +19,23 @@ export async function token(){
 }
 export async function orderRequest(path,method='GET',body){
  const bearer=await token();
- const r=await fetch(base+path,{method,headers:{Authorization:'Bearer '+bearer,'Content-Type':'application/json','PayPal-Request-Id':crypto.randomUUID()},body:body?JSON.stringify(body):undefined});
+ const r=await fetch(base+path,{method,headers:{Authorization:'Bearer '+bearer,'Content-Type':'application/json','PayPal-Request-Id':(method==='POST'&&path.endsWith('/capture')?'ncfm-capture-'+path.split('/')[4]:crypto.randomUUID())},body:body?JSON.stringify(body):undefined});
  const data=await r.json().catch(()=>({}));
  if(!r.ok)throw new Error('PayPal request failed ('+r.status+')');
  return data;
 }
 export function validateCapture(data){
  const units=Array.isArray(data.purchase_units)?data.purchase_units:[];
- const captures=units.flatMap(u=>u.payments?.captures||[]);
- return data.status==='COMPLETED'&&units.length===1&&units[0].amount?.currency_code==='USD'&&units[0].amount?.value==='9.90'&&
- captures.some(c=>c.status==='COMPLETED'&&c.amount?.currency_code==='USD'&&c.amount?.value==='9.90');
+ if(data.status!=='COMPLETED'||units.length!==1)return false;
+ const unit=units[0];
+ const captures=unit.payments?.captures||[];
+ if(!Array.isArray(captures)||captures.length!==1)return false;
+ const capture=captures[0];
+ // purchase_units[].amount is optional in PayPal's capture response.
+ // The completed capture itself MUST show the exact paid amount.
+ const match=amount=>amount?.currency_code==='USD'&&amount?.value==='9.90';
+ return capture.status==='COMPLETED'&&match(capture.amount)&&
+   (!unit.amount || match(unit.amount));
 }
 export function errorResponse(res,err){
  console.error('PayPal checkout',{name:err.name,message:err.message});
