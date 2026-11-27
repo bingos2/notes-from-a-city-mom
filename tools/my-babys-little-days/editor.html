@@ -972,7 +972,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .canvas .qa-bodybox{display:flex;flex-direction:column;overflow:visible}.canvas .qa-bodybox .bodycopy{min-height:26px;overflow-wrap:anywhere}
 .canvas .fav-layout{position:absolute;top:220px;left:31px;width:522px;display:grid;grid-template-columns:235px minmax(0,1fr);gap:17px}
 .canvas .fav-layout.no-photo{grid-template-columns:1fr}.fav-layout.no-photo .fav-photo{display:none}
-.fav-photo-toggle{position:absolute;top:175px;left:50%;transform:translateX(-50%);z-index:3;font-size:12px}
+.fav-photo-toggle{position:absolute;top:175px;left:0;right:0;margin-inline:auto;width:178px;height:36px;line-height:16px;z-index:3;font-size:12px;transform:none}
+#canvas .fav-photo-toggle:hover{background:#fff4d8;border-color:#d7b88c;filter:none}
 .fav-photo{height:236px}.fav-answers{padding:14px 16px;min-height:236px;display:grid;grid-template-columns:1fr;align-content:start;gap:9px;background:#fffaf2}
 .fav-layout.no-photo .fav-answers{grid-template-columns:1fr 1fr;gap:17px 18px;padding:23px 25px}
 .fav-answers h2{grid-column:1/-1;margin:0}.fav-ans{font-size:14px;min-width:0;overflow-wrap:anywhere}
