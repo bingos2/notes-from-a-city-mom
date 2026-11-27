@@ -6,17 +6,28 @@ const fail=(status,message)=>{throw new HttpError(status,message)};
 const digest=x=>createHash('sha256').update(x).digest('hex');
 const same=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.length===b.length&&timingSafeEqual(Buffer.from(a),Buffer.from(b));
 const unavailable='Checkout recovery is temporarily unavailable. If you already paid, do not pay again.';
-function settings(){
- const mode=process.env.JOURNAL_PAYPAL_MODE||'sandbox';
+function settings(origin){
+ const env=process.env,preview=env.VERCEL_ENV==='preview';
+ // Never let a Preview inherit real payment mode; this branch is for sandbox testing.
+ const mode=preview?'sandbox':(env.JOURNAL_PAYPAL_MODE||'sandbox');
  if(!['live','sandbox'].includes(mode))fail(503,unavailable);
- const live=mode==='live',env=process.env;
+ const live=mode==='live';
  if(live&&env.JOURNAL_LIVE_ENABLED!=='true')fail(503,'Live checkout is not enabled.');
  const name=live?'LIVE':'SANDBOX';
  const client=env['PAYPAL_'+name+'_CLIENT_ID']||(!live&&env.PAYPAL_CLIENT_ID),secret=env['PAYPAL_'+name+'_CLIENT_SECRET']||env['PAYPAL_'+name+'_CLIENT_SECRET_KEY']||(!live&&env.PAYPAL_CLIENT_SECRET_KEY);
  const merchant=env['PAYPAL_'+name+'_MERCHANT_ID'];
  let editor,store;
- try{editor=new URL(env.JOURNAL_EDITOR_URL);store=new URL(env.JOURNAL_REDIS_URL||env.UPSTASH_REDIS_REST_KV_REST_API_URL)}catch{fail(503,unavailable)}
+ try{
+  if(preview){
+   const hosts=[env.VERCEL_URL,env.VERCEL_BRANCH_URL].filter(h=>typeof h==='string'&&/^[a-z0-9.-]+\.vercel\.app$/i.test(h));
+   const valid=hosts.find(h=>'https://'+h===origin)||hosts[0];
+   if(!valid)fail(503,unavailable);
+   editor=new URL('https://'+valid+'/shop/my-babys-little-days');
+  }else editor=new URL(env.JOURNAL_EDITOR_URL);
+  store=new URL(env.JOURNAL_REDIS_URL||env.UPSTASH_REDIS_REST_KV_REST_API_URL);
+ }catch{fail(503,unavailable)}
  const storeToken=env.JOURNAL_REDIS_TOKEN||env.UPSTASH_REDIS_REST_KV_REST_API_TOKEN;
+ if(preview&&(!client||!secret))fail(503,'PayPal Sandbox is not connected for this Preview yet. No payment was attempted.');
  if(!client||!secret||(live&&!merchant)||!storeToken||editor.protocol!=='https:'||store.protocol!=='https:'||editor.username||editor.password||store.username||store.password)fail(503,unavailable);
  return {mode,live,client,secret,merchant,editor,store:store.href.replace(/\/$/,''),storeToken,base:'https://api-m.'+(live?'':'sandbox.')+'paypal.com'};
 }
@@ -62,9 +73,14 @@ const iso=x=>typeof x==='string'&&!Number.isNaN(Date.parse(x))?new Date(x).toISO
 function urlFor(c,kind){const u=new URL(c.editor);u.searchParams.set('journal',kind);return u.href}
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
+ // Protected Preview health probe: authenticates to PayPal and checks the ledger, but never creates an order.
+ if(req.method==='GET'&&process.env.VERCEL_ENV==='preview'){
+  try{const c=settings();await Promise.all([redis(c,['PING']),paypalToken(c)]);return res.status(200).json({checkout:'ready',mode:'sandbox',realMoney:false});}
+  catch(e){return res.status(e.status||503).json({checkout:'not-ready',mode:'sandbox',error:e instanceof HttpError?e.message:unavailable});}
+ }
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed.'});
  try{
-  const c=settings(),b=req.body||{},action=b.action;
+  const c=settings(req.headers?.origin),b=req.body||{},action=b.action;
   if(action==='export'){
    const auth=req.headers?.authorization||'';
    const admin=process.env.JOURNAL_ADMIN_TOKEN;

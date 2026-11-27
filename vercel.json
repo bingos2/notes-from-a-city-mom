@@ -27,6 +27,10 @@
     {
       "source": "/newsletters/why-does-my-toddler-bang-his-head",
       "destination": "/api/head-banging-newsletter"
+    },
+    {
+      "source": "/shop/my-babys-little-days",
+      "destination": "/tools/my-babys-little-days/editor"
     }
   ]
 }
