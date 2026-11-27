@@ -10,11 +10,11 @@
     :root{--shop-cream:#fffaf0;--shop-navy:#071b3d;--shop-yellow:#ffcc32;--shop-line:#e8d9bb}
     .shop{padding:28px 0 58px;color:var(--shop-navy)}
     .shop-card{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:clamp(26px,5vw,66px);padding:clamp(26px,4.8vw,58px);border:1px solid var(--shop-line);border-radius:28px;background:#fffdf8}
-    .shop-copy,.shop-preview{min-width:0}
+    .shop-copy,.shop-preview{min-width:0}.shop-copy{container-type:inline-size}
     .shop-kicker{display:inline-block;margin:0 0 15px;padding:6px 10px;border-radius:100px;background:#fff0bb;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
-    .shop h1{margin:0 0 15px;font:700 clamp(36px,5.4vw,63px)/1.02 Fredoka,Arial,sans-serif;letter-spacing:-.035em}
+    .shop h1{margin:0 0 15px;font:700 clamp(21px,3vw,44px)/1.08 Fredoka,Arial,sans-serif;font-size:clamp(20px,9cqw,44px);white-space:nowrap;letter-spacing:-.035em}
     .shop-description{font-size:clamp(16px,2vw,19px);line-height:1.48;margin:0 0 18px;color:#273854;max-width:39ch}
-    .shop-price{margin:0 0 13px;font-size:16px;font-weight:800}
+    .shop-how{display:block;margin-top:6px}.shop-price{margin:0 0 13px;font-size:16px;font-weight:800}
     .shop-cta{display:inline-flex;min-height:48px;align-items:center;padding:10px 21px;border:2px solid var(--shop-navy);border-radius:10px;background:var(--shop-yellow);color:var(--shop-navy);font-weight:900;text-decoration:none}
     .shop-cta:hover{background:#ffe483}
     .shop-cta:focus-visible,.shop a:focus-visible{outline:3px solid #185496;outline-offset:4px}
@@ -24,7 +24,7 @@
     .shop-samples img{display:block;width:100%;height:auto;border:1px solid #e5d1b5;border-radius:5px;box-shadow:0 5px 12px #3c271320}
     .shop-samples img:last-child{margin-top:13px}
     .shop-preview figcaption{text-align:center;color:#4d4039;font-size:13px;margin-top:12px;line-height:1.35}
-    @media(max-width:710px){.shop{padding-top:17px}.shop-card{grid-template-columns:1fr;padding:21px;gap:19px}.shop h1{font-size:clamp(35px,8vw,48px)}}
+    @media(max-width:710px){.shop{padding-top:17px}.shop-card{grid-template-columns:1fr;padding:21px;gap:19px}}
     @media(max-width:480px){.inside-top{height:auto!important;min-height:66px;flex-wrap:wrap;justify-content:space-between;gap:6px 12px;padding-block:10px}.inside-nav{gap:12px!important}}
   </style>
 </head>
@@ -38,7 +38,7 @@
     <div class="shop-copy">
       <p class="shop-kicker">Make your own baby memory book</p>
       <h1 id="journal-title">My Baby’s Little Days</h1>
-      <p class="shop-description">Turn little firsts, photos, and everyday memories into a baby book you make in your browser. A few sentences are enough, even without a photo.</p>
+      <p class="shop-description">Turn little firsts, photos, and everyday memories into a baby book you make in your browser.<br><span class="shop-how">Just add a few photos. Your book comes together in minutes.</span></p>
       <p class="shop-price">$9.90 USD · One-time purchase</p>
       <a class="shop-cta" href="/shop/my-babys-little-days">Try the editor</a>
       <p class="shop-note">Free to try. Pay only when you download your PDF.</p>
