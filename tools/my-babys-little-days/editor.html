@@ -1075,10 +1075,48 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .invite-form label{display:block;font-weight:800;font-size:13px;margin-bottom:5px}.invite-entry{display:flex;gap:7px;flex-wrap:wrap}
 .invite-entry input{flex:1 1 150px;min-width:0;border-radius:6px;border:1px solid #d3baa0;padding:6px 8px;background:white;font-size:16px}
 #inviteMessage{font-size:12px;line-height:1.4;margin:5px 0 0;color:#52372c}
+
+.photo img.photo-positioned{width:var(--img-w);height:var(--img-h);left:var(--img-left);top:var(--img-top);right:auto;bottom:auto;object-fit:fill}
+#canvas .photo.has:after{content:'Adjust crop';position:absolute;bottom:5px;right:5px;max-width:calc(100% - 10px);padding:4px 7px;border-radius:7px;background:#fffdf7;color:#4b342d;font:800 12px 'Nunito Sans',sans-serif;box-shadow:0 1px 5px #30201e44;pointer-events:none}
+#canvas .photo:focus-visible,.photo-dialog :focus-visible{outline:3px solid #946530;outline-offset:2px}
+.photo-dialog{width:min(calc(100% - 24px),480px);max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);padding:18px;border:1px solid #e8d9c9;border-radius:17px;background:#fffdf8;color:#3b2b24;box-shadow:0 10px 50px #24120b55;overscroll-behavior:contain}
+.photo-dialog::backdrop{background:#21150eb3}
+.photo-dialog h2{font:800 21px 'Nunito Sans',sans-serif;margin:0 0 4px}
+.photo-dialog p{font-size:14px;margin:0 0 12px;line-height:1.4;overflow-wrap:anywhere}
+.crop-stage{display:grid;place-items:center;background:#f1e9df;border-radius:12px;padding:12px}
+#cropFrame{position:relative;display:block;width:min(100%,calc(clamp(112px,42vh,310px) * var(--crop-ratio)));aspect-ratio:var(--crop-ratio);touch-action:none;cursor:grab;outline:2px solid #955e34;outline-offset:2px}
+#cropFrame.cropping{cursor:grabbing}
+#cropFrame img{pointer-events:none;user-select:none}
+.crop-zoom{display:flex;align-items:center;gap:12px;font-weight:800;font-size:14px;margin:8px 0}
+.crop-zoom input{flex:1;min-width:0;accent-color:#714a2c;min-height:40px;cursor:pointer}
+.crop-zoom output{min-width:4ch;text-align:right;font-variant-numeric:tabular-nums}
+.photo-dialog .crop-actions{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end;align-items:center}
+.photo-dialog .btn{min-height:42px;padding-inline:11px}
+.photo-dialog .crop-actions .photo-reset{margin-right:auto}
+.photo-dialog label[for="photoNewName"]{font-size:13px;font-weight:800}
+#photoNewName{display:block;width:100%;font:600 16px 'Nunito Sans',sans-serif;border:1px solid #c9aa8c;border-radius:8px;padding:8px;margin:4px 0 5px}
+#photoNameError{color:#9c3426;min-height:1.4em;margin-bottom:4px;font-size:13px}
+@media(max-width:440px){.photo-dialog{padding:14px}.photo-dialog .btn{min-height:44px}.photo-dialog .crop-actions .photo-reset{margin-right:0}}
+@media print{.photo-dialog,#canvas .photo.has:after{display:none!important}}
 </style></head><body>
 <div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn" id="resumeDraft">Continue in this browser</button><button class="btn" id="replaceDraft">Keep this version</button><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
 <div class="workspace"><aside class="side"><h4>My book</h4><div id="thumbnails"></div><div class="side-actions"><button id="addpage" class="btn">+ Add page</button><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
 <div class="start hide" id="start"><div class="start-card"><button type="button" id="closestart" class="close-start" aria-label="Close settings">×</button><div class="start-art"><div class="start-cover"><div class="big">My Baby's<br>Little Days</div><div style="font:600 12px 'Fredoka'">ordinary days, extraordinary love</div></div></div><div class="start-fields"><div class="hint">YOUR KEEPSAKE BOOK</div><h1>Let's make something lovely.</h1><p>Make a little book of memories to give your baby someday. You can change everything later.</p><label>Baby's name or nickname (optional)</label><input id="sname" placeholder="e.g. Charlie"><label>Baby's birthday (optional)</label><input type="date" id="sbirthday"><label>Paper size</label><select id="spaper"><option value="letter">US Letter · 8.5 × 11 in</option><option value="a4">A4 · 210 × 297 mm</option></select><button id="begin" class="btn yellow">Create my journal →</button><div class="hint" style="margin-top:16px">Your photos stay in this browser while editing.<br>Download your project file to keep working later.</div></div></div></div>
+<dialog id="photoCrop" class="photo-dialog" aria-labelledby="cropTitle" aria-describedby="cropHint">
+ <h2 id="cropTitle">Adjust photo crop</h2>
+ <p id="cropHint">Drag the photo to choose what shows in the frame. Use the slider to zoom.</p>
+ <div class="crop-stage"><div id="cropFrame" class="photo has" tabindex="0" role="group" aria-label="Crop preview. Use the arrow keys to move the photo."><img id="cropImage" alt="" draggable="false"></div></div>
+ <label class="crop-zoom" for="cropZoom">Zoom <input id="cropZoom" type="range" min="100" max="400" step="1" value="100"><output id="cropPercent" for="cropZoom">100%</output></label>
+ <div class="crop-actions"><button type="button" class="btn photo-reset" id="cropReset">Reset</button><button type="button" class="btn" id="cropReplace">Change photo</button><button type="button" class="btn" id="cropCancel">Cancel</button><button type="button" class="btn yellow" id="cropApply">Save crop</button></div>
+</dialog>
+<dialog id="photoNameDialog" class="photo-dialog" aria-labelledby="photoNameTitle" aria-describedby="photoNameBody">
+ <h2 id="photoNameTitle">A photo has this name already</h2>
+ <p id="photoNameBody"></p>
+ <label for="photoNewName">New name if you keep both</label>
+ <input type="text" id="photoNewName" maxlength="300" autocomplete="off" spellcheck="false">
+ <p id="photoNameError" role="status"></p>
+ <div class="crop-actions"><button type="button" class="btn" id="photoNameCancel" autofocus>Cancel upload</button><button type="button" class="btn" id="photoNameReplace">Replace in photo tray</button><button type="button" class="btn yellow" id="photoNameKeep">Keep both</button></div>
+</dialog>
 <div class="record-pop hide" id="checkoutpop"><div class="record-panel checkout-panel" style="max-width:480px"><button class="checkout-x" type="button" id="closecheckoutx" aria-label="Close checkout">×</button><h2 id="checkoutTitle">Your little book</h2><p style="font:500 15px 'DM Sans';line-height:1.6">Your memories, one keepsake.<br>Pay once. No subscription.</p><h2 id="checkoutPrice" style="margin:13px 0;color:#4b342d">$9.90 USD</h2><select id="orderPicker" aria-label="Saved order" hidden></select><div id="paypal-msg" class="hint" role="status" style="margin:14px 0">The PDF is generated on this device. Checkout does not upload your entries or photos.</div><div id="pdfBuild" class="pdf-build" hidden>
  <div class="pdf-book" aria-hidden="true"><span class="pdf-sheet s3"></span><span class="pdf-sheet s2"></span><span class="pdf-sheet s1"></span><span class="pdf-cover"><span class="pdf-mark">✦</span><span class="pdf-line"></span><span class="pdf-line short"></span></span></div>
  <div><strong>Preparing your PDF</strong><div id="pdfBuildCount" class="hint">Getting your pages ready…</div><progress id="pdfBuildMeter" value="0" max="1" aria-label="PDF preparation"></progress></div>
@@ -1114,7 +1152,7 @@ const $=id=>document.getElementById(id), uid=()=>Math.random().toString(36).slic
 const STICKERS=["bottle","bunny-moon","heart","rainbow","sock-single","socks-blue","socks-pink","car-yellow","doll-pink","storybook","elephant","puppy","kitten","dinosaur","star","baby-pillow","baby-blanket","rice-cracker","bread","baby-spoon","baby-bowl","baby-water-bottle"];
 const BASE=[['cover','My Baby’s Little Days'],['toc','Table of Contents'],['note','A Little Note for Today'],['photo','The Story Behind This Photo'],['favorites','Little Favorites'],['growth','Our Little Growth Journey'],['calendar','Little Calendar'],['letter','A Letter to You'],['note','The Ordinary Days'],['photo','Our Little Adventure'],['firsts','Little Firsts'],['favorites','Things That Make You Smile'],['note','A Funny Little Moment'],['photo','A Day in Pictures'],['letter','What I Want You to Know'],['calendar','Little Calendar'],['growth','How You Have Grown'],['note','Something New'],['photo','A Moment Worth Keeping'],['letter','With All My Love']];
 function makePage(type,title){return {hiddenDecorations:[],id:uid(),type,title,subtitle:type==='cover'?'ordinary days, extraordinary love':'',body:'',fields:{},photos:{},stickers:[],free:[],month:new Date().getMonth(),year:new Date().getFullYear(),memories:{},style:{}}}
-let book={name:'',birthday:'',paper:'letter',font:'DM Serif Display',captionFont:'Caveat',bodyFont:'Nunito Sans',titleSize:36,captionSize:21,bodySize:19,pages:BASE.map(([t,n])=>makePage(t,n))},sel=0,photoTray=[],lastRemoved=null,activeTab='photos',pendingSlot=null,activePhoto=null,dragging=null,recordDate=null,focusedText=null;
+let book={name:'',birthday:'',paper:'letter',font:'DM Serif Display',captionFont:'Caveat',bodyFont:'Nunito Sans',titleSize:36,captionSize:21,bodySize:19,pages:BASE.map(([t,n])=>makePage(t,n))},sel=0,photoTray=[],lastRemoved=null,activeTab='photos',pendingSlot=null,dragging=null,recordDate=null,focusedText=null;
 // Journal undo stack. Each checkpoint is a full editable book snapshot, not merely a deleted page.
 const undoHistory=[];let restoringHistory=false;
 // Save meaningful book changes, not page selection or clicks that did not edit anything.
@@ -1159,7 +1197,7 @@ function applyPageStyle(c,pg){c.dataset.paperBackground=book.background==='white
 function field(pg,key,def=''){return Object.prototype.hasOwnProperty.call(pg.fields,key)?pg.fields[key]:def}
 function ed(pg,key,def='',cl='',style=''){return `<span class="ed ${cl}" data-key="${esc(key)}" contenteditable="true" spellcheck="true" style="${style}">${esc(field(pg,key,def))}</span>`}
 function art(id,x,y,w,rotate=0){return `<img class="orn" alt="" src="${assetUrl(id)}" style="left:${x}px;top:${y}px;width:${w}px;transform:rotate(${rotate}deg)">`}
-function photo(pg,key,style={},label='Add a photo'){const a=pg.photos[key],styles=Object.entries(style).map(([k,v])=>`${k.replace(/[A-Z]/g,x=>'-'+x.toLowerCase())}:${v}`).join(';');return `<div class="photo ${a?'has':''}" data-slot="${key}" style="${styles}" title="Click to place a photo here">${a?`<img src="${a}" alt="Baby memory photo">`:''}<span class="photo-call">${label}<small style="display:block;font:600 11px 'Nunito Sans'">click or drop a photo</small></span></div>`}
+function photo(pg,key,style={},label='Add a photo'){const a=pg.photos[key],styles=Object.entries(style).map(([k,v])=>`${k.replace(/[A-Z]/g,x=>'-'+x.toLowerCase())}:${v}`).join(';');return `<div class="photo ${a?'has':''}" data-slot="${key}" style="${styles}" title="Click to place a photo here">${a?`<img src="${a}" alt="Baby memory photo" draggable="false">`:''}<span class="photo-call">${label}<small style="display:block;font:600 11px 'Nunito Sans'">click or drop a photo</small></span></div>`}
 function ornaments(a){return ''}
 function title(pg,sub=''){return `<div style="text-align:center;padding-top:22px">${ornaments([['garland',200,8,180,0]])}<h1 class="page-title" style="padding-top:40px">${ed(pg,'title',pg.title)}</h1>${sub?`<div class="page-caption" style="margin-top:7px">${ed(pg,'subtitle',sub)}</div>`:''}</div>`}
 function inside(pg, index=sel){let h='<div class="paper"><div class="in">';let g='<div class="foot">'+(index+1)+'</div>';
@@ -1206,8 +1244,184 @@ function applyHiddenDecorations(root,pg,editable){
  });
 }
 function fitLongPhotoTitle(root,pg){if(pg.type!=='photo')return;const title=root.querySelector('.page-title');if(!title)return;const text=title.querySelector('.ed');if(!text)return;const max=title.clientWidth-4;let size=styleFor(pg).titleSize;while(text.scrollWidth>max && size>19){size-=1;title.style.fontSize=size+'px'}}
-function render(){$('paperBackground').value=book.background==='white'?'white':'cream';syncToc();if(sel>=book.pages.length)sel=book.pages.length-1;if(sel<0)sel=0;const c=$('canvas');c.classList.toggle('a4',book.paper==='a4');applyPageStyle(c,p());c.innerHTML=inside(p());applyHiddenDecorations(c,p(),true);c.querySelectorAll('.ed').forEach(el=>{el.oninput=()=>{if(el.dataset.key==='body'){p().body=readEditable(el);updateNoteMode(c,p())}else p().fields[el.dataset.key]=readEditable(el);checkCurrent();queueDraft()};el.onblur=()=>{if(el.hasAttribute('data-placeholder')&&!readEditable(el).trim())el.replaceChildren();thumb();checkCurrent()}});for(const s of p().stickers.filter(s=>STICKERS.includes(s.type)))mountSticker(c,s);for(const f of p().free)mountFree(c,f);wirePage(c,p());thumb();$('bookstats').textContent=`${book.pages.length} pages  ·  ${book.paper==='a4'?'A4':'US Letter'}`;$('duplicate').disabled=!!p().generatedToc;$('delete').disabled=!!p().generatedToc;$('counter').textContent=`${sel+1} / ${book.pages.length}`;$('pgtitle').textContent=p().title;$('prev').disabled=sel===0;$('next').disabled=sel===book.pages.length-1;if(activeTab==='text' && $('font')){const ps=styleFor(p());[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont'],['titleSize','titleSize'],['captionSize','captionSize'],['bodySize','bodySize']].forEach(([id,key])=>{const el=$(id);if(el)el.value=ps[key]})}fit();checkCurrent();queueDraft()}
-function wirePage(root,pg){root.querySelectorAll('[data-slot]').forEach(e=>{e.onclick=()=>{pendingSlot={pageId:pg.id,slot:e.dataset.slot};$('framepicker').click()};e.ondragover=event=>{event.preventDefault();e.style.outline='3px solid #ebb35e'};e.ondragleave=()=>e.style.outline='';e.ondrop=event=>{event.preventDefault();e.style.outline='';const files=event.dataTransfer.files;if(files&&files.length){receiveFiles(files,{pageId:pg.id,slot:e.dataset.slot})}else if(activePhoto){checkpoint();pg.photos[e.dataset.slot]=activePhoto;render();toast('Photo added to this frame.')}}});root.querySelectorAll('[data-goto]').forEach(e=>e.onclick=()=>{sel=+e.dataset.goto;render()});root.querySelectorAll('[data-monthmove]').forEach(e=>e.onclick=()=>{checkpoint();pg.month+=+e.dataset.monthmove;if(pg.month>11){pg.month=0;pg.year++}if(pg.month<0){pg.month=11;pg.year--}render()});root.querySelectorAll('[data-day]').forEach(e=>e.onclick=()=>{recordDate=`${pg.year}-${pg.month}-${e.dataset.day}`;$('recordtitle').textContent=new Date(pg.year,pg.month,+e.dataset.day).toLocaleDateString('en-US',{dateStyle:'long'});$('recordtext').value=pg.memories[recordDate]||'';$('recordpop').classList.remove('hide')})}
+function render(){$('paperBackground').value=book.background==='white'?'white':'cream';syncToc();if(sel>=book.pages.length)sel=book.pages.length-1;if(sel<0)sel=0;const c=$('canvas');c.classList.toggle('a4',book.paper==='a4');applyPageStyle(c,p());c.innerHTML=inside(p());applyHiddenDecorations(c,p(),true);c.querySelectorAll('.ed').forEach(el=>{el.oninput=()=>{if(el.dataset.key==='body'){p().body=readEditable(el);updateNoteMode(c,p())}else p().fields[el.dataset.key]=readEditable(el);checkCurrent();queueDraft()};el.onblur=()=>{if(el.hasAttribute('data-placeholder')&&!readEditable(el).trim())el.replaceChildren();thumb();checkCurrent()}});for(const s of p().stickers.filter(s=>STICKERS.includes(s.type)))mountSticker(c,s);for(const f of p().free)mountFree(c,f);wirePage(c,p());paintPagePhotos(c,p());thumb();$('bookstats').textContent=`${book.pages.length} pages  ·  ${book.paper==='a4'?'A4':'US Letter'}`;$('duplicate').disabled=!!p().generatedToc;$('delete').disabled=!!p().generatedToc;$('counter').textContent=`${sel+1} / ${book.pages.length}`;$('pgtitle').textContent=p().title;$('prev').disabled=sel===0;$('next').disabled=sel===book.pages.length-1;if(activeTab==='text' && $('font')){const ps=styleFor(p());[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont'],['titleSize','titleSize'],['captionSize','captionSize'],['bodySize','bodySize']].forEach(([id,key])=>{const el=$(id);if(el)el.value=ps[key]})}fit();checkCurrent();queueDraft()}
+// Store the crop separately from the original. The same geometry draws the editor, preview and PDF.
+const DEFAULT_CROP=Object.freeze({x:.5,y:.5,z:1});
+const cropClamp=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math.max(min,value)):fallback;
+function cleanCrop(c){
+ return {x:cropClamp(c?.x,0,1,.5),y:cropClamp(c?.y,0,1,.5),z:cropClamp(c?.z,1,4,1)};
+}
+function photoGeometry(frame,img,c){
+ const w=frame.clientWidth,h=frame.clientHeight,iw=img.naturalWidth,ih=img.naturalHeight;
+ if(!w||!h||!iw||!ih)return null;
+ const scale=Math.max(w/iw,h/ih)*c.z;
+ const width=iw*scale,height=ih*scale;
+ const overX=Math.max(0,width-w),overY=Math.max(0,height-h);
+ return {w,h,width,height,overX,overY};
+}
+function paintPhoto(frame,img,c){
+ const g=photoGeometry(frame,img,c);if(!g)return;
+ const per=(v,total)=>100*v/total+'%';
+ img.style.setProperty('--img-w',per(g.width,g.w));
+ img.style.setProperty('--img-h',per(g.height,g.h));
+ img.style.setProperty('--img-left',per(-g.overX*c.x,g.w));
+ img.style.setProperty('--img-top',per(-g.overY*c.y,g.h));
+ img.classList.add('photo-positioned');
+}
+// Each output page is sized before measuring. Wait for intrinsic image dimensions before PDF rasterization.
+function paintPagePhotos(root,pg,wait=false){
+ const ready=[];
+ for(const frame of root.querySelectorAll('.photo.has[data-slot]')){
+  const img=frame.querySelector('img');if(!img)continue;
+  const c=cleanCrop(pg.crops?.[frame.dataset.slot]);
+  const paint=()=>paintPhoto(frame,img,c);
+  if(img.complete){paint();continue}
+  if(!wait){img.addEventListener('load',paint,{once:true});continue}
+  ready.push(new Promise(resolve=>{
+   const finish=()=>{clearTimeout(timer);img.removeEventListener('load',finish);img.removeEventListener('error',finish);paint();resolve()};
+   const timer=setTimeout(finish,7500);
+   img.addEventListener('load',finish);img.addEventListener('error',finish);
+  }));
+ }
+ return wait?Promise.all(ready):undefined;
+}
+let cropEditing=null,cropDrag=null;
+function frameFor(slot){return [...$('canvas').querySelectorAll('.photo[data-slot]')].find(frame=>frame.dataset.slot===slot)}
+function updateCrop(){
+ if(!cropEditing)return;
+ $('cropPercent').textContent=Math.round(cropEditing.crop.z*100)+'%';
+ paintPhoto($('cropFrame'),$('cropImage'),cropEditing.crop);
+}
+function openPhotoCrop(pg,slot,frame){
+ if(!frame||!frame.clientWidth||!frame.clientHeight||!pg.photos[slot]||$('photoCrop').open)return;
+ const photo=pg.photos[slot],crop=cleanCrop(pg.crops?.[slot]);
+ cropEditing={pg,slot,photo,crop,frame};
+ $('cropImage').classList.remove('photo-positioned');
+ $('cropImage').src=photo;
+ $('cropFrame').style.setProperty('--crop-ratio',frame.clientWidth/frame.clientHeight);
+ $('cropZoom').value=String(Math.round(crop.z*100));
+ $('photoCrop').showModal();updateCrop();$('cropFrame').focus();
+}
+function closePhotoCrop(){
+ const prev=cropEditing;cropEditing=null;cropDrag=null;$('cropFrame').classList.remove('cropping');
+ if($('photoCrop').open)$('photoCrop').close();
+ return prev;
+}
+$('photoCrop').addEventListener('cancel',e=>{e.preventDefault();closePhotoCrop()});
+$('cropImage').onload=updateCrop;
+window.addEventListener('resize',updateCrop);
+$('cropZoom').oninput=()=>{if(cropEditing){cropEditing.crop.z=Number($('cropZoom').value)/100;updateCrop()}};
+$('cropReset').onclick=()=>{if(cropEditing){cropEditing.crop={...DEFAULT_CROP};$('cropZoom').value='100';updateCrop()}};
+$('cropCancel').onclick=closePhotoCrop;
+$('cropReplace').onclick=()=>{
+ const edit=closePhotoCrop();
+ if(edit){pendingSlot={pageId:edit.pg.id,slot:edit.slot};$('framepicker').click()}
+};
+$('cropApply').onclick=()=>{
+ const edit=closePhotoCrop();
+ if(!edit||!book.pages.includes(edit.pg)||edit.pg.photos[edit.slot]!==edit.photo)return;
+ const original=cleanCrop(edit.pg.crops?.[edit.slot]), next=edit.crop;
+ if(['x','y','z'].every(k=>original[k]===next[k]))return;
+ checkpoint();
+ if(next.x===.5&&next.y===.5&&next.z===1)clearFrameCrop(edit.pg,edit.slot);
+ else {edit.pg.crops??={};edit.pg.crops[edit.slot]={...next}}
+ render();frameFor(edit.slot)?.focus({preventScroll:true});toast('Photo crop saved');
+};
+$('cropFrame').onpointerdown=e=>{
+ if(!cropEditing||!e.isPrimary||e.button!==0)return;
+ const g=photoGeometry($('cropFrame'),$('cropImage'),cropEditing.crop);if(!g)return;
+ cropDrag={id:e.pointerId,startX:e.clientX,startY:e.clientY,x:cropEditing.crop.x,y:cropEditing.crop.y,g};
+ $('cropFrame').setPointerCapture(e.pointerId);$('cropFrame').classList.add('cropping');e.preventDefault();
+};
+$('cropFrame').onpointermove=e=>{
+ if(!cropEditing||cropDrag?.id!==e.pointerId)return;
+ const {g,startX,startY,x,y}=cropDrag,c=cropEditing.crop;
+ if(g.overX>.01)c.x=cropClamp(x-(e.clientX-startX)/g.overX,0,1,x);
+ if(g.overY>.01)c.y=cropClamp(y-(e.clientY-startY)/g.overY,0,1,y);
+ updateCrop();
+};
+$('cropFrame').onlostpointercapture=()=>{cropDrag=null;$('cropFrame').classList.remove('cropping')};
+$('cropFrame').onkeydown=e=>{
+ const move={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]}[e.key];
+ if(!cropEditing||!Array.isArray(move))return;
+ const c=cropEditing.crop,g=photoGeometry($('cropFrame'),$('cropImage'),c);if(!g)return;
+ e.preventDefault();
+ if(g.overX>.01)c.x=cropClamp(c.x-move[0]/g.overX,0,1,c.x);
+ if(g.overY>.01)c.y=cropClamp(c.y-move[1]/g.overY,0,1,c.y);
+ updateCrop();
+};
+function clearFrameCrop(pg,slot){
+ if(!pg.crops)return;
+ delete pg.crops[slot];if(!Object.keys(pg.crops).length)delete pg.crops;
+}
+function setFramePhoto(pg,slot,data){
+ if(pg.photos[slot]===data)return false;
+ pg.photos[slot]=data;clearFrameCrop(pg,slot);return true;
+}
+function refreshPlacedPhoto(pg,slot){
+ render();
+ if(p()===pg)openPhotoCrop(pg,slot,frameFor(slot));
+}
+function wirePhotoFrame(frame,pg){
+ const slot=frame.dataset.slot,has=!!pg.photos[slot];
+ frame.tabIndex=0;frame.setAttribute('role','button');
+ frame.setAttribute('aria-label',has?'Adjust photo crop':'Add a photo');
+ frame.title=has?'Adjust photo crop':'Click to add a photo';
+ function place(data){
+  if(pg.photos[slot]!==data){checkpoint();setFramePhoto(pg,slot,data);refreshPlacedPhoto(pg,slot)}
+  else openPhotoCrop(pg,slot,frame);
+ }
+ frame.onclick=()=>{
+  if(trayPick&&photoTray.some(ph=>ph.data===trayPick)){const data=trayPick;trayPick=null;place(data);return}
+  if(has){openPhotoCrop(pg,slot,frame);return}
+  pendingSlot={pageId:pg.id,slot};$('framepicker').click();
+ };
+ frame.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();frame.click()}};
+ frame.ondragover=e=>{e.preventDefault();frame.style.outline='3px solid #ebb35e'};
+ frame.ondragleave=()=>{frame.style.outline=''};
+ frame.ondrop=e=>{
+  e.preventDefault();frame.style.outline='';
+  const files=e.dataTransfer.files;
+  if(files?.length){receiveFiles(files,{pageId:pg.id,slot});return}
+  const picked=e.dataTransfer.getData('application/x-citymom-photo');
+  const item=picked&&photoTray.find(ph=>ph.id===picked);
+  if(item){trayPick=null;place(item.data)}
+ };
+}
+const photoBytes=data=>data.slice(data.indexOf(',')+1);
+const nameKey=name=>String(name).trim().normalize('NFC').toLowerCase();
+function samePhoto(data){
+ const payload=photoBytes(data);
+ return photoTray.find(ph=>photoBytes(ph.data)===payload);
+}
+function suggestionFor(name){
+ const dot=name.lastIndexOf('.'),ext=dot>0?name.slice(dot):'',base=dot>0?name.slice(0,dot):name;
+ let i=2;const used=new Set(photoTray.map(ph=>nameKey(ph.name)));
+ while(used.has(nameKey(base+' ('+i+')'+ext)))i++;
+ return base+' ('+i+')'+ext;
+}
+function askPhotoName(name){
+ const dialog=$('photoNameDialog'),input=$('photoNewName'),error=$('photoNameError');
+ $('photoNameBody').textContent='“'+name+'” is a different photo with the same file name. Replacing it updates your photo tray only. Photos already on your pages stay as they are.';
+ input.value=suggestionFor(name);error.textContent='';
+ dialog.returnValue='';
+ return new Promise(resolve=>{
+  $('photoNameCancel').onclick=()=>dialog.close('cancel');
+  $('photoNameReplace').onclick=()=>dialog.close('replace');
+  $('photoNameKeep').onclick=()=>{
+   const newName=input.value.trim();
+   if(!newName||/[\\/]/.test(newName)||photoTray.some(ph=>nameKey(ph.name)===nameKey(newName))){
+    error.textContent='Choose a new, unused file name.';input.focus();return;
+   }
+   dialog.close('keep');
+  };
+  input.oninput=()=>{error.textContent=''};
+  input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('photoNameKeep').click()}};
+  dialog.addEventListener('close',()=>resolve({choice:dialog.returnValue,name:input.value.trim()}),{once:true});
+  dialog.showModal();
+ });
+}
+function wirePage(root,pg){root.querySelectorAll('.photo[data-slot]').forEach(frame=>wirePhotoFrame(frame,pg));root.querySelectorAll('[data-goto]').forEach(e=>e.onclick=()=>{sel=+e.dataset.goto;render()});root.querySelectorAll('[data-monthmove]').forEach(e=>e.onclick=()=>{checkpoint();pg.month+=+e.dataset.monthmove;if(pg.month>11){pg.month=0;pg.year++}if(pg.month<0){pg.month=11;pg.year--}render()});root.querySelectorAll('[data-day]').forEach(e=>e.onclick=()=>{recordDate=`${pg.year}-${pg.month}-${e.dataset.day}`;$('recordtitle').textContent=new Date(pg.year,pg.month,+e.dataset.day).toLocaleDateString('en-US',{dateStyle:'long'});$('recordtext').value=pg.memories[recordDate]||'';$('recordpop').classList.remove('hide')})}
 function dragOn(el,obj,root){let orig=null;el.onpointerdown=e=>{if(e.button!==0)return;if(e.target.closest('button'))return;if(e.target.isContentEditable)return;orig={ox:obj.x,oy:obj.y,sx:e.clientX,sy:e.clientY};el.setPointerCapture(e.pointerId);el.classList.add('selected');e.preventDefault()};el.onpointermove=e=>{if(!orig)return;const factor=root.getBoundingClientRect().width/680;obj.x=Math.round(Math.max(0,Math.min(615,orig.ox+(e.clientX-orig.sx)/factor)));obj.y=Math.round(Math.max(0,Math.min((book.paper==='a4'?961:880)-30,orig.oy+(e.clientY-orig.sy)/factor)));el.style.left=obj.x+'px';el.style.top=obj.y+'px'};el.onpointerup=el.onpointercancel=()=>{orig=null;checkCurrent();queueDraft();if(!el.classList.contains('floating'))el.classList.remove('selected')}}
 function mountSticker(root,s){const el=document.createElement('div');el.className='floating';el.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.w}px;transform:rotate(${Number(s.rotation)||0}deg)`;el.innerHTML=`<img src="${assetUrl(s.type)}" alt="Sticker ${s.type}"><button class="sticker-resize" type="button" title="Drag to resize">↘</button><button class="sticker-rotate" type="button" title="Drag to rotate">↻</button><button class="sticker-delete" type="button" title="Delete sticker" aria-label="Delete sticker">×</button>`;el.title='Click to select · drag to move · drag corner to resize · drag circular arrow to rotate';root.appendChild(el);dragOn(el,s,root);
 const rot=el.querySelector('.sticker-rotate');let rotateFrom=null;
@@ -1215,21 +1429,72 @@ rot.onpointerdown=e=>{e.preventDefault();e.stopPropagation();checkpoint();const 
 rot.onpointermove=e=>{if(!rotateFrom)return;const current=Math.atan2(e.clientY-rotateFrom.centerY,e.clientX-rotateFrom.centerX)*180/Math.PI;s.rotation=Math.round((rotateFrom.initial+(current-rotateFrom.startAngle))*10)/10;el.style.transform=`rotate(${s.rotation}deg)`};
 rot.onpointerup=e=>{rotateFrom=null};rot.onpointercancel=e=>{rotateFrom=null};el.addEventListener('pointerdown',e=>{if(e.target.closest('.sticker-resize, .sticker-rotate'))return;root.querySelectorAll('.floating.selected').forEach(n=>n.classList.remove('selected'));el.classList.add('selected')});const del=el.querySelector('.sticker-delete');del.onclick=e=>{e.preventDefault();e.stopPropagation();p().stickers=p().stickers.filter(q=>q.id!==s.id);render()};const handle=el.querySelector('.sticker-resize');let sizeStart=null;handle.onpointerdown=e=>{e.preventDefault();e.stopPropagation();sizeStart={w:s.w,x:e.clientX,y:e.clientY};handle.setPointerCapture(e.pointerId)};handle.onpointermove=e=>{if(!sizeStart)return;const scale=root.getBoundingClientRect().width/680;const delta=Math.max((e.clientX-sizeStart.x)/scale,(e.clientY-sizeStart.y)/scale);s.w=Math.max(30,Math.min(280,Math.round(sizeStart.w+delta)));el.style.width=s.w+'px';el.style.height=s.w+'px'};handle.onpointerup=e=>{e.stopPropagation();sizeStart=null};handle.onpointercancel=()=>{sizeStart=null};el.ondblclick=e=>{if(e.target.closest('.sticker-resize'))return;p().stickers=p().stickers.filter(q=>q.id!==s.id);render()}}
 function mountFree(root,t){const el=document.createElement('div');el.className='floating-text';el.style.cssText=`left:${t.x}px;top:${t.y}px;width:${t.width||230}px;font:${t.size||20}px '${t.font||book.font}'`;el.textContent=t.text;el.title='Drag to move · double-click to edit';root.appendChild(el);dragOn(el,t,root);el.ondblclick=()=>{el.contentEditable=true;el.focus();el.classList.add('selected');const range=document.createRange();range.selectNodeContents(el);const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range)};el.oninput=()=>{t.text=readEditable(el);checkCurrent();queueDraft()};el.onblur=()=>{t.text=readEditable(el);checkCurrent();queueDraft();el.contentEditable=false;el.classList.remove('selected')}}
-function tab(name){activeTab=name;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));const area=$('tools');if(name==='photos'){area.innerHTML=`<h3>Your Photos</h3><p>Click a photo frame to upload directly into that spot. Or add photos here and drag them onto a frame.</p><label class="upload">＋ Upload photos<input type="file" id="manyfiles" accept="image/*" multiple></label><div class="photos-grid" id="photoitems"></div><div class="hint">Your edits and photos are saved in this browser when available. Download a backup before switching devices.</div>`;area.querySelector('#manyfiles').onchange=e=>receiveFiles(e.target.files);showTray()}else if(name==='stickers'){area.innerHTML=`<h3>Little Stickers</h3><p>Add a sticker, drag to move, resize, and rotate.<br>Double-click or tap × to delete.</p><div class="st-grid" id="st-grid"></div>`;STICKERS.forEach(id=>{const b=document.createElement('button');b.className='st-btn';b.title=id;b.innerHTML=`<img src="${assetUrl(id)}" alt="${id}">`;b.onclick=()=>{checkpoint();p().stickers.push({id:uid(),type:id,x:250,y:440,w:92});render();toast('Sticker added. Drag it to place it!')};$('st-grid').appendChild(b)})}else if(name==='text'){const ps=styleFor(p());area.innerHTML=`<h3>Write & Style</h3><p>Start with Heirloom, or choose the rounder City Mom look. You can still set each font individually.</p><div class="type-presets"><button class="type-preset" data-preset="city" title="Fredoka / Caveat / Nunito Sans"><strong>City Mom</strong><small>Fredoka · Caveat · Nunito Sans</small></button><button class="type-preset" data-preset="soft" title="Caveat / Caveat / DM Sans"><strong>Soft Notes</strong><small>Caveat · Caveat · DM Sans</small></button><button class="type-preset" data-preset="classic" title="DM Serif Display / Caveat / Nunito Sans"><strong>Heirloom</strong><small>DM Serif Display · Caveat · Nunito Sans</small></button></div><p style="margin-top:9px">Presets apply only to this page. You can still change each font and size individually.</p><button class="toolbutton" id="addtxt">＋ Add movable text</button>${[['Title','font','titleSize',ps.titleSize],['Subtitle','captionFont','captionSize',ps.captionSize],['Body','bodyfont','bodySize',ps.bodySize]].map(([label,fontId,sizeId,size])=>`<div class="font-control"><div class="fieldlabel">${label}</div><div class="font-inline"><select class="choose" id="${fontId}" aria-label="${label} font"></select><input class="st-size-input" type="number" aria-label="${label} size in px" id="${sizeId}" min="11" max="64" step="1" value="${size}" title="Font size (px)"></div><div class="font-actions"><button class="apply-all" data-applyall="${fontId==='bodyfont'?'bodyFont':fontId}">Apply font to all pages</button><button class="apply-all" data-applyall="${sizeId}">Apply size to all pages</button></div></div>`).join('')}<div class="hint" style="margin-top:15px">Click any text on your page to edit. Fonts and sizes affect only this page unless you apply them to all.</div>`;area.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const presets={city:['Fredoka','Caveat','Nunito Sans',36,23,19],soft:['Caveat','Caveat','DM Sans',40,22,19],classic:['DM Serif Display','Caveat','Nunito Sans',36,21,19]};const x=presets[b.dataset.preset];if(!x)return;checkpoint();p().style={...p().style,font:x[0],captionFont:x[1],bodyFont:x[2],titleSize:x[3],captionSize:x[4],bodySize:x[5]};render();tab('text');toast('Typography style applied to this page.')});area.querySelectorAll('[data-applyall]').forEach(btn=>btn.onclick=()=>{checkpoint();const key=btn.dataset.applyall;const target=key==='bodyFont'?'bodyfont':key;const el=$(target);const value=key.endsWith('Size')?Number(el.value):el.value;if(!value)return;book.pages.forEach(pg=>{pg.style=pg.style??{};pg.style[key]=value});render();toast('Applied to all '+book.pages.length+' pages.')});const fonts=['Caveat','Fredoka','Lilita One','Nunito Sans','DM Sans','Quicksand','Fraunces','DM Serif Display','Lora','Arial'];[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont']].forEach(([id,key])=>{const el=$(id);el.innerHTML=fonts.map(f=>`<option value="${f}">${f}</option>`).join('');el.value=ps[key];el.onchange=()=>{checkpoint();p().style=p().style??{};p().style[key]=el.value;render()}});[['titleSize','titleSize',18,64],['captionSize','captionSize',11,42],['bodySize','bodySize',11,36]].forEach(([id,key,min,max])=>{const el=$(id);el.onchange=()=>{checkpoint();const v=Math.round(Number(el.value));if(!Number.isFinite(v)){el.value=styleFor(p())[key];return}p().style=p().style??{};p().style[key]=Math.max(min,Math.min(max,v));el.value=p().style[key];render()}});$('addtxt').onclick=()=>{checkpoint();p().free.push({id:uid(),x:115,y:460,width:250,text:'A little note...',size:styleFor(p()).bodySize,font:styleFor(p()).bodyFont});render();toast('Text added — drag to move; double-click to type.')}}else{area.innerHTML=`<h3>Choose a Page</h3><p>Pick a layout to add to your journal. Photo-required layouts are marked.</p><div id="layouts"></div>`;const types=[['note','Little Note · no photo'],['photo','Photo Story · photo needed'],['favorites','Little Favorites · photo optional'],['growth','12-Month Growth · 12 photos'],['calendar','Little Calendar · interactive dates'],['letter','A Letter · no photo'],['firsts','Little Firsts · photos'],['toc','Table of Contents · links']];types.forEach(([t,txt])=>{const b=document.createElement('button');b.className='toolbutton';b.textContent='＋ '+txt;b.onclick=()=>{checkpoint();book.pages.splice(sel+1,0,makePage(t,txt.split(' ·')[0]));sel++;render();toast('Page added')};$('layouts').append(b)})}}
-function showTray(){let x=$('photoitems');if(!x)return;x.innerHTML='';photoTray.forEach(ph=>{const e=document.createElement('img');e.className='p-tile';e.src=ph.data;e.title='Click to select, then click a frame. Or drag onto a photo frame.';e.draggable=true;e.onclick=()=>{activePhoto=ph.data;toast('Photo selected. Click any photo frame to place it.')};e.ondragstart=()=>{activePhoto=ph.data};x.append(e)})}
-async function receiveFiles(files,target=null){
- if(typeof target==='string')target={pageId:p().id,slot:target};
- const generation=book;let changed=false,added=0;
- for(const file of Array.from(files)){
+function tab(name){activeTab=name;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));const area=$('tools');if(name==='photos'){area.innerHTML=`<h3>Your Photos</h3><p>Choose an empty frame to add a photo. Select a photo on the page to adjust its crop. You can also select or drag a photo from this tray.</p><label class="upload">＋ Upload photos<input type="file" id="manyfiles" accept="image/*" multiple></label><div class="photos-grid" id="photoitems"></div><div class="hint">Your edits and photos are saved in this browser when available. Download a backup before switching devices.</div>`;area.querySelector('#manyfiles').onchange=e=>{receiveFiles(e.target.files);e.target.value=''};showTray()}else if(name==='stickers'){area.innerHTML=`<h3>Little Stickers</h3><p>Add a sticker, drag to move, resize, and rotate.<br>Double-click or tap × to delete.</p><div class="st-grid" id="st-grid"></div>`;STICKERS.forEach(id=>{const b=document.createElement('button');b.className='st-btn';b.title=id;b.innerHTML=`<img src="${assetUrl(id)}" alt="${id}">`;b.onclick=()=>{checkpoint();p().stickers.push({id:uid(),type:id,x:250,y:440,w:92});render();toast('Sticker added. Drag it to place it!')};$('st-grid').appendChild(b)})}else if(name==='text'){const ps=styleFor(p());area.innerHTML=`<h3>Write & Style</h3><p>Start with Heirloom, or choose the rounder City Mom look. You can still set each font individually.</p><div class="type-presets"><button class="type-preset" data-preset="city" title="Fredoka / Caveat / Nunito Sans"><strong>City Mom</strong><small>Fredoka · Caveat · Nunito Sans</small></button><button class="type-preset" data-preset="soft" title="Caveat / Caveat / DM Sans"><strong>Soft Notes</strong><small>Caveat · Caveat · DM Sans</small></button><button class="type-preset" data-preset="classic" title="DM Serif Display / Caveat / Nunito Sans"><strong>Heirloom</strong><small>DM Serif Display · Caveat · Nunito Sans</small></button></div><p style="margin-top:9px">Presets apply only to this page. You can still change each font and size individually.</p><button class="toolbutton" id="addtxt">＋ Add movable text</button>${[['Title','font','titleSize',ps.titleSize],['Subtitle','captionFont','captionSize',ps.captionSize],['Body','bodyfont','bodySize',ps.bodySize]].map(([label,fontId,sizeId,size])=>`<div class="font-control"><div class="fieldlabel">${label}</div><div class="font-inline"><select class="choose" id="${fontId}" aria-label="${label} font"></select><input class="st-size-input" type="number" aria-label="${label} size in px" id="${sizeId}" min="11" max="64" step="1" value="${size}" title="Font size (px)"></div><div class="font-actions"><button class="apply-all" data-applyall="${fontId==='bodyfont'?'bodyFont':fontId}">Apply font to all pages</button><button class="apply-all" data-applyall="${sizeId}">Apply size to all pages</button></div></div>`).join('')}<div class="hint" style="margin-top:15px">Click any text on your page to edit. Fonts and sizes affect only this page unless you apply them to all.</div>`;area.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const presets={city:['Fredoka','Caveat','Nunito Sans',36,23,19],soft:['Caveat','Caveat','DM Sans',40,22,19],classic:['DM Serif Display','Caveat','Nunito Sans',36,21,19]};const x=presets[b.dataset.preset];if(!x)return;checkpoint();p().style={...p().style,font:x[0],captionFont:x[1],bodyFont:x[2],titleSize:x[3],captionSize:x[4],bodySize:x[5]};render();tab('text');toast('Typography style applied to this page.')});area.querySelectorAll('[data-applyall]').forEach(btn=>btn.onclick=()=>{checkpoint();const key=btn.dataset.applyall;const target=key==='bodyFont'?'bodyfont':key;const el=$(target);const value=key.endsWith('Size')?Number(el.value):el.value;if(!value)return;book.pages.forEach(pg=>{pg.style=pg.style??{};pg.style[key]=value});render();toast('Applied to all '+book.pages.length+' pages.')});const fonts=['Caveat','Fredoka','Lilita One','Nunito Sans','DM Sans','Quicksand','Fraunces','DM Serif Display','Lora','Arial'];[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont']].forEach(([id,key])=>{const el=$(id);el.innerHTML=fonts.map(f=>`<option value="${f}">${f}</option>`).join('');el.value=ps[key];el.onchange=()=>{checkpoint();p().style=p().style??{};p().style[key]=el.value;render()}});[['titleSize','titleSize',18,64],['captionSize','captionSize',11,42],['bodySize','bodySize',11,36]].forEach(([id,key,min,max])=>{const el=$(id);el.onchange=()=>{checkpoint();const v=Math.round(Number(el.value));if(!Number.isFinite(v)){el.value=styleFor(p())[key];return}p().style=p().style??{};p().style[key]=Math.max(min,Math.min(max,v));el.value=p().style[key];render()}});$('addtxt').onclick=()=>{checkpoint();p().free.push({id:uid(),x:115,y:460,width:250,text:'A little note...',size:styleFor(p()).bodySize,font:styleFor(p()).bodyFont});render();toast('Text added — drag to move; double-click to type.')}}else{area.innerHTML=`<h3>Choose a Page</h3><p>Pick a layout to add to your journal. Photo-required layouts are marked.</p><div id="layouts"></div>`;const types=[['note','Little Note · no photo'],['photo','Photo Story · photo needed'],['favorites','Little Favorites · photo optional'],['growth','12-Month Growth · 12 photos'],['calendar','Little Calendar · interactive dates'],['letter','A Letter · no photo'],['firsts','Little Firsts · photos'],['toc','Table of Contents · links']];types.forEach(([t,txt])=>{const b=document.createElement('button');b.className='toolbutton';b.textContent='＋ '+txt;b.onclick=()=>{checkpoint();book.pages.splice(sel+1,0,makePage(t,txt.split(' ·')[0]));sel++;render();toast('Page added')};$('layouts').append(b)})}}
+function showTray(){
+ const root=$('photoitems');if(!root)return;
+ root.replaceChildren();
+ const listed=new Set();
+ for(const ph of photoTray){
+  const payload=photoBytes(ph.data);if(listed.has(payload))continue;listed.add(payload);
+  const img=document.createElement('img');img.className='p-tile';img.src=ph.data;img.alt=ph.name;
+  img.title=ph.name+' · Select, then choose a photo frame. Or drag it to a frame.';
+  img.draggable=true;img.tabIndex=0;img.setAttribute('role','button');img.setAttribute('aria-label','Select '+ph.name);
+  img.onclick=()=>{trayPick=ph.data;if(document.querySelector('.app').dataset.drawer==='tools')setDrawer('');toast('Photo selected. Choose a frame to place it.')};
+  img.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();img.click()}};
+  img.ondragstart=e=>{trayPick=null;e.dataTransfer.setData('application/x-citymom-photo',ph.id);e.dataTransfer.effectAllowed='copy'};
+  root.append(img);
+ }
+}
+let queuedUploads=Promise.resolve(),trayPick=null;
+function receiveFiles(files,target=null){
+ const picked=Array.from(files), generation=book;
+ queuedUploads=queuedUploads.then(()=>savePhotos(picked,target,generation)).catch(()=>toast('That photo could not be added. Please try again.'));
+}
+async function savePhotos(files,target,generation){
+ let added=0,reused=0,replaced=0,cropPage=null,cropSlot=null;
+ for(const file of files){
+  if(book!==generation)return;
   if(!/^image\/(png|jpe?g|webp|gif|bmp|avif|x-icon|vnd.microsoft.icon)$/i.test(file.type)){toast('Use a JPG, PNG, WebP or another supported photo.');continue}
   if(file.size>17*1024*1024){toast('Please use photos under 17 MB');continue}
-  try{const data=await new Promise((done,fail)=>{const r=new FileReader;r.onload=()=>done(r.result);r.onerror=fail;r.onabort=fail;r.readAsDataURL(file)});
-   if(generation!==book){toast('The photo was not added because another draft was opened.');return}
-   if(!changed){checkpoint();changed=true}photoTray.push({id:uid(),name:file.name,data});added++;
-   if(target){const page=book.pages.find(q=>q.id===target.pageId);if(page){page.photos[target.slot]=data;activePhoto=data}else toast('That page was removed. Your photo is in the tray.');target=null}
-  }catch(e){toast('That photo could not be read. Try a JPG or PNG.')}
+  let data;
+  try{data=await new Promise((done,fail)=>{const r=new FileReader();r.onload=()=>done(r.result);r.onerror=fail;r.onabort=fail;r.readAsDataURL(file)})}
+  catch{toast('That photo could not be read. Try a JPG or PNG.');continue}
+  if(book!==generation){toast('The photo wasn’t added because another draft was opened.');return}
+  let recorded=false;
+  const record=()=>{if(!recorded){checkpoint();recorded=true}};
+  const existing=samePhoto(data);
+  if(existing){data=existing.data;reused++}
+  else {
+   const match=photoTray.find(ph=>nameKey(ph.name)===nameKey(file.name));
+   if(match){
+    const choice=await askPhotoName(file.name);
+    if(book!==generation)return;
+    if(!['keep','replace'].includes(choice.choice))continue;
+    record();
+    if(choice.choice==='replace'){match.data=data;match.name=file.name;replaced++}
+    else {photoTray.push({id:uid(),name:choice.name,data});added++}
+   }
+   else {record();photoTray.push({id:uid(),name:file.name,data});added++}
+  }
+  if(target){
+   const pg=book.pages.find(q=>q.id===target.pageId),slot=target.slot;
+   if(pg){
+    if(pg.photos[slot]!==data){record();setFramePhoto(pg,slot,data)}
+    cropPage=pg;cropSlot=slot;
+   }else toast('That page was removed. Look for the photo in your photo tray.');
+   target=null;
+  }
  }
- if(changed){render();showTray();if(added)toast('Photo added to your journal')}
+ if(book!==generation)return;
+ if(added||replaced||cropPage){render();showTray()}
+ if(cropPage&&p()===cropPage&&!$('photoNameDialog').open)openPhotoCrop(cropPage,cropSlot,frameFor(cropSlot));
+ if(added||reused||replaced){
+  const parts=[];
+  if(added)parts.push(added===1?'Photo added':added+' photos added');
+  if(replaced)parts.push(replaced===1?'Photo replaced in tray':replaced+' photos replaced in tray');
+  if(reused)parts.push(reused===1?'Already in your photo tray; no duplicate added':reused+' duplicate photos skipped');
+  toast(parts.join(' · '));
+ }
 }
 $('framepicker').onchange=e=>{if(e.target.files?.length)receiveFiles(e.target.files,pendingSlot);e.target.value='';pendingSlot=null};
 $('begin').onclick=()=>{checkpoint();book.name=$('sname').value.trim();book.birthday=$('sbirthday').value;book.paper=$('spaper').value;book.pages[0].fields.coverfoot=book.name?book.name+"'s story, told with love":'a little book of you';$('start').classList.add('hide');render();tab('photos')};$('closestart').onclick=()=>{$('start').classList.add('hide')};$('editsettings').onclick=()=>{$('sname').value=book.name;$('sbirthday').value=book.birthday;$('spaper').value=book.paper;$('start').classList.remove('hide')};
@@ -1286,7 +1551,7 @@ document.addEventListener('click',e=>{
  checkpoint();const pg=p(),currently=!!pg.photos.main||!!field(pg,'showPhoto',false);
  if(currently&&pg.photos.main){
   if(!photoTray.some(x=>x.data===pg.photos.main))photoTray.push({id:uid(),name:'Favorite photo',data:pg.photos.main});
-  delete pg.photos.main;
+  delete pg.photos.main;clearFrameCrop(pg,'main');
  }
  pg.fields.showPhoto=!currently;render();if(activeTab==='photos')showTray();
 });
@@ -1388,7 +1653,7 @@ function sizePreview(){
 }
 function drawPreview(){
  const stage=$('previewStage'),pg=book.pages[previewIndex],c=pageCanvas(pg,previewIndex,true);
- $('previewFrame').replaceChildren(c);sizePreview();stage.scrollTop=0;stage.scrollLeft=0;
+ $('previewFrame').replaceChildren(c);paintPagePhotos(c,pg);sizePreview();stage.scrollTop=0;stage.scrollLeft=0;
  $('previewCount').textContent='Page '+(previewIndex+1)+' of '+book.pages.length;
  $('previewJump').value=String(previewIndex);
  $('previewPrev').disabled=previewIndex===0;$('previewNext').disabled=previewIndex===book.pages.length-1;
@@ -1437,7 +1702,7 @@ function setDrawer(drawer){
 }
 $('mobilePages').onclick=()=>setDrawer('pages');$('mobileTools').onclick=()=>setDrawer('tools');
 document.addEventListener('click',e=>{if(e.target.closest('[data-jump]')&&document.querySelector('.app').dataset.drawer==='pages')setDrawer('')},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('writePop').classList.contains('hide'))closeWriting();else if(!$('previewPop').classList.contains('hide')){closePreview();$('download').focus();}else setDrawer('')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('photoCrop').open||$('photoNameDialog').open)return; if(trayPick){trayPick=null;return} if(!$('writePop').classList.contains('hide'))closeWriting();else if(!$('previewPop').classList.contains('hide')){closePreview();$('download').focus();}else setDrawer('')}});
 function safeImage(v){return typeof v==='string'&&/^data:image\/(png|jpe?g|webp|gif|bmp|avif|x-icon|vnd.microsoft.icon);base64,[A-Za-z0-9+/=]+$/i.test(v)}
 function normalizeProject(s){
  if(!s||!Number.isInteger(s.version)||s.version<4||s.version>16||!s.book||!Array.isArray(s.book.pages)||!s.book.pages.length||s.book.pages.length>350)throw Error('Invalid book');
@@ -1455,6 +1720,12 @@ function normalizeProject(s){
   pg.month=bounds(q.month,0,11)??pg.month;pg.year=bounds(q.year,1900,2200)??pg.year;
   pg.memories=Object.fromEntries(Object.entries(q.memories||{}).filter(([k,v])=>/^\d{4}-\d{1,2}-\d{1,2}$/.test(k)&&typeof v==='string').map(([k,v])=>[k,str(v,80)]));
   pg.photos=Object.fromEntries(Object.entries(q.photos||{}).filter(([k,v])=>/^(main|m\d{1,2}|firstphoto[0-3])$/.test(k)&&safeImage(v)));
+  for(const slot of Object.keys(pg.photos)){
+   if(q.crops?.[slot]&&typeof q.crops[slot]==='object'){
+    const crop=cleanCrop(q.crops[slot]);
+    if(crop.x!==.5||crop.y!==.5||crop.z!==1){pg.crops??={};pg.crops[slot]=crop}
+   }
+  }
   pg.stickers=(Array.isArray(q.stickers)?q.stickers:[]).filter(t=>t&&STICKERS.includes(t.type)).map(t=>({id:uid(),type:t.type,x:bounds(t.x,0,679)??250,y:bounds(t.y,0,960)??440,w:bounds(t.w,25,500)??92,rotation:bounds(t.rotation,-360,360)??0}));
   pg.free=(Array.isArray(q.free)?q.free:[]).filter(t=>t&&typeof t.text==='string').map(t=>({id:uid(),text:t.text,x:bounds(t.x,0,679)??115,y:bounds(t.y,0,960)??460,width:bounds(t.width,20,650)??250,size:bounds(t.size,11,64)??20,font:font(t.font)}));
   // The new templates have different decoration positions. Never apply old indices to them.
@@ -1473,7 +1744,7 @@ function normalizeProject(s){
  const tray=(Array.isArray(s.photoTray)?s.photoTray:[]).filter(q=>q&&safeImage(q.data)).map(q=>({id:uid(),name:str(q.name,300),data:q.data}));
  return {book:next,photoTray:tray};
 }
-function applyProject(next){checkpoint();book=next.book;photoTray=next.photoTray;sel=0;lastRemoved=null;activePhoto=null;pendingSlot=null;$('restore').classList.add('hide');$('start').classList.add('hide');render();tab('photos')}
+function applyProject(next){checkpoint();book=next.book;photoTray=next.photoTray;sel=0;lastRemoved=null;trayPick=null;pendingSlot=null;$('restore').classList.add('hide');$('start').classList.add('hide');render();tab('photos')}
 function downloadJSON(){
  if(document.activeElement?.isContentEditable)document.activeElement.blur();
  const copy=JSON.parse(snapshot());
@@ -1624,7 +1895,7 @@ function makePrint(){
  const root=$('printroot');root.replaceChildren();const letter=book.paper==='letter',scale=letter?1.2:1.167;
  book.pages.forEach((pg,i)=>{
   const wrap=document.createElement('div');wrap.className='printed';wrap.style.width=letter?'8.5in':'210mm';wrap.style.height=letter?'11in':'297mm';
-  const c=pageCanvas(pg,i,true);c.style.transform='scale('+scale+')';wrap.append(c);root.append(wrap);
+  const c=pageCanvas(pg,i,true);c.style.transform='scale('+scale+')';wrap.append(c);root.append(wrap);paintPagePhotos(c,pg);
  });
  setPaperSize();return root;
 }
@@ -1658,6 +1929,7 @@ async function createBookPDF(progress=()=>{}){
  try{
   for(let i=0;i<pages.length;i++){
    const page=pages[i];root.replaceChildren(page);
+   await paintPagePhotos(page,book.pages[i],true);
    const w=page.offsetWidth,h=page.offsetHeight;
    // The original uses a fixed paper layout. Render one page at a time to cap memory use.
    const canvas=await html2canvas(page,{scale:4,backgroundColor:'#ffffff',width:w,height:h,windowWidth:Math.max(innerWidth,w+30),windowHeight:Math.max(innerHeight,h+30),scrollX:0,scrollY:0,logging:false,removeContainer:true,imageTimeout:7500});
