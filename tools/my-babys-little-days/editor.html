@@ -1118,6 +1118,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .layout-mark:is([data-layout=growth],[data-layout=calendar],[data-layout=firsts]) i{height:5px;background:repeating-linear-gradient(to right,#d6ac80 0 5px,transparent 5px 8px);border-radius:0}
 .layout-mark:is([data-layout=growth],[data-layout=calendar],[data-layout=firsts]) i:last-child{width:100%}
 @media(max-width:510px){.layout-choice-list{grid-template-columns:1fr}.layout-choice{min-height:57px}.page-layout-dialog{padding:12px}}
+
+.growth-spot{position:relative}
+.growth-remove{position:absolute;z-index:2;top:2px;right:2px;width:38px;height:38px;padding:0;border:1px solid #be987a;border-radius:50%;background:#fffdf8;color:#69452e;font:800 26px/1 'Nunito Sans',sans-serif;box-shadow:0 1px 3px #35201228}
+.growth-remove:hover,.growth-remove:focus-visible{background:#ffedcc}
+.growth-remove:focus-visible,.growth-tools button:focus-visible{outline:3px solid #8d6039;outline-offset:2px}
+.growth-tools{position:absolute;left:55px;width:496px;display:flex;flex-wrap:wrap;justify-content:center;gap:7px}
+.growth-tools button{min-height:36px;padding:5px 11px;border:1px solid #c5a181;border-radius:9px;background:#fffdf7;color:#60452c;font:800 14px/1.1 'Nunito Sans',sans-serif}
+.growth-tools button:hover{background:#fff0d1}
+@media print{.growth-tools,.growth-remove{display:none!important}}
 </style></head><body>
 <div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn" id="resumeDraft">Continue in this browser</button><button class="btn" id="replaceDraft">Keep this version</button><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
 <div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
@@ -1250,8 +1259,9 @@ function inside(pg, index=sel){let h='<div class="paper"><div class="in">';let g
  } else if(pg.type==='photo'){
   h+=`<div class="photo-paper" style="position:absolute;left:145px;top:36px;width:294px;height:281px"><div class="tape"></div>${photo(pg,'main',{width:'100%',height:'100%'},'Add your photo')}</div><div style="position:absolute;top:341px;left:36px;width:512px;display:flex;justify-content:space-between"><span class="badge-small">${optionalEd(pg,'date','Add a date')}</span><span class="badge-small">${optionalEd(pg,'age','Add age')}</span></div><div class="page-title photo-title">${ed(pg,'title',pg.title)}</div><div class="stitch qa-bodybox" style="position:absolute;left:36px;top:526px;width:512px;height:220px;padding:19px 22px;background:#fffdfa">${bodyMarkup(pg,'Write the story behind this photo…')}</div>`;
  } else if(pg.type==='growth'){
- h+=ornaments([['bear',22,12,78],['bow',260,745,84]]);h+=`<h1 class="page-title" style="padding-top:55px">${ed(pg,'title','Our Little Growth Journey')}</h1><div class="page-caption">${ed(pg,'subtitle','12 months of you')}</div><div style="position:absolute;top:187px;left:55px;width:496px;display:grid;grid-template-columns:repeat(3,1fr);gap:11px 13px">`;
- for(let i=0;i<12;i++)h+=`<div style="height:126px;background:white;border:1px solid #f0dfca;border-radius:10px;padding:6px;box-shadow:2px 3px 0 #f6e8d7">${photo(pg,'m'+i,{width:'100%',height:'91px'},'Add photo')}<div style="text-align:center;font:600 12px 'Fredoka';margin-top:4px">${ed(pg,'mcap'+i,i+' '+(i===1?'month':'months'))}</div></div>`;
+ const hidden=validGrowthSpots(pg.hiddenGrowthSpots);
+ h+=ornaments([['bear',22,12,78],['bow',260,745,84]]);h+=`<h1 class="page-title" style="padding-top:55px">${ed(pg,'title','Our Little Growth Journey')}</h1><div class="page-caption">${ed(pg,'subtitle',hidden.length?'little moments as you grow':'12 months of you')}</div><div data-growth-grid style="position:absolute;top:187px;left:55px;width:496px;display:grid;grid-template-columns:repeat(3,1fr);gap:11px 13px">`;
+ for(let i=0;i<12;i++)if(!hidden.includes(i))h+=`<div class="growth-spot" data-growth-spot="${i}" style="height:126px;background:white;border:1px solid #f0dfca;border-radius:10px;padding:6px;box-shadow:2px 3px 0 #f6e8d7">${photo(pg,'m'+i,{width:'100%',height:'91px'},'Add photo')}<div style="text-align:center;font:600 12px 'Fredoka';margin-top:4px">${ed(pg,'mcap'+i,i+' '+(i===1?'month':'months'))}</div></div>`;
  h+='</div>';
  } else if(pg.type==='calendar'){
  h+=ornaments([['rainbow',490,30,78],['duck',21,715,68]]);h+=`<h1 class="page-title" style="padding-top:48px">${ed(pg,'title','Little Calendar')}</h1><div class="page-caption">${ed(pg,'subtitle','a little record of big moments')}</div><div style="display:flex;justify-content:center;align-items:center;gap:25px;margin-top:35px"><button class="btn" data-monthmove="-1">←</button><span style="font:600 25px var(--caption-font)">${new Date(pg.year,pg.month,1).toLocaleString('en-US',{month:'long',year:'numeric'})}</span><button class="btn" data-monthmove="1">→</button></div><div style="position:absolute;top:265px;left:21px;width:566px" class="month-grid">`;
@@ -1458,7 +1468,53 @@ function askPhotoName(name){
   dialog.showModal();
  });
 }
-function wirePage(root,pg){root.querySelectorAll('.photo[data-slot]').forEach(frame=>wirePhotoFrame(frame,pg));root.querySelectorAll('[data-goto]').forEach(e=>e.onclick=()=>{sel=+e.dataset.goto;render()});root.querySelectorAll('[data-monthmove]').forEach(e=>e.onclick=()=>{checkpoint();pg.month+=+e.dataset.monthmove;if(pg.month>11){pg.month=0;pg.year++}if(pg.month<0){pg.month=11;pg.year--}render()});root.querySelectorAll('[data-day]').forEach(e=>e.onclick=()=>{recordDate=`${pg.year}-${pg.month}-${e.dataset.day}`;$('recordtitle').textContent=new Date(pg.year,pg.month,+e.dataset.day).toLocaleDateString('en-US',{dateStyle:'long'});$('recordtext').value=pg.memories[recordDate]||'';$('recordpop').classList.remove('hide')})}
+function validGrowthSpots(input){
+ return Array.isArray(input)?[...new Set(input.filter(i=>Number.isInteger(i)&&i>=0&&i<12))].sort((a,b)=>a-b):[];
+}
+function setGrowthSpots(pg,indices){
+ const valid=validGrowthSpots(indices);
+ if(valid.length)pg.hiddenGrowthSpots=valid;else delete pg.hiddenGrowthSpots;
+}
+function wireGrowthSpots(root,pg){
+ if(pg.type!=='growth')return;
+ const grid=root.querySelector('[data-growth-grid]');if(!grid)return;
+ const cards=[...grid.querySelectorAll('[data-growth-spot]')];
+ const hidden=validGrowthSpots(pg.hiddenGrowthSpots);
+ const visible=cards.map(card=>Number(card.dataset.growthSpot));
+ const empty=visible.filter(i=>!pg.photos['m'+i]);
+ const canHideEmpty=empty.length>0&&empty.length<visible.length;
+ function change(indices,focus,msg){
+  checkpoint();setGrowthSpots(pg,indices);render();
+  let next=null;
+  if(Number.isInteger(focus)){
+   const buttons=[...root.querySelectorAll('[data-hide-growth]')];
+   next=buttons.find(button=>Number(button.dataset.hideGrowth)>focus)||buttons.at(-1);
+  }else if(focus==='first')next=root.querySelector('[data-hide-growth]');
+  (next||root.querySelector('[data-restore-growth]'))?.focus({preventScroll:true});
+  toast(msg);
+ }
+ for(const card of cards){
+  const i=Number(card.dataset.growthSpot),button=document.createElement('button');
+  const label=field(pg,'mcap'+i,i+' '+(i===1?'month':'months'))||'photo '+(i+1);
+  button.type='button';button.className='growth-remove';button.textContent='×';
+  button.title='Remove photo spot';button.setAttribute('aria-label','Remove photo spot: '+label);
+  button.dataset.hideGrowth=String(i);
+  button.onclick=()=>change([...hidden,i],i,'Photo spot removed');
+  card.append(button);
+ }
+ if(!hidden.length&&!canHideEmpty)return;
+ const tools=document.createElement('div');tools.className='growth-tools';
+ const rows=Math.ceil(cards.length/3);
+ tools.style.top=187+rows*126+Math.max(rows-1,0)*11+12+'px';
+ function control(label,run){
+  const button=document.createElement('button');button.type='button';button.textContent=label;button.onclick=run;
+  tools.append(button);return button;
+ }
+ if(canHideEmpty)control('Hide empty photo spots',()=>change([...hidden,...empty],'restore','Empty photo spots hidden'));
+ if(hidden.length)control('Restore hidden spots',()=>change([],'first','All photo spots restored')).dataset.restoreGrowth='';
+ grid.after(tools);
+}
+function wirePage(root,pg){wireGrowthSpots(root,pg);root.querySelectorAll('.photo[data-slot]').forEach(frame=>wirePhotoFrame(frame,pg));root.querySelectorAll('[data-goto]').forEach(e=>e.onclick=()=>{sel=+e.dataset.goto;render()});root.querySelectorAll('[data-monthmove]').forEach(e=>e.onclick=()=>{checkpoint();pg.month+=+e.dataset.monthmove;if(pg.month>11){pg.month=0;pg.year++}if(pg.month<0){pg.month=11;pg.year--}render()});root.querySelectorAll('[data-day]').forEach(e=>e.onclick=()=>{recordDate=`${pg.year}-${pg.month}-${e.dataset.day}`;$('recordtitle').textContent=new Date(pg.year,pg.month,+e.dataset.day).toLocaleDateString('en-US',{dateStyle:'long'});$('recordtext').value=pg.memories[recordDate]||'';$('recordpop').classList.remove('hide')})}
 function dragOn(el,obj,root){let orig=null;el.onpointerdown=e=>{if(e.button!==0)return;if(e.target.closest('button'))return;if(e.target.isContentEditable)return;orig={ox:obj.x,oy:obj.y,sx:e.clientX,sy:e.clientY};el.setPointerCapture(e.pointerId);el.classList.add('selected');e.preventDefault()};el.onpointermove=e=>{if(!orig)return;const factor=root.getBoundingClientRect().width/680;obj.x=Math.round(Math.max(0,Math.min(615,orig.ox+(e.clientX-orig.sx)/factor)));obj.y=Math.round(Math.max(0,Math.min((book.paper==='a4'?961:880)-30,orig.oy+(e.clientY-orig.sy)/factor)));el.style.left=obj.x+'px';el.style.top=obj.y+'px'};el.onpointerup=el.onpointercancel=()=>{orig=null;checkCurrent();queueDraft();if(!el.classList.contains('floating'))el.classList.remove('selected')}}
 function mountSticker(root,s){const el=document.createElement('div');el.className='floating';el.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.w}px;transform:rotate(${Number(s.rotation)||0}deg)`;el.innerHTML=`<img src="${assetUrl(s.type)}" alt="Sticker ${s.type}"><button class="sticker-resize" type="button" title="Drag to resize">↘</button><button class="sticker-rotate" type="button" title="Drag to rotate">↻</button><button class="sticker-delete" type="button" title="Delete sticker" aria-label="Delete sticker">×</button>`;el.title='Click to select · drag to move · drag corner to resize · drag circular arrow to rotate';root.appendChild(el);dragOn(el,s,root);
 const rot=el.querySelector('.sticker-rotate');let rotateFrom=null;
@@ -1786,6 +1842,7 @@ function normalizeProject(s){
   pg.month=bounds(q.month,0,11)??pg.month;pg.year=bounds(q.year,1900,2200)??pg.year;
   pg.memories=Object.fromEntries(Object.entries(q.memories||{}).filter(([k,v])=>/^\d{4}-\d{1,2}-\d{1,2}$/.test(k)&&typeof v==='string').map(([k,v])=>[k,str(v,80)]));
   pg.photos=Object.fromEntries(Object.entries(q.photos||{}).filter(([k,v])=>/^(main|m\d{1,2}|firstphoto[0-3])$/.test(k)&&safeImage(v)));
+  if(pg.type==='growth')setGrowthSpots(pg,q.hiddenGrowthSpots);
   for(const slot of Object.keys(pg.photos)){
    if(q.crops?.[slot]&&typeof q.crops[slot]==='object'){
     const crop=cleanCrop(q.crops[slot]);
