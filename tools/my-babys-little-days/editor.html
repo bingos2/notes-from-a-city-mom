@@ -1098,10 +1098,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #photoNameError{color:#9c3426;min-height:1.4em;margin-bottom:4px;font-size:13px}
 @media(max-width:440px){.photo-dialog{padding:14px}.photo-dialog .btn{min-height:44px}.photo-dialog .crop-actions .photo-reset{margin-right:0}}
 @media print{.photo-dialog,#canvas .photo.has:after{display:none!important}}
+
+#addpage{width:100%;margin:0 0 9px;min-height:40px}
+.page-layout-dialog{width:min(calc(100% - 24px),660px)}
+.layout-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.layout-dialog-head .btn{flex:none}
+.layout-choice-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.layout-choice{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid #e3d3c4;border-radius:12px;padding:8px;background:#fff;color:#483228;min-height:66px;min-width:0}
+.layout-choice:where(:hover,:focus-visible){background:#fff5db;border-color:#ad8456}
+.layout-choice strong,.layout-choice small{display:block;line-height:1.25;overflow-wrap:anywhere}
+.layout-choice strong{font-size:14px}
+.layout-choice small{margin-top:3px;color:#6c5749;font-size:12px;font-weight:600}
+.layout-mark{width:32px;height:42px;border:1px solid #ccb29b;border-radius:4px;padding:5px 4px;flex:none;display:grid;gap:3px;background:#fff8eb;align-content:start}
+.layout-mark i{display:block;height:2px;background:#b1937a;border-radius:2px}
+.layout-mark i:last-child{width:70%}
+.layout-mark[data-layout=photo] i:first-child,.layout-mark[data-layout=cover] i:nth-child(2){height:15px;border:1px solid #ae8a66;background:#efd3a9}
+.layout-mark[data-layout=favorites] i{background:linear-gradient(to right,#be9c80 42%,transparent 42% 57%,#be9c80 57%)}
+.layout-mark:is([data-layout=growth],[data-layout=calendar],[data-layout=firsts]) i{height:5px;background:repeating-linear-gradient(to right,#d6ac80 0 5px,transparent 5px 8px);border-radius:0}
+.layout-mark:is([data-layout=growth],[data-layout=calendar],[data-layout=firsts]) i:last-child{width:100%}
+@media(max-width:510px){.layout-choice-list{grid-template-columns:1fr}.layout-choice{min-height:57px}.page-layout-dialog{padding:12px}}
 </style></head><body>
 <div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn" id="resumeDraft">Continue in this browser</button><button class="btn" id="replaceDraft">Keep this version</button><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
-<div class="workspace"><aside class="side"><h4>My book</h4><div id="thumbnails"></div><div class="side-actions"><button id="addpage" class="btn">+ Add page</button><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
+<div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
 <div class="start hide" id="start"><div class="start-card"><button type="button" id="closestart" class="close-start" aria-label="Close settings">×</button><div class="start-art"><div class="start-cover"><div class="big">My Baby's<br>Little Days</div><div style="font:600 12px 'Fredoka'">ordinary days, extraordinary love</div></div></div><div class="start-fields"><div class="hint">YOUR KEEPSAKE BOOK</div><h1>Let's make something lovely.</h1><p>Make a little book of memories to give your baby someday. You can change everything later.</p><label>Baby's name or nickname (optional)</label><input id="sname" placeholder="e.g. Charlie"><label>Baby's birthday (optional)</label><input type="date" id="sbirthday"><label>Paper size</label><select id="spaper"><option value="letter">US Letter · 8.5 × 11 in</option><option value="a4">A4 · 210 × 297 mm</option></select><button id="begin" class="btn yellow">Create my journal →</button><div class="hint" style="margin-top:16px">Your photos stay in this browser while editing.<br>Download your project file to keep working later.</div></div></div></div>
+<dialog id="pageLayoutDialog" class="photo-dialog page-layout-dialog" aria-labelledby="pageLayoutTitle" aria-describedby="pageLayoutHint">
+ <div class="layout-dialog-head">
+  <div><h2 id="pageLayoutTitle">Add a page</h2><p id="pageLayoutHint">Choose a layout. You can add more than one of the same kind.</p></div>
+  <button type="button" class="btn" id="layoutCancel" autofocus>Cancel</button>
+ </div>
+ <div id="pageLayouts" class="layout-choice-list"></div>
+</dialog>
 <dialog id="photoCrop" class="photo-dialog" aria-labelledby="cropTitle" aria-describedby="cropHint">
  <h2 id="cropTitle">Adjust photo crop</h2>
  <p id="cropHint">Drag the photo to choose what shows in the frame. Use the slider to zoom.</p>
@@ -1150,7 +1176,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 function assetUrl(id){return window.__NCFM_ASSETS?.[id]||('assets/'+id+'.png')}
 const $=id=>document.getElementById(id), uid=()=>Math.random().toString(36).slice(2,10), esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const STICKERS=["bottle","bunny-moon","heart","rainbow","sock-single","socks-blue","socks-pink","car-yellow","doll-pink","storybook","elephant","puppy","kitten","dinosaur","star","baby-pillow","baby-blanket","rice-cracker","bread","baby-spoon","baby-bowl","baby-water-bottle"];
-const BASE=[['cover','My Baby’s Little Days'],['toc','Table of Contents'],['note','A Little Note for Today'],['photo','The Story Behind This Photo'],['favorites','Little Favorites'],['growth','Our Little Growth Journey'],['calendar','Little Calendar'],['letter','A Letter to You'],['note','The Ordinary Days'],['photo','Our Little Adventure'],['firsts','Little Firsts'],['favorites','Things That Make You Smile'],['note','A Funny Little Moment'],['photo','A Day in Pictures'],['letter','What I Want You to Know'],['calendar','Little Calendar'],['growth','How You Have Grown'],['note','Something New'],['photo','A Moment Worth Keeping'],['letter','With All My Love']];
+const BASE=[
+ ['cover','My Baby’s Little Days','Cover','A name and a favorite photo.'],
+ ['toc','Table of Contents','Table of contents','Page numbers update as your book grows.'],
+ ['note','A Little Note for Today','Little note','A few lines about an everyday moment.'],
+ ['photo','The Story Behind This Photo','Photo story','A photo and the memory behind it.'],
+ ['favorites','Little Favorites','Little favorites','Favorite foods, toys, songs and books.'],
+ ['growth','Our Little Growth Journey','Growth journal','Twelve little photo spots.'],
+ ['calendar','Little Calendar','Calendar','A month of small milestones.'],
+ ['firsts','Little Firsts','Little firsts','First smiles, steps and more.'],
+ ['letter','A Letter to You','Letter','A page for words you want to keep.']
+];
 function makePage(type,title){return {hiddenDecorations:[],id:uid(),type,title,subtitle:type==='cover'?'ordinary days, extraordinary love':'',body:'',fields:{},photos:{},stickers:[],free:[],month:new Date().getMonth(),year:new Date().getFullYear(),memories:{},style:{}}}
 let book={name:'',birthday:'',paper:'letter',font:'DM Serif Display',captionFont:'Caveat',bodyFont:'Nunito Sans',titleSize:36,captionSize:21,bodySize:19,pages:BASE.map(([t,n])=>makePage(t,n))},sel=0,photoTray=[],lastRemoved=null,activeTab='photos',pendingSlot=null,dragging=null,recordDate=null,focusedText=null;
 // Journal undo stack. Each checkpoint is a full editable book snapshot, not merely a deleted page.
@@ -1184,7 +1220,7 @@ document.addEventListener('keydown',e=>{
 // Capture the pre-edit state. Non-editing clicks do not create Undo steps.
 document.addEventListener('pointerdown',e=>{
  const target=e.target;
- if(target.closest('#canvas .floating,#canvas .floating-text,#canvas .decoration-delete,#tools [data-applyall],#tools .st-btn,#addpage,#delete,#duplicate,#restore,#recordsave'))checkpoint();
+ if(target.closest('#canvas .floating,#canvas .floating-text,#canvas .decoration-delete,#tools [data-applyall],#tools .st-btn,#delete,#duplicate,#restore,#recordsave'))checkpoint();
 },true);
 document.addEventListener('pointerup',()=>{queueDraft();checkCurrent()},true);
 document.addEventListener('focusin',e=>{
@@ -1498,7 +1534,36 @@ async function savePhotos(files,target,generation){
 }
 $('framepicker').onchange=e=>{if(e.target.files?.length)receiveFiles(e.target.files,pendingSlot);e.target.value='';pendingSlot=null};
 $('begin').onclick=()=>{checkpoint();book.name=$('sname').value.trim();book.birthday=$('sbirthday').value;book.paper=$('spaper').value;book.pages[0].fields.coverfoot=book.name?book.name+"'s story, told with love":'a little book of you';$('start').classList.add('hide');render();tab('photos')};$('closestart').onclick=()=>{$('start').classList.add('hide')};$('editsettings').onclick=()=>{$('sname').value=book.name;$('sbirthday').value=book.birthday;$('spaper').value=book.paper;$('start').classList.remove('hide')};
-$('prev').onclick=()=>{sel--;render()};$('next').onclick=()=>{sel++;render()};$('zoom').onchange=fit;window.addEventListener('resize',fit);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));$('addpage').onclick=()=>{checkpoint();book.pages.splice(sel+1,0,makePage('note','A Little Note for Today'));sel++;render()};$('duplicate').onclick=()=>{checkpoint();let np=JSON.parse(JSON.stringify(p()));np.id=uid();book.pages.splice(sel+1,0,np);sel++;render()};$('delete').onclick=()=>{checkpoint();if(book.pages.length===1){toast('Keep at least one page');return}lastRemoved={page:book.pages.splice(sel,1)[0],at:sel};sel=Math.min(sel,book.pages.length-1);$('restore').classList.remove('hide');render();toast('Page deleted. Undo is available.')};$('restore').onclick=()=>{if(!lastRemoved)return;book.pages.splice(lastRemoved.at,0,lastRemoved.page);sel=lastRemoved.at;lastRemoved=null;$('restore').classList.add('hide');render()};$('recordsave').onclick=()=>{checkpoint();const v=Array.from($('recordtext').value.trim()).slice(0,18).join('');if(v)p().memories[recordDate]=v;else delete p().memories[recordDate];$('recordpop').classList.add('hide');render()};$('recordcancel').onclick=()=>$('recordpop').classList.add('hide');
+$('prev').onclick=()=>{sel--;render()};$('next').onclick=()=>{sel++;render()};$('zoom').onchange=fit;window.addEventListener('resize',fit);document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));$('duplicate').onclick=()=>{checkpoint();let np=JSON.parse(JSON.stringify(p()));np.id=uid();book.pages.splice(sel+1,0,np);sel++;render()};$('delete').onclick=()=>{checkpoint();if(book.pages.length===1){toast('Keep at least one page');return}lastRemoved={page:book.pages.splice(sel,1)[0],at:sel};sel=Math.min(sel,book.pages.length-1);$('restore').classList.remove('hide');render();toast('Page deleted. Undo is available.')};$('restore').onclick=()=>{if(!lastRemoved)return;book.pages.splice(lastRemoved.at,0,lastRemoved.page);sel=lastRemoved.at;lastRemoved=null;$('restore').classList.add('hide');render()};$('recordsave').onclick=()=>{checkpoint();const v=Array.from($('recordtext').value.trim()).slice(0,18).join('');if(v)p().memories[recordDate]=v;else delete p().memories[recordDate];$('recordpop').classList.add('hide');render()};$('recordcancel').onclick=()=>$('recordpop').classList.add('hide');
+function openPageLayouts(){
+ const dialog=$('pageLayoutDialog');
+ if(dialog.open)return;
+ const options=BASE.filter(([type])=>!['cover','toc'].includes(type)||!book.pages.some(pg=>pg.type===type));
+ $('pageLayouts').innerHTML=options.map(([type,,label,description])=>`<button class="layout-choice" type="button" data-page-layout="${type}"><span aria-hidden="true" class="layout-mark" data-layout="${type}"><i></i><i></i><i></i><i></i></span><span><strong>${label}</strong><small>${description}</small></span></button>`).join('');
+ dialog.showModal();
+}
+function addPageLayout(type){
+ if(!$('pageLayoutDialog').open)return;
+ const template=BASE.find(([kind])=>kind===type);if(!template)return;
+ if(book.pages.length>=350){toast('This book already has the maximum number of pages.');return}
+ const existing=book.pages.some(pg=>pg.type===type);
+ if(existing&&['toc','cover'].includes(type))return;
+ $('pageLayoutDialog').close();checkpoint();
+ const pg=makePage(type,template[1]);
+ let at=sel+1;
+ if(type==='cover'){
+  at=0;
+  if(book.name)pg.fields.coverfoot=book.name+"'s story, told with love";
+ }else if(type==='toc')at=book.pages[0]?.type==='cover'?1:0;
+ else while(book.pages[at]?.type==='toc')at++;
+ book.pages.splice(at,0,pg);sel=at;render();
+ if(document.querySelector('.app').dataset.drawer==='pages'){setDrawer('');$('mobilePages').focus({preventScroll:true})}
+ else $('thumbnails').querySelector('.thumb.active')?.focus();
+ toast('Page added');
+}
+$('addpage').onclick=openPageLayouts;
+$('layoutCancel').onclick=()=>$('pageLayoutDialog').close();
+$('pageLayouts').onclick=e=>{const option=e.target.closest('[data-page-layout]');if(option)addPageLayout(option.dataset.pageLayout)};
 const TOC_CAPACITY=12;
 const PAGE_TYPES=new Set(BASE.map(x=>x[0]));
 const KNOWN_FONTS=['Caveat','Fredoka','Lilita One','Nunito Sans','DM Sans','Quicksand','Fraunces','DM Serif Display','Lora','Arial'];
@@ -1702,7 +1767,7 @@ function setDrawer(drawer){
 }
 $('mobilePages').onclick=()=>setDrawer('pages');$('mobileTools').onclick=()=>setDrawer('tools');
 document.addEventListener('click',e=>{if(e.target.closest('[data-jump]')&&document.querySelector('.app').dataset.drawer==='pages')setDrawer('')},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('photoCrop').open||$('photoNameDialog').open)return; if(trayPick){trayPick=null;return} if(!$('writePop').classList.contains('hide'))closeWriting();else if(!$('previewPop').classList.contains('hide')){closePreview();$('download').focus();}else setDrawer('')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('photoCrop').open||$('photoNameDialog').open||$('pageLayoutDialog').open)return; if(trayPick){trayPick=null;return} if(!$('writePop').classList.contains('hide'))closeWriting();else if(!$('previewPop').classList.contains('hide')){closePreview();$('download').focus();}else setDrawer('')}});
 function safeImage(v){return typeof v==='string'&&/^data:image\/(png|jpe?g|webp|gif|bmp|avif|x-icon|vnd.microsoft.icon);base64,[A-Za-z0-9+/=]+$/i.test(v)}
 function normalizeProject(s){
  if(!s||!Number.isInteger(s.version)||s.version<4||s.version>16||!s.book||!Array.isArray(s.book.pages)||!s.book.pages.length||s.book.pages.length>350)throw Error('Invalid book');
@@ -2235,6 +2300,6 @@ $('download').onclick=openPreview;
 for(const id of ['closecheckout','closecheckoutx'])$(id).onclick=()=>{$('checkoutpop').classList.add('hide');$('download').focus()};
 
 window.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='p'){e.preventDefault();openPreview()}});window.addEventListener('afterprint',()=>{$('printroot').innerHTML='';$('print-papersize')?.remove()});
-// A ready-made 20-page journal is shown immediately; setup is optional.
+// Show one of each layout in a brand-new journal; saved drafts keep their own pages.
 render();tab('photos');initDraft();
 </script></body></html>
