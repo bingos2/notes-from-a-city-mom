@@ -1156,15 +1156,13 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 /* Editor controls are attached after composing the page; print/preview never receive them. */
 .photo-frame-tools{position:absolute;left:55px;top:137px;width:496px;min-height:38px;display:flex;flex-wrap:wrap;gap:5px 7px;align-items:center;justify-content:center;z-index:3}
-.photo-frame-tools.for-firsts{left:33px;top:170px;width:543px}
 .photo-frame-tools button{min-height:36px;border:1px solid #c5a181;border-radius:9px;background:#fffdf7;color:#60452c;padding:4px 9px;font:800 14px/1.1 'Nunito Sans',sans-serif}
 .photo-frame-tools button:hover:not(:disabled){background:#fff0d1}
 .photo-frame-tools button:focus-visible,.photo-frame-grip:focus-visible{outline:3px solid #8d6039;outline-offset:1px}
-.photo-frame-tools button:disabled{opacity:.55;cursor:default}
 .photo-frame-wrap{position:relative}
 .photo-frame-grip{position:absolute;z-index:3;right:-11px;bottom:-11px;width:44px;height:44px;border:0;border-radius:50%;padding:0;background:transparent;cursor:nwse-resize;touch-action:none;display:grid;place-items:center}
 .photo-frame-grip::after{content:'↘';width:24px;height:24px;display:grid;place-items:center;border:1px solid #caa477;border-radius:50%;background:#fffdf5;color:#63452e;font:800 16px/1 'Nunito Sans',sans-serif;pointer-events:none;box-shadow:0 1px 4px #63452e23}
-.photo-frame-grip:hover::after,.photo-frame-grip:focus-visible::after,.photo-frame-grip[aria-pressed=true]::after{background:#ffe5b7;border-color:#a37447}
+.photo-frame-grip:hover::after,.photo-frame-grip:focus-visible::after{background:#ffe5b7;border-color:#a37447}
 .photo-frame-grid{align-items:start}
 .photo-frame-grid.sized-frames>*{justify-self:start;min-width:0}
 .photo-frame-grid.sized-frames .photo-frame-label{overflow-wrap:anywhere}
@@ -1580,11 +1578,10 @@ function photoFrameCellStyle(cfg,slot,originalW,originalH){
  const size=cfg.frames[slot];
  return 'width:'+(size.w+cfg.overW)+'px;min-height:'+(size.h+cfg.overH)+'px';
 }
-let selectedFramePage=null,selectedFrameSlot=null;
-function resizeFramesToolbar(root,pg,grid,cfg){
+function resizeFramesToolbar(root,grid){
  let tools=root.querySelector('.photo-frame-tools');
  if(tools)return tools;
- tools=document.createElement('div');tools.className='photo-frame-tools'+(cfg.growth?'':' for-firsts');
+ tools=document.createElement('div');tools.className='photo-frame-tools';
  tools.setAttribute('role','group');tools.setAttribute('aria-label','Photo layout tools');grid.before(tools);
  return tools;
 }
@@ -1595,34 +1592,10 @@ function wirePhotoFrameSizes(root,pg){
  if(!FRAME_SLOT_RULES[pg.type])return;
  const grid=root.querySelector('[data-photo-frame-grid]');if(!grid)return;
  const initial=photoFrameConfig(pg);
- if(selectedFramePage!==pg.id){selectedFramePage=pg.id;selectedFrameSlot=null;}
- if(!initial.slots.includes(selectedFrameSlot))selectedFrameSlot=null;
- const tools=resizeFramesToolbar(root,pg,grid,initial);
  function focusButton(sel){root.querySelector(sel)?.focus({preventScroll:true});}
  function commit(sizes,focusSlot){
   checkpoint();pg.photoFrameSizes=validPhotoFrameSizes(pg.type,sizes);render();
   focusButton('[data-resize-photo="'+focusSlot+'"]');
- }
- const match=appendFrameControl(tools,'Match photo sizes',()=>{
-  const cfg=photoFrameConfig(pg);
-  const slot=selectedFrameSlot||cfg.slots[0];if(!slot||!cfg.rows)return;
-  const sample=cfg.frames[slot],size={w:sample.w,h:Math.min(sample.h,Math.floor(cfg.budget/cfg.rows))};
-  const sizes={...pg.photoFrameSizes};for(const slot of cfg.slots)sizes[slot]=size;
-  checkpoint();pg.photoFrameSizes=sizes;render();focusButton('[data-match-photo-sizes]');toast('Photo frames now match on this page.');
- });
- match.dataset.matchPhotoSizes='';
- match.disabled=initial.slots.length<2;
- match.title='Match all visible photo frames to the selected frame';
- if(initial.growth&&initial.slots.length&&initial.slots.length<=6){
-  const larger=appendFrameControl(tools,initial.roomy?'Use compact grid':'Use larger grid',()=>{
-   checkpoint();if(pg.growthFrameLayout==='roomy')delete pg.growthFrameLayout;else pg.growthFrameLayout='roomy';
-   render();focusButton('[data-grow-photo-grid]');
-  });
-  larger.dataset.growPhotoGrid='';
- }
- function select(slot){
-  selectedFrameSlot=slot;
-  for(const item of grid.querySelectorAll('[data-resize-photo]'))item.setAttribute('aria-pressed',String(item.dataset.resizePhoto===slot));
  }
  function applyLive(cfg){
   grid.classList.toggle('sized-frames',cfg.custom);
@@ -1649,13 +1622,12 @@ function wirePhotoFrameSizes(root,pg){
   grip.type='button';grip.className='photo-frame-grip';grip.dataset.resizePhoto=slot;
   const n=initial.slots.indexOf(slot)+1;
   grip.setAttribute('aria-label','Resize photo frame '+n+'. Use arrow keys to resize.');
-  grip.setAttribute('aria-pressed',String(selectedFrameSlot===slot));
   grip.title='Drag to resize photo frame';wrap.append(grip);
-  grip.onclick=e=>{e.stopPropagation();select(slot);};
+  grip.onclick=e=>e.stopPropagation();
   grip.onkeydown=e=>{
    const offsets={ArrowLeft:[-8,0],ArrowRight:[8,0],ArrowUp:[0,-8],ArrowDown:[0,8]};
    if(!offsets[e.key])return;
-   e.preventDefault();e.stopPropagation();select(slot);
+   e.preventDefault();e.stopPropagation();
    const cfg=photoFrameConfig(pg),old=cfg.frames[slot],w=frame.offsetWidth,h=frame.offsetHeight,delta=offsets[e.key];
    const next=candidate(cfg,slot,w+delta[0],h+delta[1]);
    if(next.w!==old.w||next.h!==old.h)commit({...pg.photoFrameSizes,[slot]:next},slot);
@@ -1663,7 +1635,7 @@ function wirePhotoFrameSizes(root,pg){
   let drag=null;
   grip.onpointerdown=e=>{
    if(e.button!==0||!e.isPrimary)return;
-   e.preventDefault();e.stopPropagation();select(slot);grip.focus({preventScroll:true});
+   e.preventDefault();e.stopPropagation();grip.focus({preventScroll:true});
    const cfg=photoFrameConfig(pg),rect=root.getBoundingClientRect(),w=frame.offsetWidth,h=frame.offsetHeight;
    drag={id:e.pointerId,x:e.clientX,y:e.clientY,w,h,cfg,sx:root.clientWidth/rect.width,sy:root.clientHeight/rect.height};
    grip.setPointerCapture(e.pointerId);
@@ -1720,7 +1692,7 @@ function wireGrowthSpots(root,pg){
   card.append(button);
  }
  if(!hidden.length&&!canHideEmpty)return;
- const tools=resizeFramesToolbar(root,pg,grid,photoFrameConfig(pg));tools.classList.add('growth-tools');
+ const tools=resizeFramesToolbar(root,grid);tools.classList.add('growth-tools');
  if(canHideEmpty)appendFrameControl(tools,'Hide empty photo spots',()=>change([...hidden,...empty],'restore','Empty photo spots hidden'));
  if(hidden.length)appendFrameControl(tools,'Restore hidden spots',()=>change([],'first','All photo spots restored')).dataset.restoreGrowth='';
 }
