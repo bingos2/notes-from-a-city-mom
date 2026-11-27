@@ -44,6 +44,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/journal-invite",
+      "destination": "/api/journal-checkout?journalRoute=invite"
+    },
+    {
       "source": "/newsletters/why-does-my-toddler-scream-so-much",
       "destination": "/api/screaming-newsletter"
     },
