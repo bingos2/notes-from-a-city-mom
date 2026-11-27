@@ -1133,11 +1133,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #canvas .fav-ans{cursor:text}
 #canvas .free-copy{min-height:20px;outline:none;white-space:pre-wrap;overflow-wrap:anywhere}
 #canvas .floating-text.is-editing{cursor:text;touch-action:auto}
-#canvas .free-actions{display:none;position:absolute;right:0;bottom:100%;gap:3px;padding:3px;border-radius:7px;background:#fffaf0;box-shadow:0 1px 4px #452d2538}
-#canvas .floating-text.free-active>.free-actions,#canvas .floating-text:focus-within>.free-actions{display:flex}
-#canvas .floating-text.free-near-top>.free-actions{bottom:auto;top:100%}
-#canvas .free-actions button{min-height:35px;border:1px solid #dabb92;background:white;color:#60432d;border-radius:6px;padding:3px 8px;font:800 14px/1 'Nunito Sans',sans-serif}
-#canvas .free-actions button:hover{background:#ffedc7}
+#canvas .free-actions{display:none;position:absolute;right:-17px;top:-17px;z-index:1}
+#canvas .floating-text.free-active>.free-actions,#canvas .floating-text:focus-within>.free-actions{display:block}
+#canvas .free-actions button{position:relative;display:grid;place-items:center;isolation:isolate;width:40px;height:40px;border:0;padding:0;background:transparent;color:#67452f;font:800 16px/1 'Nunito Sans',sans-serif}
+#canvas .free-actions button::before{content:'';position:absolute;z-index:-1;inset:8px;border:1px solid #d1ad84;border-radius:50%;background:#fffdf7}
+#canvas .free-actions button:is(:hover,:focus-visible)::before{background:#ffecc4;border-color:#b98b57}
+#canvas .free-actions button:focus-visible{outline:2px solid #956637;outline-offset:-8px;border-radius:50%}
 #canvas .floating-text.free-active,#canvas .floating-text:focus-visible{border-color:#bc8b50;background:#fffdf5}
 @media print{#canvas .free-actions{display:none!important}}
 </style></head><body>
@@ -1591,7 +1592,6 @@ function mountFree(root,t){
  };
  copy.oninput=persist;
  copy.onblur=()=>{if(copy.isContentEditable){persist();copy.removeAttribute('contenteditable');copy.removeAttribute('role');copy.removeAttribute('aria-label');el.classList.remove('is-editing')}};
- el.classList.toggle('free-near-top',t.y<44);
  let drag=null;
  el.onpointerdown=e=>{
   if(e.button!==0||!e.isPrimary||e.target.closest('button')||(copy.isContentEditable&&copy.contains(e.target)))return;
@@ -1605,7 +1605,7 @@ function mountFree(root,t){
   const dx=e.clientX-drag.sx,dy=e.clientY-drag.sy;if(!drag.moved&&Math.hypot(dx,dy)<4)return;
   if(!drag.moved){checkpoint();drag.moved=true}
   Object.assign(t,boundedFreePosition(root,t,drag.x+dx*drag.w,drag.y+dy*drag.h,el.offsetHeight));
-  el.style.left=t.x+'px';el.style.top=t.y+'px';el.classList.toggle('free-near-top',t.y<44);
+  el.style.left=t.x+'px';el.style.top=t.y+'px';
  };
  el.onpointerup=e=>{if(drag?.id!==e.pointerId)return;if(!drag.moved)startEditing();};
  el.onlostpointercapture=()=>{if(drag?.moved){checkCurrent();queueDraft()}drag=null};
