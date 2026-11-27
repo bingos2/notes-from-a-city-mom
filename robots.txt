@@ -1,17 +1,21 @@
 User-agent: OAI-SearchBot
-Allow: /
 Disallow: /api/
+Allow: /shop
+Allow: /baby-memory-book-prompts
 
 User-agent: Claude-SearchBot
-Allow: /
 Disallow: /api/
+Allow: /shop
+Allow: /baby-memory-book-prompts
 
 User-agent: Claude-User
-Allow: /
 Disallow: /api/
+Allow: /shop
+Allow: /baby-memory-book-prompts
 
 User-agent: *
-Allow: /
 Disallow: /api/
+Allow: /shop
+Allow: /baby-memory-book-prompts
 
 Sitemap: https://www.citymomnotes.com/sitemap.xml
