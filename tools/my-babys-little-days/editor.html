@@ -1131,13 +1131,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .canvas .fav-answer{display:block;min-height:20px;white-space:pre-wrap;overflow-wrap:anywhere}
 #canvas .fav-answer{cursor:text}
 #canvas .fav-ans{cursor:text}
-#freePlacement{margin:0 auto 8px;width:min(100%,680px);padding:7px 9px;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px 8px;border:1px solid #d9b97a;border-radius:9px;background:#fff5d9;color:#513c2d;font-size:13px;font-weight:800}
-#freePlacement:not([hidden]){display:flex}
-#freePlacement .btn{padding:5px 8px;min-height:30px}
-#canvas.placing-free,#canvas.placing-free *{cursor:crosshair!important}
-#canvas.placing-free *{pointer-events:none!important}
 #canvas .free-copy{min-height:20px;outline:none;white-space:pre-wrap;overflow-wrap:anywhere}
-#canvas .free-copy:empty::before{content:'Type here…';color:#8c6d50;pointer-events:none}
 #canvas .floating-text.is-editing{cursor:text;touch-action:auto}
 #canvas .free-actions{display:none;position:absolute;right:0;bottom:100%;gap:3px;padding:3px;border-radius:7px;background:#fffaf0;box-shadow:0 1px 4px #452d2538}
 #canvas .floating-text.free-active>.free-actions,#canvas .floating-text:focus-within>.free-actions{display:flex}
@@ -1145,10 +1139,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #canvas .free-actions button{min-height:35px;border:1px solid #dabb92;background:white;color:#60432d;border-radius:6px;padding:3px 8px;font:800 14px/1 'Nunito Sans',sans-serif}
 #canvas .free-actions button:hover{background:#ffedc7}
 #canvas .floating-text.free-active,#canvas .floating-text:focus-visible{border-color:#bc8b50;background:#fffdf5}
-@media print{#freePlacement,#canvas .free-actions{display:none!important}}
+@media print{#canvas .free-actions{display:none!important}}
 </style></head><body>
 <div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn" id="resumeDraft">Continue in this browser</button><button class="btn" id="replaceDraft">Keep this version</button><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
-<div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div id="freePlacement" hidden><span role="status">Click or tap the page to place your text.</span><button class="btn" type="button" id="placeFreeCenter">Place in the middle</button><button class="btn" type="button" id="cancelFreePlacement">Cancel</button></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
+<div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
 <div class="start hide" id="start"><div class="start-card"><button type="button" id="closestart" class="close-start" aria-label="Close settings">×</button><div class="start-art"><div class="start-cover"><div class="big">My Baby's<br>Little Days</div><div style="font:600 12px 'Fredoka'">ordinary days, extraordinary love</div></div></div><div class="start-fields"><div class="hint">YOUR KEEPSAKE BOOK</div><h1>Let's make something lovely.</h1><p>Make a little book of memories to give your baby someday. You can change everything later.</p><label>Baby's name or nickname (optional)</label><input id="sname" placeholder="e.g. Charlie"><label>Baby's birthday (optional)</label><input type="date" id="sbirthday"><label>Paper size</label><select id="spaper"><option value="letter">US Letter · 8.5 × 11 in</option><option value="a4">A4 · 210 × 297 mm</option></select><button id="begin" class="btn yellow">Create my journal →</button><div class="hint" style="margin-top:16px">Your photos stay in this browser while editing.<br>Download your project file to keep working later.</div></div></div></div>
 <dialog id="pageLayoutDialog" class="photo-dialog page-layout-dialog" aria-labelledby="pageLayoutTitle" aria-describedby="pageLayoutHint">
  <div class="layout-dialog-head">
@@ -1310,7 +1304,7 @@ function applyHiddenDecorations(root,pg,editable){
  });
 }
 function fitLongPhotoTitle(root,pg){if(pg.type!=='photo')return;const title=root.querySelector('.page-title');if(!title)return;const text=title.querySelector('.ed');if(!text)return;const max=title.clientWidth-4;let size=styleFor(pg).titleSize;while(text.scrollWidth>max && size>19){size-=1;title.style.fontSize=size+'px'}}
-function render(){if(freePlacementPage&&freePlacementPage!==p())clearFreePlacement();$('paperBackground').value=book.background==='white'?'white':'cream';syncToc();if(sel>=book.pages.length)sel=book.pages.length-1;if(sel<0)sel=0;const c=$('canvas');c.classList.toggle('a4',book.paper==='a4');applyPageStyle(c,p());c.innerHTML=inside(p());applyHiddenDecorations(c,p(),true);c.querySelectorAll('.ed').forEach(el=>{el.oninput=()=>{if(el.dataset.key==='body'){p().body=readEditable(el);updateNoteMode(c,p())}else p().fields[el.dataset.key]=readEditable(el);checkCurrent();queueDraft()};el.onblur=()=>{if(el.hasAttribute('data-placeholder')&&!readEditable(el).trim())el.replaceChildren();thumb();checkCurrent()}});for(const s of p().stickers.filter(s=>STICKERS.includes(s.type)))mountSticker(c,s);for(const f of p().free)mountFree(c,f);wirePage(c,p());paintPagePhotos(c,p());thumb();$('bookstats').textContent=`${book.pages.length} pages  ·  ${book.paper==='a4'?'A4':'US Letter'}`;$('duplicate').disabled=!!p().generatedToc;$('delete').disabled=!!p().generatedToc;$('counter').textContent=`${sel+1} / ${book.pages.length}`;$('pgtitle').textContent=p().title;$('prev').disabled=sel===0;$('next').disabled=sel===book.pages.length-1;if(activeTab==='text' && $('font')){const ps=styleFor(p());[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont'],['titleSize','titleSize'],['captionSize','captionSize'],['bodySize','bodySize']].forEach(([id,key])=>{const el=$(id);if(el)el.value=ps[key]})}fit();checkCurrent();queueDraft()}
+function render(){$('paperBackground').value=book.background==='white'?'white':'cream';syncToc();if(sel>=book.pages.length)sel=book.pages.length-1;if(sel<0)sel=0;const c=$('canvas');c.classList.toggle('a4',book.paper==='a4');applyPageStyle(c,p());c.innerHTML=inside(p());applyHiddenDecorations(c,p(),true);c.querySelectorAll('.ed').forEach(el=>{el.oninput=()=>{if(el.dataset.key==='body'){p().body=readEditable(el);updateNoteMode(c,p())}else p().fields[el.dataset.key]=readEditable(el);checkCurrent();queueDraft()};el.onblur=()=>{if(el.hasAttribute('data-placeholder')&&!readEditable(el).trim())el.replaceChildren();thumb();checkCurrent()}});for(const s of p().stickers.filter(s=>STICKERS.includes(s.type)))mountSticker(c,s);for(const f of p().free)mountFree(c,f);wirePage(c,p());paintPagePhotos(c,p());thumb();$('bookstats').textContent=`${book.pages.length} pages  ·  ${book.paper==='a4'?'A4':'US Letter'}`;$('duplicate').disabled=!!p().generatedToc;$('delete').disabled=!!p().generatedToc;$('counter').textContent=`${sel+1} / ${book.pages.length}`;$('pgtitle').textContent=p().title;$('prev').disabled=sel===0;$('next').disabled=sel===book.pages.length-1;if(activeTab==='text' && $('font')){const ps=styleFor(p());[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont'],['titleSize','titleSize'],['captionSize','captionSize'],['bodySize','bodySize']].forEach(([id,key])=>{const el=$(id);if(el)el.value=ps[key]})}fit();checkCurrent();queueDraft()}
 // Store the crop separately from the original. The same geometry draws the editor, preview and PDF.
 const DEFAULT_CROP=Object.freeze({x:.5,y:.5,z:1});
 const cropClamp=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math.max(min,value)):fallback;
@@ -1540,17 +1534,6 @@ const rot=el.querySelector('.sticker-rotate');let rotateFrom=null;
 rot.onpointerdown=e=>{e.preventDefault();e.stopPropagation();checkpoint();const rect=el.getBoundingClientRect();rotateFrom={centerX:rect.left+rect.width/2,centerY:rect.top+rect.height/2,initial:Number(s.rotation)||0,startAngle:Math.atan2(e.clientY-(rect.top+rect.height/2),e.clientX-(rect.left+rect.width/2))*180/Math.PI};rot.setPointerCapture(e.pointerId);el.classList.add('selected')};
 rot.onpointermove=e=>{if(!rotateFrom)return;const current=Math.atan2(e.clientY-rotateFrom.centerY,e.clientX-rotateFrom.centerX)*180/Math.PI;s.rotation=Math.round((rotateFrom.initial+(current-rotateFrom.startAngle))*10)/10;el.style.transform=`rotate(${s.rotation}deg)`};
 rot.onpointerup=e=>{rotateFrom=null};rot.onpointercancel=e=>{rotateFrom=null};el.addEventListener('pointerdown',e=>{if(e.target.closest('.sticker-resize, .sticker-rotate'))return;root.querySelectorAll('.floating.selected').forEach(n=>n.classList.remove('selected'));el.classList.add('selected')});const del=el.querySelector('.sticker-delete');del.onclick=e=>{e.preventDefault();e.stopPropagation();p().stickers=p().stickers.filter(q=>q.id!==s.id);render()};const handle=el.querySelector('.sticker-resize');let sizeStart=null;handle.onpointerdown=e=>{e.preventDefault();e.stopPropagation();sizeStart={w:s.w,x:e.clientX,y:e.clientY};handle.setPointerCapture(e.pointerId)};handle.onpointermove=e=>{if(!sizeStart)return;const scale=root.getBoundingClientRect().width/680;const delta=Math.max((e.clientX-sizeStart.x)/scale,(e.clientY-sizeStart.y)/scale);s.w=Math.max(30,Math.min(280,Math.round(sizeStart.w+delta)));el.style.width=s.w+'px';el.style.height=s.w+'px'};handle.onpointerup=e=>{e.stopPropagation();sizeStart=null};handle.onpointercancel=()=>{sizeStart=null};el.ondblclick=e=>{if(e.target.closest('.sticker-resize'))return;p().stickers=p().stickers.filter(q=>q.id!==s.id);render()}}
-let freePlacementPage=null;
-function clearFreePlacement(){
- freePlacementPage=null;$('freePlacement').hidden=true;$('canvas').classList.remove('placing-free');
-}
-function startFreePlacement(){
- if(freePlacementPage===p()){clearFreePlacement();return}
- if(document.activeElement?.isContentEditable)document.activeElement.blur();
- if(document.querySelector('.app').dataset.drawer)setDrawer('');
- freePlacementPage=p();$('freePlacement').hidden=false;$('canvas').classList.add('placing-free');
- $('placeFreeCenter').focus({preventScroll:true});
-}
 function boundedFreePosition(root,t,x,y,minHeight=36){
  const margin=11;
  return {
@@ -1558,26 +1541,20 @@ function boundedFreePosition(root,t,x,y,minHeight=36){
   y:Math.round(Math.max(margin,Math.min(root.clientHeight-minHeight-margin,y)))
  };
 }
-function insertFreeText(x,y){
- if(freePlacementPage!==p())return clearFreePlacement();
- const root=$('canvas'),style=styleFor(p()),t={id:uid(),width:250,text:'',size:style.bodySize,font:style.bodyFont};
- Object.assign(t,boundedFreePosition(root,t,x,y));
- clearFreePlacement();checkpoint();p().free.push(t);render();
- const el=[...root.querySelectorAll('.floating-text')].find(n=>n.dataset.freeId===t.id);
- el?.startEditing(true);
+function addFreeText(){
+ if(document.activeElement?.isContentEditable)document.activeElement.blur();
+ if(document.querySelector('.app').dataset.drawer)setDrawer('');
+ const root=$('canvas'),r=root.getBoundingClientRect(),stage=root.closest('.stage').getBoundingClientRect(),pg=p(),style=styleFor(pg);
+ const t={id:uid(),width:250,text:'',size:style.bodySize,font:style.bodyFont};
+ const mid=(a,b,lo,hi)=>Math.max(a,lo)<Math.min(b,hi)?(Math.max(a,lo)+Math.min(b,hi))/2:(a+b)/2;
+ const x=(mid(r.left,r.right,stage.left,stage.right)-r.left)*root.clientWidth/r.width-t.width/2;
+ const y=(mid(r.top,r.bottom,stage.top,stage.bottom)-r.top)*root.clientHeight/r.height-18;
+ const candidates=[0,45,-45,90,-90].map(dy=>boundedFreePosition(root,t,x,y+dy));
+ Object.assign(t,candidates.find(at=>!pg.free.some(other=>Math.abs(other.x-at.x)<t.width&&Math.abs(other.y-at.y)<38))||candidates[0]);
+ checkpoint();pg.free.push(t);render();
+ const node=[...root.querySelectorAll('.floating-text')].find(el=>el.dataset.freeId===t.id);
+ node?.scrollIntoView({block:'nearest',inline:'nearest'});node?.focus({preventScroll:true});
 }
-$('cancelFreePlacement').onclick=clearFreePlacement;
-$('placeFreeCenter').onclick=()=>{
- const root=$('canvas'),r=root.getBoundingClientRect(),stage=root.closest('.stage').getBoundingClientRect();
- const y=(Math.max(r.top,stage.top)+Math.min(r.bottom,stage.bottom))/2;
- insertFreeText((root.clientWidth-250)/2,(y-r.top)*root.clientHeight/r.height-18);
-};
-$('canvas').addEventListener('click',e=>{
- if(!freePlacementPage)return;
- e.preventDefault();e.stopImmediatePropagation();
- const root=$('canvas'),r=root.getBoundingClientRect();
- insertFreeText((e.clientX-r.left)*root.clientWidth/r.width,(e.clientY-r.top)*root.clientHeight/r.height);
-},true);
 function wireFavoriteAnswers(root){
  for(const cell of root.querySelectorAll('.fav-ans')){
   const answer=cell.querySelector('.fav-answer');
@@ -1588,30 +1565,25 @@ function mountFree(root,t){
  const el=document.createElement('div');el.className='floating-text';el.dataset.freeId=t.id;el.tabIndex=0;
  el.style.cssText=`left:${t.x}px;top:${t.y}px;width:${t.width||230}px;font:${t.size||20}px '${t.font||book.font}'`;
  el.setAttribute('aria-label','Movable text. Press Enter to edit or Delete to remove.');
- el.innerHTML='<div class="free-copy"></div><div class="free-actions"><button type="button" data-free-edit>Edit</button><button type="button" data-free-remove aria-label="Remove movable text" title="Remove text box">×</button></div>';
+ el.innerHTML='<div class="free-copy"></div><div class="free-actions"><button type="button" data-free-remove aria-label="Remove movable text" title="Remove text box">×</button></div>';
  const copy=el.querySelector('.free-copy');copy.textContent=t.text;
- const toolbar=el.querySelector('.free-actions');
  function select(){
   root.querySelectorAll('.free-active').forEach(n=>{if(n!==el)n.classList.remove('free-active')});
   el.classList.add('free-active');
  }
  function persist(){t.text=readEditable(copy);checkCurrent();queueDraft()}
- function startEditing(scroll=false){
+ function startEditing(){
   if(!copy.isContentEditable)checkpoint();
   select();el.classList.add('is-editing');copy.contentEditable='plaintext-only';
   copy.setAttribute('role','textbox');copy.setAttribute('aria-label','Edit movable text');
-  if(scroll)el.scrollIntoView({block:'nearest',inline:'nearest'});
   copy.focus({preventScroll:true});
   const selection=getSelection();selection?.collapse(copy,copy.childNodes.length);
  }
  function remove(){
   checkpoint();p().free=p().free.filter(x=>x!==t);render();toast('Text box removed. Undo is available.');
  }
- el.startEditing=startEditing;
- el.querySelector('[data-free-edit]').onclick=()=>startEditing();
  el.querySelector('[data-free-remove]').onclick=remove;
  el.addEventListener('focusin',select);
- el.ondblclick=e=>{if(!e.target.closest('button'))startEditing()};
  el.onkeydown=e=>{
   if(e.target===el&&(e.key==='Delete'||e.key==='Backspace')){e.preventDefault();remove();return}
   if(e.target===el&&e.key==='Enter'){e.preventDefault();startEditing()}
@@ -1622,7 +1594,7 @@ function mountFree(root,t){
  el.classList.toggle('free-near-top',t.y<44);
  let drag=null;
  el.onpointerdown=e=>{
-  if(e.button!==0||!e.isPrimary||e.target.closest('button')||copy.isContentEditable)return;
+  if(e.button!==0||!e.isPrimary||e.target.closest('button')||(copy.isContentEditable&&copy.contains(e.target)))return;
   select();el.focus({preventScroll:true});e.preventDefault();
   const rect=root.getBoundingClientRect();
   drag={id:e.pointerId,sx:e.clientX,sy:e.clientY,x:t.x,y:t.y,w:root.clientWidth/rect.width,h:root.clientHeight/rect.height,moved:false};
@@ -1635,13 +1607,14 @@ function mountFree(root,t){
   Object.assign(t,boundedFreePosition(root,t,drag.x+dx*drag.w,drag.y+dy*drag.h,el.offsetHeight));
   el.style.left=t.x+'px';el.style.top=t.y+'px';el.classList.toggle('free-near-top',t.y<44);
  };
+ el.onpointerup=e=>{if(drag?.id!==e.pointerId)return;if(!drag.moved)startEditing();};
  el.onlostpointercapture=()=>{if(drag?.moved){checkCurrent();queueDraft()}drag=null};
  root.append(el);
 }
 $('canvas').addEventListener('pointerdown',e=>{
  if(!e.target.closest('.floating-text'))$('canvas').querySelectorAll('.free-active').forEach(n=>n.classList.remove('free-active'));
 },true);
-function tab(name){activeTab=name;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));const area=$('tools');if(name==='photos'){area.innerHTML=`<h3>Your Photos</h3><p>Choose an empty frame to add a photo. Select a photo on the page to adjust its crop. You can also select or drag a photo from this tray.</p><label class="upload">＋ Upload photos<input type="file" id="manyfiles" accept="image/*" multiple></label><div class="photos-grid" id="photoitems"></div><div class="hint">Your edits and photos are saved in this browser when available. Download a backup before switching devices.</div>`;area.querySelector('#manyfiles').onchange=e=>{receiveFiles(e.target.files);e.target.value=''};showTray()}else if(name==='stickers'){area.innerHTML=`<h3>Little Stickers</h3><p>Add a sticker, drag to move, resize, and rotate.<br>Double-click or tap × to delete.</p><div class="st-grid" id="st-grid"></div>`;STICKERS.forEach(id=>{const b=document.createElement('button');b.className='st-btn';b.title=id;b.innerHTML=`<img src="${assetUrl(id)}" alt="${id}">`;b.onclick=()=>{checkpoint();p().stickers.push({id:uid(),type:id,x:250,y:440,w:92});render();toast('Sticker added. Drag it to place it!')};$('st-grid').appendChild(b)})}else if(name==='text'){const ps=styleFor(p());area.innerHTML=`<h3>Write & Style</h3><p>Start with Heirloom, or choose the rounder City Mom look. You can still set each font individually.</p><div class="type-presets"><button class="type-preset" data-preset="city" title="Fredoka / Caveat / Nunito Sans"><strong>City Mom</strong><small>Fredoka · Caveat · Nunito Sans</small></button><button class="type-preset" data-preset="soft" title="Caveat / Caveat / DM Sans"><strong>Soft Notes</strong><small>Caveat · Caveat · DM Sans</small></button><button class="type-preset" data-preset="classic" title="DM Serif Display / Caveat / Nunito Sans"><strong>Heirloom</strong><small>DM Serif Display · Caveat · Nunito Sans</small></button></div><p style="margin-top:9px">Presets apply only to this page. You can still change each font and size individually.</p><button class="toolbutton" id="addtxt">＋ Add movable text</button>${[['Title','font','titleSize',ps.titleSize],['Subtitle','captionFont','captionSize',ps.captionSize],['Body','bodyfont','bodySize',ps.bodySize]].map(([label,fontId,sizeId,size])=>`<div class="font-control"><div class="fieldlabel">${label}</div><div class="font-inline"><select class="choose" id="${fontId}" aria-label="${label} font"></select><input class="st-size-input" type="number" aria-label="${label} size in px" id="${sizeId}" min="11" max="64" step="1" value="${size}" title="Font size (px)"></div><div class="font-actions"><button class="apply-all" data-applyall="${fontId==='bodyfont'?'bodyFont':fontId}">Apply font to all pages</button><button class="apply-all" data-applyall="${sizeId}">Apply size to all pages</button></div></div>`).join('')}<div class="hint" style="margin-top:15px">Click any text on your page to edit. Fonts and sizes affect only this page unless you apply them to all.</div>`;area.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const presets={city:['Fredoka','Caveat','Nunito Sans',36,23,19],soft:['Caveat','Caveat','DM Sans',40,22,19],classic:['DM Serif Display','Caveat','Nunito Sans',36,21,19]};const x=presets[b.dataset.preset];if(!x)return;checkpoint();p().style={...p().style,font:x[0],captionFont:x[1],bodyFont:x[2],titleSize:x[3],captionSize:x[4],bodySize:x[5]};render();tab('text');toast('Typography style applied to this page.')});area.querySelectorAll('[data-applyall]').forEach(btn=>btn.onclick=()=>{checkpoint();const key=btn.dataset.applyall;const target=key==='bodyFont'?'bodyfont':key;const el=$(target);const value=key.endsWith('Size')?Number(el.value):el.value;if(!value)return;book.pages.forEach(pg=>{pg.style=pg.style??{};pg.style[key]=value});render();toast('Applied to all '+book.pages.length+' pages.')});const fonts=['Caveat','Fredoka','Lilita One','Nunito Sans','DM Sans','Quicksand','Fraunces','DM Serif Display','Lora','Arial'];[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont']].forEach(([id,key])=>{const el=$(id);el.innerHTML=fonts.map(f=>`<option value="${f}">${f}</option>`).join('');el.value=ps[key];el.onchange=()=>{checkpoint();p().style=p().style??{};p().style[key]=el.value;render()}});[['titleSize','titleSize',18,64],['captionSize','captionSize',11,42],['bodySize','bodySize',11,36]].forEach(([id,key,min,max])=>{const el=$(id);el.onchange=()=>{checkpoint();const v=Math.round(Number(el.value));if(!Number.isFinite(v)){el.value=styleFor(p())[key];return}p().style=p().style??{};p().style[key]=Math.max(min,Math.min(max,v));el.value=p().style[key];render()}});$('addtxt').onclick=startFreePlacement}else{area.innerHTML=`<h3>Choose a Page</h3><p>Pick a layout to add to your journal. Photo-required layouts are marked.</p><div id="layouts"></div>`;const types=[['note','Little Note · no photo'],['photo','Photo Story · photo needed'],['favorites','Little Favorites · photo optional'],['growth','12-Month Growth · 12 photos'],['calendar','Little Calendar · interactive dates'],['letter','A Letter · no photo'],['firsts','Little Firsts · photos'],['toc','Table of Contents · links']];types.forEach(([t,txt])=>{const b=document.createElement('button');b.className='toolbutton';b.textContent='＋ '+txt;b.onclick=()=>{checkpoint();book.pages.splice(sel+1,0,makePage(t,txt.split(' ·')[0]));sel++;render();toast('Page added')};$('layouts').append(b)})}}
+function tab(name){activeTab=name;document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));const area=$('tools');if(name==='photos'){area.innerHTML=`<h3>Your Photos</h3><p>Choose an empty frame to add a photo. Select a photo on the page to adjust its crop. You can also select or drag a photo from this tray.</p><label class="upload">＋ Upload photos<input type="file" id="manyfiles" accept="image/*" multiple></label><div class="photos-grid" id="photoitems"></div><div class="hint">Your edits and photos are saved in this browser when available. Download a backup before switching devices.</div>`;area.querySelector('#manyfiles').onchange=e=>{receiveFiles(e.target.files);e.target.value=''};showTray()}else if(name==='stickers'){area.innerHTML=`<h3>Little Stickers</h3><p>Add a sticker, drag to move, resize, and rotate.<br>Double-click or tap × to delete.</p><div class="st-grid" id="st-grid"></div>`;STICKERS.forEach(id=>{const b=document.createElement('button');b.className='st-btn';b.title=id;b.innerHTML=`<img src="${assetUrl(id)}" alt="${id}">`;b.onclick=()=>{checkpoint();p().stickers.push({id:uid(),type:id,x:250,y:440,w:92});render();toast('Sticker added. Drag it to place it!')};$('st-grid').appendChild(b)})}else if(name==='text'){const ps=styleFor(p());area.innerHTML=`<h3>Write & Style</h3><p>Start with Heirloom, or choose the rounder City Mom look. You can still set each font individually.</p><div class="type-presets"><button class="type-preset" data-preset="city" title="Fredoka / Caveat / Nunito Sans"><strong>City Mom</strong><small>Fredoka · Caveat · Nunito Sans</small></button><button class="type-preset" data-preset="soft" title="Caveat / Caveat / DM Sans"><strong>Soft Notes</strong><small>Caveat · Caveat · DM Sans</small></button><button class="type-preset" data-preset="classic" title="DM Serif Display / Caveat / Nunito Sans"><strong>Heirloom</strong><small>DM Serif Display · Caveat · Nunito Sans</small></button></div><p style="margin-top:9px">Presets apply only to this page. You can still change each font and size individually.</p><button class="toolbutton" id="addtxt">＋ Add movable text</button>${[['Title','font','titleSize',ps.titleSize],['Subtitle','captionFont','captionSize',ps.captionSize],['Body','bodyfont','bodySize',ps.bodySize]].map(([label,fontId,sizeId,size])=>`<div class="font-control"><div class="fieldlabel">${label}</div><div class="font-inline"><select class="choose" id="${fontId}" aria-label="${label} font"></select><input class="st-size-input" type="number" aria-label="${label} size in px" id="${sizeId}" min="11" max="64" step="1" value="${size}" title="Font size (px)"></div><div class="font-actions"><button class="apply-all" data-applyall="${fontId==='bodyfont'?'bodyFont':fontId}">Apply font to all pages</button><button class="apply-all" data-applyall="${sizeId}">Apply size to all pages</button></div></div>`).join('')}<div class="hint" style="margin-top:15px">Click any text on your page to edit. Fonts and sizes affect only this page unless you apply them to all.</div>`;area.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const presets={city:['Fredoka','Caveat','Nunito Sans',36,23,19],soft:['Caveat','Caveat','DM Sans',40,22,19],classic:['DM Serif Display','Caveat','Nunito Sans',36,21,19]};const x=presets[b.dataset.preset];if(!x)return;checkpoint();p().style={...p().style,font:x[0],captionFont:x[1],bodyFont:x[2],titleSize:x[3],captionSize:x[4],bodySize:x[5]};render();tab('text');toast('Typography style applied to this page.')});area.querySelectorAll('[data-applyall]').forEach(btn=>btn.onclick=()=>{checkpoint();const key=btn.dataset.applyall;const target=key==='bodyFont'?'bodyfont':key;const el=$(target);const value=key.endsWith('Size')?Number(el.value):el.value;if(!value)return;book.pages.forEach(pg=>{pg.style=pg.style??{};pg.style[key]=value});render();toast('Applied to all '+book.pages.length+' pages.')});const fonts=['Caveat','Fredoka','Lilita One','Nunito Sans','DM Sans','Quicksand','Fraunces','DM Serif Display','Lora','Arial'];[['font','font'],['captionFont','captionFont'],['bodyfont','bodyFont']].forEach(([id,key])=>{const el=$(id);el.innerHTML=fonts.map(f=>`<option value="${f}">${f}</option>`).join('');el.value=ps[key];el.onchange=()=>{checkpoint();p().style=p().style??{};p().style[key]=el.value;render()}});[['titleSize','titleSize',18,64],['captionSize','captionSize',11,42],['bodySize','bodySize',11,36]].forEach(([id,key,min,max])=>{const el=$(id);el.onchange=()=>{checkpoint();const v=Math.round(Number(el.value));if(!Number.isFinite(v)){el.value=styleFor(p())[key];return}p().style=p().style??{};p().style[key]=Math.max(min,Math.min(max,v));el.value=p().style[key];render()}});$('addtxt').onclick=addFreeText}else{area.innerHTML=`<h3>Choose a Page</h3><p>Pick a layout to add to your journal. Photo-required layouts are marked.</p><div id="layouts"></div>`;const types=[['note','Little Note · no photo'],['photo','Photo Story · photo needed'],['favorites','Little Favorites · photo optional'],['growth','12-Month Growth · 12 photos'],['calendar','Little Calendar · interactive dates'],['letter','A Letter · no photo'],['firsts','Little Firsts · photos'],['toc','Table of Contents · links']];types.forEach(([t,txt])=>{const b=document.createElement('button');b.className='toolbutton';b.textContent='＋ '+txt;b.onclick=()=>{checkpoint();book.pages.splice(sel+1,0,makePage(t,txt.split(' ·')[0]));sel++;render();toast('Page added')};$('layouts').append(b)})}}
 function showTray(){
  const root=$('photoitems');if(!root)return;
  root.replaceChildren();
@@ -1804,6 +1777,8 @@ function pageCanvas(pg,i,readOnly=false){
  applyPageStyle(c,pg);c.innerHTML=inside(pg,i);applyHiddenDecorations(c,pg,false);
  if(readOnly){
   c.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+  c.querySelectorAll('[data-placeholder]').forEach(e=>e.removeAttribute('data-placeholder'));
+  c.querySelectorAll('.photo-call').forEach(e=>e.remove());
   for(const photo of c.querySelectorAll('.photo:not(.has)'))photo.classList.add('no-image');
   const favorites=c.querySelector('.fav-layout');
   if(favorites&&!pg.photos.main)favorites.classList.add('no-photo');
@@ -1905,7 +1880,6 @@ function drawPreview(){
 }
 async function openPreview(){
  if(checkoutBusy)return;
- if(freePlacementPage)clearFreePlacement();
  const token=++previewSession;syncToc();previewIndex=0;previewIssues=[];
  $('previewZoom').value='fit';$('previewJump').replaceChildren(...book.pages.map((_,i)=>new Option('Page '+(i+1)+' of '+book.pages.length,String(i))));
  $('previewPop').classList.remove('hide');$('previewContinue').disabled=true;$('previewFix').hidden=true;
@@ -1947,7 +1921,7 @@ function setDrawer(drawer){
 }
 $('mobilePages').onclick=()=>setDrawer('pages');$('mobileTools').onclick=()=>setDrawer('tools');
 document.addEventListener('click',e=>{if(e.target.closest('[data-jump]')&&document.querySelector('.app').dataset.drawer==='pages')setDrawer('')},true);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('photoCrop').open||$('photoNameDialog').open||$('pageLayoutDialog').open)return; if(freePlacementPage){clearFreePlacement();return} if(trayPick){trayPick=null;return} if(!$('writePop').classList.contains('hide'))closeWriting();else if(!$('previewPop').classList.contains('hide')){closePreview();$('download').focus();}else setDrawer('')}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('photoCrop').open||$('photoNameDialog').open||$('pageLayoutDialog').open)return; if(trayPick){trayPick=null;return} if(!$('writePop').classList.contains('hide'))closeWriting();else if(!$('previewPop').classList.contains('hide')){closePreview();$('download').focus();}else setDrawer('')}});
 function safeImage(v){return typeof v==='string'&&/^data:image\/(png|jpe?g|webp|gif|bmp|avif|x-icon|vnd.microsoft.icon);base64,[A-Za-z0-9+/=]+$/i.test(v)}
 function normalizeProject(s){
  if(!s||!Number.isInteger(s.version)||s.version<4||s.version>16||!s.book||!Array.isArray(s.book.pages)||!s.book.pages.length||s.book.pages.length>350)throw Error('Invalid book');
