@@ -73,10 +73,15 @@ const iso=x=>typeof x==='string'&&!Number.isNaN(Date.parse(x))?new Date(x).toISO
 function urlFor(c,kind){const u=new URL(c.editor);u.searchParams.set('journal',kind);return u.href}
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
- // Protected Preview health probe: authenticates to PayPal and checks the ledger, but never creates an order.
- if(req.method==='GET'&&process.env.VERCEL_ENV==='preview'){
-  try{const c=settings();await Promise.all([redis(c,['PING']),paypalToken(c)]);return res.status(200).json({checkout:'ready',mode:'sandbox',realMoney:false});}
-  catch(e){return res.status(e.status||503).json({checkout:'not-ready',mode:'sandbox',error:e instanceof HttpError?e.message:unavailable});}
+ // Readiness authenticates to PayPal and checks the ledger without creating an order.
+ if(req.method==='GET'&&['preview','production'].includes(process.env.VERCEL_ENV)){
+  const preview=process.env.VERCEL_ENV==='preview';
+  try{
+   const c=settings();
+   if(!preview&&req.headers?.host!==c.editor.host)return res.status(404).json({error:'Not found.'});
+   await Promise.all([redis(c,['PING']),paypalToken(c)]);
+   return res.status(200).json({checkout:'ready',mode:c.mode,realMoney:c.live});
+  }catch(e){return res.status(e.status||503).json({checkout:'not-ready',error:preview&&e instanceof HttpError?e.message:unavailable});}
  }
  if(req.method!=='POST')return res.status(405).json({error:'Method not allowed.'});
  try{
