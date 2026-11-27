@@ -1070,6 +1070,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @keyframes pdf-turn{0%,100%{transform:rotateY(-4deg)}50%{transform:rotateY(-26deg)}}
 @media(prefers-reduced-motion:reduce){.pdf-cover{animation:none}.pdf-sheet{transition:none}}
 .print-guide{font-size:13px;line-height:1.5;margin-top:12px;color:#573f33}.print-guide summary{font-weight:800;cursor:pointer}
+
+.invite-toggle{margin-top:12px}.invite-form{margin:8px 0 4px;padding:10px 11px;border:1px solid #ecd9b2;border-radius:10px;background:#fff9ea}
+.invite-form label{display:block;font-weight:800;font-size:13px;margin-bottom:5px}.invite-entry{display:flex;gap:7px;flex-wrap:wrap}
+.invite-entry input{flex:1 1 150px;min-width:0;border-radius:6px;border:1px solid #d3baa0;padding:6px 8px;background:white;font-size:16px}
+#inviteMessage{font-size:12px;line-height:1.4;margin:5px 0 0;color:#52372c}
 </style></head><body>
 <div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn" id="resumeDraft">Continue in this browser</button><button class="btn" id="replaceDraft">Keep this version</button><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
 <div class="workspace"><aside class="side"><h4>My book</h4><div id="thumbnails"></div><div class="side-actions"><button id="addpage" class="btn">+ Add page</button><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
@@ -1077,7 +1082,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 <div class="record-pop hide" id="checkoutpop"><div class="record-panel checkout-panel" style="max-width:480px"><button class="checkout-x" type="button" id="closecheckoutx" aria-label="Close checkout">×</button><h2 id="checkoutTitle">Your little book</h2><p style="font:500 15px 'DM Sans';line-height:1.6">Your memories, one keepsake.<br>Pay once. No subscription.</p><h2 id="checkoutPrice" style="margin:13px 0;color:#4b342d">$9.90 USD</h2><select id="orderPicker" aria-label="Saved order" hidden></select><div id="paypal-msg" class="hint" role="status" style="margin:14px 0">The PDF is generated on this device. Checkout does not upload your entries or photos.</div><div id="pdfBuild" class="pdf-build" hidden>
  <div class="pdf-book" aria-hidden="true"><span class="pdf-sheet s3"></span><span class="pdf-sheet s2"></span><span class="pdf-sheet s1"></span><span class="pdf-cover"><span class="pdf-mark">✦</span><span class="pdf-line"></span><span class="pdf-line short"></span></span></div>
  <div><strong>Preparing your PDF</strong><div id="pdfBuildCount" class="hint">Getting your pages ready…</div><progress id="pdfBuildMeter" value="0" max="1" aria-label="PDF preparation"></progress></div>
- </div><div id="orderNumber"></div><p class="hint">Use this same browser to recover your order.<br>Download the PDF and keep a copy before clearing browser data or switching devices.</p><div class="checkout-actions"><button class="btn yellow" id="checkoutNow" hidden>Continue to PayPal</button><button class="btn yellow" id="downloadPaid" hidden>Download PDF</button><button class="btn" id="receiptProject" hidden>Download editable project</button><a class="btn" id="pdfFallback" hidden target="_blank" rel="noopener">Open PDF instead</a></div><details class="print-guide" id="printGuide" hidden><summary>Print your book</summary><p>At home: choose the paper size in your PDF (A4 or US Letter). Select Fit if your printer clips the edges.</p><p>At a copy shop: send the downloaded PDF for document printing. Ask before ordering a bound photo book: the shop may require different margins, bleed, or a specific color format.</p></details><button id="closecheckout" class="btn" style="margin-top:18px">Back to my journal</button></div></div><div class="record-pop hide" id="recordpop"><div class="record-panel"><h2 id="recordtitle">Little memory</h2><input id="recordtext" type="text" maxlength="18" placeholder="e.g. First steps!" style="width:100%;padding:13px;border:1px solid #e7ddd0;border-radius:12px"><div class="hint" style="margin:6px 0 12px">Keep it short: up to 18 characters. Your note will appear inside the calendar day in the PDF.</div><div style="display:flex;gap:8px"><button class="btn yellow" id="recordsave">Save this memory</button><button class="btn" id="recordcancel">Cancel</button></div></div></div><div class="status hide" id="status"></div><input id="framepicker" class="hide" type="file" accept="image/*"><input id="projectpicker" class="hide" type="file" accept=".json,application/json"><div class="record-pop hide" id="draftChoicePop" role="dialog" aria-modal="true" aria-labelledby="draftChoiceTitle" aria-describedby="draftChoiceText"><div class="record-panel"><h2 id="draftChoiceTitle"></h2><p id="draftChoiceText"></p><div class="storage-actions"><button type="button" class="btn" id="draftChoiceSave"></button><button type="button" class="btn" id="draftChoiceCancel">Go back</button><button type="button" class="btn yellow" id="draftChoiceApply"></button></div></div></div><div id="printroot"></div><div id="qaMeasure" aria-hidden="true"></div><div id="pdfRender" aria-hidden="true"></div><div class="record-pop hide" id="previewPop" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-panel"><div class="preview-heading"><h2 id="previewTitle">Review your book</h2><button class="btn" id="closePreview">Back to edit</button></div><div id="previewStatus" role="status"></div><div class="preview-tools"><label for="previewZoom">Zoom</label><select id="previewZoom"><option value="fit">Fit page</option><option value="75">75%</option><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select><span id="previewScale" aria-hidden="true"></span></div><div id="previewStage" data-fit="true" role="region" aria-label="Book page preview" tabindex="0"><div id="previewFrame"></div></div><div class="preview-actions"><button class="btn" id="previewPrev" aria-label="Previous preview page">←</button><span id="previewCount" class="sr-preview" aria-live="polite"></span><select id="previewJump" aria-label="Go to preview page"></select><button class="btn" id="previewNext" aria-label="Next preview page">→</button><button class="btn" id="previewFix" hidden>Fix first issue</button><button class="btn yellow" id="previewContinue">Continue · $9.90</button></div></div></div><div class="record-pop hide" id="writePop" role="dialog" aria-modal="true" aria-labelledby="writeTitle"><div class="record-panel"><h2 id="writeTitle">Write your memory</h2><textarea id="mobileBody" rows="8" aria-label="Your memory"></textarea><div class="preview-actions"><button class="btn" id="closeWriting">Cancel</button><button class="btn yellow" id="applyWriting">Apply to page</button></div></div></div>
+ </div><div id="orderNumber"></div><p class="hint">Use this same browser to recover your order.<br>Download the PDF and keep a copy before clearing browser data or switching devices.</p><div class="checkout-actions"><button class="btn yellow" id="checkoutNow" hidden>Continue to PayPal</button><button class="btn yellow" id="downloadPaid" hidden>Download PDF</button><button class="btn" id="receiptProject" hidden>Download editable project</button><a class="btn" id="pdfFallback" hidden target="_blank" rel="noopener">Open PDF instead</a></div><button type="button" id="inviteToggle" class="btn invite-toggle" hidden>Use an invite code</button>
+<form id="inviteForm" class="invite-form" hidden>
+ <label for="inviteCode">Invite code</label>
+ <div class="invite-entry"><input id="inviteCode" type="text" maxlength="45" autocomplete="off" spellcheck="false" autocapitalize="characters" placeholder="BOOK-…" required><button class="btn" type="submit" id="inviteApply">Unlock free PDF</button></div>
+ <p id="inviteMessage" role="status"></p>
+</form><details class="print-guide" id="printGuide" hidden><summary>Print your book</summary><p>At home: choose the paper size in your PDF (A4 or US Letter). Select Fit if your printer clips the edges.</p><p>At a copy shop: send the downloaded PDF for document printing. Ask before ordering a bound photo book: the shop may require different margins, bleed, or a specific color format.</p></details><button id="closecheckout" class="btn" style="margin-top:18px">Back to my journal</button></div></div><div class="record-pop hide" id="recordpop"><div class="record-panel"><h2 id="recordtitle">Little memory</h2><input id="recordtext" type="text" maxlength="18" placeholder="e.g. First steps!" style="width:100%;padding:13px;border:1px solid #e7ddd0;border-radius:12px"><div class="hint" style="margin:6px 0 12px">Keep it short: up to 18 characters. Your note will appear inside the calendar day in the PDF.</div><div style="display:flex;gap:8px"><button class="btn yellow" id="recordsave">Save this memory</button><button class="btn" id="recordcancel">Cancel</button></div></div></div><div class="status hide" id="status"></div><input id="framepicker" class="hide" type="file" accept="image/*"><input id="projectpicker" class="hide" type="file" accept=".json,application/json"><div class="record-pop hide" id="draftChoicePop" role="dialog" aria-modal="true" aria-labelledby="draftChoiceTitle" aria-describedby="draftChoiceText"><div class="record-panel"><h2 id="draftChoiceTitle"></h2><p id="draftChoiceText"></p><div class="storage-actions"><button type="button" class="btn" id="draftChoiceSave"></button><button type="button" class="btn" id="draftChoiceCancel">Go back</button><button type="button" class="btn yellow" id="draftChoiceApply"></button></div></div></div><div id="printroot"></div><div id="qaMeasure" aria-hidden="true"></div><div id="pdfRender" aria-hidden="true"></div><div class="record-pop hide" id="previewPop" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-panel"><div class="preview-heading"><h2 id="previewTitle">Review your book</h2><button class="btn" id="closePreview">Back to edit</button></div><div id="previewStatus" role="status"></div><div class="preview-tools"><label for="previewZoom">Zoom</label><select id="previewZoom"><option value="fit">Fit page</option><option value="75">75%</option><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select><span id="previewScale" aria-hidden="true"></span></div><div id="previewStage" data-fit="true" role="region" aria-label="Book page preview" tabindex="0"><div id="previewFrame"></div></div><div class="preview-actions"><button class="btn" id="previewPrev" aria-label="Previous preview page">←</button><span id="previewCount" class="sr-preview" aria-live="polite"></span><select id="previewJump" aria-label="Go to preview page"></select><button class="btn" id="previewNext" aria-label="Next preview page">→</button><button class="btn" id="previewFix" hidden>Fix first issue</button><button class="btn yellow" id="previewContinue">Continue · $9.90</button></div></div></div><div class="record-pop hide" id="writePop" role="dialog" aria-modal="true" aria-labelledby="writeTitle"><div class="record-panel"><h2 id="writeTitle">Write your memory</h2><textarea id="mobileBody" rows="8" aria-label="Your memory"></textarea><div class="preview-actions"><button class="btn" id="closeWriting">Cancel</button><button class="btn yellow" id="applyWriting">Apply to page</button></div></div></div>
 <script>/*!
  * html2canvas 1.4.1 <https://html2canvas.hertzen.com>
  * Copyright (c) 2022 Niklas von Hertzen <https://hertzen.com>
@@ -1683,7 +1693,7 @@ function receiptRequest(store,key){
 function writeReceipt(r){
  return new Promise((resolve,reject)=>{
   const tx=receiptDB.transaction(['items','index'],'readwrite');
-  const summary={id:r.id,digest:r.digest,created:r.created,paid:r.paid,orderId:r.orderId};
+  const summary={id:r.id,digest:r.digest,created:r.created,paid:r.paid,orderId:r.orderId,kind:r.kind};
   tx.objectStore('items').put(r,r.id);tx.objectStore('index').put(summary,r.id);
   tx.oncomplete=()=>resolve();tx.onabort=()=>reject(tx.error);
  });
@@ -1693,7 +1703,7 @@ async function claimReceipt(r){
   const tx=receiptDB.transaction(['items','index'],'readwrite'),index=tx.objectStore('index');
   let known;const get=index.getAll();
   get.onsuccess=()=>{
-   known=get.result.find(x=>x.digest===r.digest&&x.id!==r.id);
+   known=get.result.find(x=>x.digest===r.digest&&x.id!==r.id&&(x.kind!=='invite'||x.paid));
    if(!known){tx.objectStore('items').put(r,r.id);index.put({id:r.id,digest:r.digest,created:r.created,paid:false,orderId:null},r.id)}
   };
   tx.oncomplete=()=>resolve(known);tx.onabort=()=>reject(tx.error);
@@ -1718,6 +1728,7 @@ async function loadReceipt(){
  }catch(e){receiptDB=null}
 }
 function checkoutPanel(){
+ resetInvite();
  $('checkoutpop').classList.remove('hide');$('checkoutTitle').textContent='Your little book';$('pdfBuild').hidden=true;$('printGuide').hidden=true;$('checkoutNow').hidden=true;$('receiptProject').hidden=true;$('downloadPaid').hidden=true;$('pdfFallback').hidden=true;$('orderPicker').hidden=true;$('orderNumber').textContent='';$('checkoutPrice').hidden=false;$('checkoutpop').querySelector('#closecheckoutx').focus();
 }
 async function checkoutAPI(action,fields={}){
@@ -1745,14 +1756,14 @@ async function openCheckout(){
  if(receiptLoading||!receiptDB){msg.textContent='This browser cannot prepare order recovery. Enable local storage or try another browser before paying.';return}
  checkoutBusy=true;msg.textContent='Checking the checkout and recovery setup…';
  try{
-  const conf=await checkoutAPI('config');
   const digest=await digestBook();
-  const known=(await updateReceiptMenu()).find(x=>x.digest===digest);
+  const matches=(await updateReceiptMenu()).filter(x=>x.digest===digest);
+  const known=matches.find(x=>x.paid)||matches.find(x=>x.orderId)||matches[0];
   if(known){
    const receipt=await receiptRequest('items',known.id);
    await showReceipt(receipt);
    const old=receipt.editable?.book?.background==='white'?'white':'cream',now=book.background==='white'?'white':'cream';
-   if(receipt.paid&&old!==now&&!$('downloadPaid').hidden)msg.textContent='Your original paid PDF is ready to download in its original background. You won’t be charged again.';
+   if(receipt.paid&&old!==now&&!$('downloadPaid').hidden)msg.textContent='Your original PDF is ready to download in its original background. You won’t be charged again.';
    return;
   }
   const editable=JSON.parse(snapshot());
@@ -1763,18 +1774,24 @@ async function openCheckout(){
   $('pdfBuild').hidden=true;
   preparedPDF={id:secureToken(),key:secureToken(),digest,blob,editable,created:Date.now(),paid:false,orderId:null,events:[]};
   $('checkoutTitle').textContent='Your little book is ready';
-  msg.textContent=conf.mode==='live'?'Your PDF is ready. Pay $9.90 once to download it.':'Test checkout. No real money will be charged.';
-  $('checkoutNow').textContent=conf.mode==='live'?'Pay $9.90 with PayPal':'Continue to PayPal sandbox';
-  $('checkoutNow').hidden=false;
+  presentInvite();
+  let conf;try{conf=await checkoutAPI('config')}catch{}
+  msg.textContent=!conf?'PayPal is temporarily unavailable. You can still use an invite code.':conf.mode==='live'?'Your PDF is ready. Pay $9.90 once to download it.':'Test checkout. No real money will be charged.';
+  if(conf){$('checkoutNow').textContent=conf.mode==='live'?'Pay $9.90 with PayPal':'Continue to PayPal sandbox';$('checkoutNow').hidden=false;}
  }catch(e){msg.textContent=e.message}
  finally{$('pdfBuild').hidden=true;checkoutBusy=false}
 }
 async function beginPurchase(){
  if(checkoutBusy)return;
- const r=shownReceipt||preparedPDF;if(!r)return;
+ let r=shownReceipt||preparedPDF;if(!r)return;
  checkoutBusy=true;$('checkoutNow').disabled=true;
  const msg=$('paypal-msg');
  try{
+  if(r.kind==='invite'){
+   const state=await inviteAPI('status',r);
+   if(state.granted){await showReceipt(r);return}
+   r={...r,id:secureToken(),key:secureToken(),kind:undefined,paid:false,orderId:null};
+  }
   if(!r.orderId){
    const existing=await claimReceipt(r);
    if(existing.id!==r.id){await showReceipt(existing);return}
@@ -1791,10 +1808,11 @@ async function beginPurchase(){
 }
 async function showReceipt(r,capture=false){
  if(!r)return;
- shownReceipt=r;$('checkoutNow').onclick=beginPurchase;$('receiptProject').hidden=!r.editable;$('checkoutNow').hidden=true;$('downloadPaid').hidden=true;$('pdfFallback').hidden=true;
+ resetInvite();shownReceipt=r;$('checkoutNow').onclick=beginPurchase;$('receiptProject').hidden=!r.editable;$('checkoutNow').hidden=true;$('downloadPaid').hidden=true;$('pdfFallback').hidden=true;
  $('checkoutPrice').hidden=true;$('printGuide').hidden=true;
  const msg=$('paypal-msg');
  $('orderNumber').textContent=r.orderId?'PayPal order: '+r.orderId:'';
+ if(r.kind==='invite'){await showInviteReceipt(r);return}
  try{
   if(r.orderId){
    msg.textContent='Checking your PayPal order…';
@@ -1841,6 +1859,79 @@ function flushDownloadEvents(r,add=false){
  });
  return telemetryQueue;
 }
+function resetInvite(){
+ $('inviteToggle').hidden=true;$('inviteForm').hidden=true;$('inviteCode').value='';$('inviteMessage').textContent='';
+}
+function presentInvite(){
+ $('inviteToggle').hidden=false;
+}
+$('inviteToggle').onclick=()=>{
+ $('inviteForm').hidden=!$('inviteForm').hidden;$('inviteMessage').textContent='';
+ if(!$('inviteForm').hidden)$('inviteCode').focus();
+};
+async function inviteAPI(action,r,code){
+ const resp=await fetch('/api/journal-invite',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,receiptId:r.id,receiptKey:r.key,...(code?{code}:{})})});
+ const j=await resp.json().catch(()=>({}));
+ if(!resp.ok)throw Error(j.error||'This invite could not be checked. Try again in this browser.');
+ return j;
+}
+async function showInviteReceipt(r){
+ resetInvite();
+ const msg=$('paypal-msg');
+ msg.textContent='Checking this invite…';
+ try{
+  if(!r.paid){
+   const data=await inviteAPI('status',r);
+   if(!data.granted){
+    // Keep the same local receipt if a previous request was interrupted.
+    preparedPDF=r;
+    msg.textContent='Enter your invite code to unlock this saved PDF.';
+    presentInvite();
+    try{
+     const conf=await checkoutAPI('config');
+     $('checkoutPrice').hidden=false;
+     $('checkoutNow').textContent=conf.mode==='live'?'Pay $9.90 with PayPal':'Continue to PayPal sandbox';
+     $('checkoutNow').hidden=false;
+    }catch{}
+    return;
+   }
+   r.paid=true;
+   try{await writeReceipt(r);await updateReceiptMenu()}catch{}
+  }
+  $('checkoutTitle').textContent='Your little book is ready';
+  $('checkoutPrice').hidden=true;
+  msg.textContent='Your invite unlocked this PDF. No payment was made.';
+  $('downloadPaid').hidden=false;$('printGuide').hidden=false;$('receiptProject').hidden=!r.editable;
+ }catch(e){
+  preparedPDF=r;msg.textContent=e.message;presentInvite();
+ }
+}
+$('inviteForm').onsubmit=async e=>{
+ e.preventDefault();
+ if(checkoutBusy||!preparedPDF||preparedPDF.orderId)return;
+ const code=$('inviteCode').value.trim();
+ if(!code)return;
+ checkoutBusy=true;$('inviteApply').disabled=true;$('checkoutNow').disabled=true;
+ const message=$('inviteMessage');
+ try{
+  const pending=await receiptRequest('index');
+  const exact=pending.find(x=>x.digest===preparedPDF.digest&&x.kind==='invite');
+  const r=exact?await receiptRequest('items',exact.id):{...preparedPDF,kind:'invite'};
+  if(r.paid){await showReceipt(r);return}
+  // Store the exact PDF locally before a code can be consumed.
+  await writeReceipt(r);await updateReceiptMenu();
+  preparedPDF=r;
+  message.textContent='Checking your code…';
+  const data=await inviteAPI('redeem',r,code);
+  if(!data.granted)throw Error('This invite could not unlock the PDF.');
+  r.paid=true;
+  // The pre-existing local receipt can still recover via the server if this write fails.
+  try{await writeReceipt(r);await updateReceiptMenu()}catch{}
+  await showReceipt(r);
+ }catch(err){message.textContent=err.message||'Couldn’t check that code. Try again.'}
+ finally{checkoutBusy=false;$('inviteApply').disabled=false;$('checkoutNow').disabled=false}
+};
+
 $('checkoutNow').onclick=beginPurchase;
 $('receiptProject').onclick=()=>{
  const snap=shownReceipt?.editable;if(!snap)return;
@@ -1854,7 +1945,7 @@ $('downloadPaid').onclick=()=>{
  const fallback=$('pdfFallback'),previous=fallback.href;fallback.href=url;fallback.hidden=false;
  if(previous.startsWith('blob:'))setTimeout(()=>URL.revokeObjectURL(previous),60000);
  $('paypal-msg').textContent='PDF download requested. If it did not save, open the PDF instead. You do not need to pay again.';
- flushDownloadEvents(r,true);
+ if(r.kind!=='invite')flushDownloadEvents(r,true);
 };
 $('recoverOrder').onclick=async()=>{
  if(checkoutBusy)return;
@@ -1863,7 +1954,7 @@ $('recoverOrder').onclick=async()=>{
   const items=await updateReceiptMenu();
   if(!items.length){$('paypal-msg').textContent='No order is saved in this browser.';return}
   const picker=$('orderPicker');
-  picker.replaceChildren(...items.map(x=>new Option((x.paid?'Paid · ':x.orderId?'Order · ':'Prepared · ')+(x.orderId||new Date(x.created).toLocaleString()),x.id)));
+  picker.replaceChildren(...items.map(x=>new Option((x.kind==='invite'?'Invite PDF · ':x.paid?'Paid · ':x.orderId?'Order · ':'Prepared · ')+(x.orderId||new Date(x.created).toLocaleString()),x.id)));
   picker.hidden=items.length<2;await showReceipt(await receiptRequest('items',items[0].id));
  }catch(e){$('paypal-msg').textContent='Could not reopen this order on this device.'}
 };
