@@ -26,3 +26,9 @@
 [hidden]{display:none!important}
 .review-rating label span::before{content:'☆'}
 .review-rating label:has(input:checked) span::before,.review-rating label:has(~ label input:checked) span::before{content:'★'}
+
+.review-consent-tail{white-space:nowrap}
+.review-privacy-link{margin-inline-start:4px;color:#626675;font-size:12px;font-weight:500;text-underline-offset:2px;white-space:nowrap}
+.review-privacy-link:hover{color:#273854}
+#journal-review-form{max-width:none}
+#journal-review-form>:not(.review-consent){max-width:640px}

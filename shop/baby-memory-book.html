@@ -120,7 +120,7 @@
       <label class="review-field"><span><strong>Display name</strong> (optional)</span><input name="name" type="text" maxlength="40" placeholder="A nickname is fine" autocomplete="off"></label>
       <p class="review-help">No email or account needed. Please don’t include your child’s name, personal details, or invite code.</p>
       <label class="review-check"><input name="free" type="checkbox"> <span>I received free access to the PDF.</span></label>
-      <label class="review-check"><input name="consent" type="checkbox" required> <span>I’m okay with my rating, review, and display name being published after moderation. <a href="/privacy#product-reviews">Privacy details</a></span></label>
+      <label class="review-check review-consent"><input name="consent" type="checkbox" required> <span>I’m okay with my rating, review, and display name being published after <span class="review-consent-tail">moderation. <a class="review-privacy-link" href="/privacy#product-reviews">Privacy details</a></span></span></label>
       <div class="review-trap" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <button class="review-button" id="journal-review-submit" disabled type="submit">Submit review</button>
       <p id="journal-review-form-status" class="review-status" role="status" aria-live="polite"></p>
