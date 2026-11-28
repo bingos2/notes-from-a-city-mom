@@ -960,6 +960,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .type-preset[data-preset=classic] strong{font-family:'DM Serif Display',Georgia,serif;font-weight:400}
 @media print{.type-presets{display:none!important}}
 :root{--qa-cream:#fbf4e8;--qa-brown:#46342b;--qa-rust:#9c6254}
+.top-actions,.top-action-label{display:contents}
+.top-action-label-mobile,.top-action-label-narrow{display:none}
 #bookstats{white-space:nowrap}#draftState{font-size:11px;color:#725b49}.mobile-only{display:none}
 #qaWarning{width:min(100%,730px);font-size:13px;color:#733518;background:#fff1dc;border:1px solid #ecd0a9;border-radius:10px;padding:8px 12px;margin:0 0 9px;line-height:1.4}
 #qaWarning .btn{padding:5px 9px;margin-left:8px}.stage-meta,.canvas-wrap,#qaWarning{flex-shrink:0}
@@ -1020,12 +1022,27 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .readonly-page .ed{cursor:default}.readonly-page [data-placeholder]:empty:before{content:none!important}.readonly-page .fav-photo-toggle,.readonly-page [data-monthmove],.readonly-page .calendar-instructions,.readonly-page .photo-call{display:none!important}
 #printroot .printed:last-child{break-after:auto;page-break-after:auto}
 @media(max-width:900px){
- .app{height:100dvh;min-height:0}.top{height:auto;min-height:62px;flex-wrap:wrap;padding:9px 11px;gap:6px}.top .brand{font-size:17px;flex:1 1 160px;line-height:1}.top .brand small{font-size:8px}.top .spacer{display:none}.top .btn{font-size:11px;padding:6px 8px}.top-meta,#draftState{display:none}.mobile-only{display:inline-block}
+ .app{height:100dvh;min-height:0}.top{height:auto;min-height:62px;flex-wrap:wrap;padding:9px 11px;gap:6px}.top .brand{font-size:17px;flex:0 0 100%;line-height:1}.top .brand small{font-size:8px}.top .spacer{display:none}.top .btn{font-size:11px;padding:6px 8px}
+ .top-actions{display:flex;align-items:center;gap:5px;flex:0 0 100%;min-width:0;overflow-x:auto;scrollbar-width:thin;padding:2px 0}
+ .top-actions .btn{flex:0 0 auto;min-height:44px;min-width:44px;white-space:nowrap;padding:4px 7px}
+ .top-actions .top-action-label{display:none}
+ .top-actions .top-action-label-mobile{display:inline}
+ .top-meta,#draftState{display:none}.mobile-only{display:inline-block}
  .workspace{position:relative;grid-template-columns:minmax(0,1fr);overflow:hidden}.stage{grid-column:1;grid-row:1;min-width:0;padding:8px 8px 74px}
  .workspace .right,.workspace .side{display:none;position:fixed;top:auto;left:0;right:0;bottom:0;width:auto;max-height:53vh;overflow:auto;z-index:30;border-radius:16px 16px 0 0;box-shadow:0 -9px 32px #31231636;background:white}
  .workspace .right.is-open,.workspace .side.is-open{display:flex;flex-direction:column}.workspace .side #thumbnails{max-height:29vh;overflow:auto}.workspace .right .tools{overflow:auto}
  .app .mobile-bar{z-index:31;display:flex;gap:7px;justify-content:center;padding:7px 8px max(7px,env(safe-area-inset-bottom));background:#fffaf1;border-top:1px solid #eadccc}
  .app.drawer-open .mobile-bar{position:relative}.workspace .right,.workspace .side{bottom:48px}.stage-meta{justify-content:center!important;margin-bottom:7px}
+}
+@media(max-width:405px){
+ .top-actions{gap:4px}
+ .top-actions .btn{padding-inline:5px}
+ .top-actions #recoverOrder .top-action-label-mobile{display:none}
+ .top-actions #recoverOrder .top-action-label-narrow{display:inline}
+}
+@media(max-width:355px){
+ .top-actions #download .top-action-label-mobile{display:none}
+ .top-actions #download .top-action-label-narrow{display:inline}
 }
 .mobile-bar{display:none}.hide{display:none!important}
 @media print{#previewPop,#qaMeasure,#qaWarning,.fav-photo-toggle{display:none!important}.canvas [data-placeholder]:empty::before{content:none!important}.printed{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
@@ -1181,7 +1198,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #canvas .photo-frame-wrap .photo.has:after{right:24px}
 @media(print){.photo-frame-tools,.photo-frame-grip{display:none!important}}
 </style></head><body>
-<div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
+<div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><div class="top-actions"><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" aria-label="Undo" disabled><span class="top-action-label">↶ Undo</span><span class="top-action-label-mobile">Undo</span></button><button class="btn" id="editsettings" aria-label="Book settings"><span class="top-action-label">Book settings</span><span class="top-action-label-mobile">Settings</span></button><button class="btn" id="save" aria-label="Save a copy"><span class="top-action-label">Save a copy</span><span class="top-action-label-mobile">Save copy</span></button><button class="btn" id="recoverOrder" aria-label="Recover order" hidden><span class="top-action-label">Recover order</span><span class="top-action-label-mobile">Recover order</span><span class="top-action-label-narrow">Recover</span></button><span id="draftState" aria-live="polite"></span><button class="btn yellow" id="download" aria-label="Preview my book · $9.90"><span class="top-action-label">Preview my book · $9.90</span><span class="top-action-label-mobile">Preview · $9.90</span><span class="top-action-label-narrow">Preview</span></button></div></div>
 <div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftRestore" hidden>Continue my book</button><button class="btn" id="draftReplace" hidden>Start a new book</button><button class="btn" id="draftBackup" hidden>Save a copy</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-photo-dock" id="mobilePhotoDock" aria-label="Photo tray" hidden><strong>Photos</strong><div class="mobile-photo-items" id="mobilePhotoItems"></div></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
 <div class="start hide" id="start"><div class="start-card"><button type="button" id="closestart" class="close-start" aria-label="Close settings">×</button><div class="start-art"><div class="start-cover"><div class="big">My Baby's<br>Little Days</div><div style="font:600 12px 'Fredoka'">ordinary days, extraordinary love</div></div></div><div class="start-fields"><div class="hint">YOUR KEEPSAKE BOOK</div><h1>Let's make something lovely.</h1><p>Make a little book of memories to give your baby someday. You can change everything later.</p><label>Baby's name or nickname (optional)</label><input id="sname" placeholder="e.g. Charlie"><label>Baby's birthday (optional)</label><input type="date" id="sbirthday"><label>Paper size</label><select id="spaper"><option value="letter">US Letter · 8.5 × 11 in</option><option value="a4">A4 · 210 × 297 mm</option></select><button id="begin" class="btn yellow">Create my journal →</button><div class="hint" style="margin-top:16px">Your photos stay in this browser while editing.<br>Download your project file to keep working later.</div></div></div></div>
 <dialog id="pageLayoutDialog" class="photo-dialog page-layout-dialog" aria-labelledby="pageLayoutTitle" aria-describedby="pageLayoutHint">
@@ -2793,7 +2810,7 @@ $('inviteForm').onsubmit=async e=>{
    try{saved=(await updateReceiptMenu()).filter(x=>x.kind==='invite'&&x.paid&&x.id!==preparedPDF?.id)}catch{}
    message.textContent=saved.length
     ?'This code already unlocked a PDF. Open Recover order to find your earlier download.'
-    :'This code already unlocked a PDF. On the same device and browser you used before, look for Recover order next to Save a copy at the top of the editor.';
+    :'This code already unlocked a PDF. On the same device and browser you used before, use the Recover order button at the top of the editor.';
    if(saved.length){
     const button=$('inviteRecover');button.onclick=()=>openRecovery(saved);button.hidden=false;
    }
