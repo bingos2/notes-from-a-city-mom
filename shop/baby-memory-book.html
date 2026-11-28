@@ -12,6 +12,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Product", "name": "My Baby’s Little Days", "description": "Make a personalized baby memory book in your browser with photos, short notes, or both. Try the editor free and download a printable A4 or US Letter PDF for $9.90 once.", "image": ["https://www.citymomnotes.com/assets/journal-shop/cover.webp", "https://www.citymomnotes.com/assets/journal-shop/letter.webp"], "brand": {"@type": "Brand", "name": "Notes from a City Mom"}, "category": "Digital printable baby memory book", "offers": {"@type": "Offer", "url": "https://www.citymomnotes.com/shop/baby-memory-book", "price": "9.90", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "seller": {"@type": "Organization", "name": "Notes from a City Mom"}}}</script>
   <link rel="stylesheet" href="/inside.css">
+  <link rel="stylesheet" href="/assets/journal-shop/reviews.css">
+  <script src="/assets/journal-shop/reviews.js" defer></script>
   <style>
     :root{--shop-cream:#fffaf0;--shop-navy:#071b3d;--shop-yellow:#ffcc32;--shop-line:#e8d9bb}
     .shop{padding:28px 0 58px;color:var(--shop-navy)}
@@ -99,6 +101,31 @@
       <div><strong>Not sure what to write?</strong><br><a href="/baby-memory-book-prompts">Start with three baby memory book prompts.</a></div>
       <a class="shop-cta" href="/shop/my-babys-little-days">Try the editor</a>
     </div>
+  </section>
+  <section id="reviews" class="shop-extra review-box" aria-labelledby="journal-review-title">
+    <h2 id="journal-review-title">Reviews</h2>
+    <p id="journal-review-list-status" role="status">Loading reviews…</p>
+    <div class="review-list" id="published-journal-reviews"></div>
+    <form class="review-form" id="journal-review-form" method="post" action="/api/journal-reviews">
+      <h3>Leave a review</h3>
+      <p class="review-help">Tried My Baby’s Little Days? Tell us what worked, what didn’t, or what you’d change.</p>
+      <fieldset><legend>Your rating</legend><div class="review-rating">
+        <label aria-label="1 star"><input type="radio" name="rating" value="1" aria-label="1 star" required><span aria-hidden="true"></span></label>
+        <label aria-label="2 stars"><input type="radio" name="rating" value="2" aria-label="2 stars" required><span aria-hidden="true"></span></label>
+        <label aria-label="3 stars"><input type="radio" name="rating" value="3" aria-label="3 stars" required><span aria-hidden="true"></span></label>
+        <label aria-label="4 stars"><input type="radio" name="rating" value="4" aria-label="4 stars" required><span aria-hidden="true"></span></label>
+        <label aria-label="5 stars"><input type="radio" name="rating" value="5" aria-label="5 stars" required><span aria-hidden="true"></span></label>
+      </div></fieldset>
+      <label class="review-field">Your review<textarea name="comment" rows="4" minlength="5" maxlength="800" required placeholder="Share a little about your experience"></textarea></label>
+      <label class="review-field"><span><strong>Display name</strong> (optional)</span><input name="name" type="text" maxlength="40" placeholder="A nickname is fine" autocomplete="off"></label>
+      <p class="review-help">No email or account needed. Please don’t include your child’s name, personal details, or invite code.</p>
+      <label class="review-check"><input name="free" type="checkbox"> <span>I received free access to the PDF.</span></label>
+      <label class="review-check"><input name="consent" type="checkbox" required> <span>I’m okay with my rating, review, and display name being published after moderation. <a href="/privacy#product-reviews">Privacy details</a></span></label>
+      <div class="review-trap" aria-hidden="true"><label>Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+      <button class="review-button" id="journal-review-submit" disabled type="submit">Submit review</button>
+      <p id="journal-review-form-status" class="review-status" role="status" aria-live="polite"></p>
+      <noscript><p>Please enable JavaScript to load or submit reviews.</p></noscript>
+    </form>
   </section>
 </main>
 </body>

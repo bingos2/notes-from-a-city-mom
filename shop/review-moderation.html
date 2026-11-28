@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Manage baby book reviews | Notes from a City Mom</title>
+  <link rel="stylesheet" href="/inside.css">
+  <link rel="stylesheet" href="/assets/journal-shop/reviews.css">
+  <script src="/assets/journal-shop/review-moderation.js" defer></script>
+</head>
+<body><main class="inside-wrap review-admin">
+  <p><a href="/shop/baby-memory-book#reviews">← Product reviews</a></p>
+  <h1>Manage baby book reviews</h1>
+  <p>Publish genuine reviews unless they contain spam, personal information, or unrelated content. Critical reviews are welcome, too.</p>
+  <form id="review-admin-form" class="review-box review-form" method="post" action="/shop/review-moderation">
+    <label class="review-field">Private moderation key<input id="review-admin-key" type="password" required autocomplete="off" spellcheck="false"></label>
+    <button class="review-button" type="submit" id="review-admin-open" disabled>Load reviews</button>
+  </form>
+  <p class="review-status" id="review-admin-status" role="status" aria-live="polite"></p>
+  <div id="review-admin-queue" hidden>
+    <p><button class="review-button secondary" id="review-admin-refresh">Refresh</button> <button class="review-button secondary" id="review-admin-lock">Lock</button></p>
+    <section class="review-box"><h2>Pending</h2><div id="review-pending"></div></section>
+    <section class="review-box"><h2>Published</h2><div id="review-published"></div></section>
+  </div>
+</main></body></html>

@@ -1,3 +1,4 @@
+import reviewHandler from '../lib/journal-reviews.js';
 import inviteHandler from '../lib/journal-invite.js';
 import {createHash,timingSafeEqual} from 'node:crypto';
 const SKU='ncfm-baby-journal',REF='ncfm-baby-journal-v17',AMOUNT='9.90',CURRENCY='USD';
@@ -73,6 +74,7 @@ const toMap=items=>Array.isArray(items)?Object.fromEntries(items.reduce((out,v,i
 const iso=x=>typeof x==='string'&&!Number.isNaN(Date.parse(x))?new Date(x).toISOString():new Date().toISOString();
 function urlFor(c,kind){const u=new URL(c.editor);u.searchParams.set('journal',kind);return u.href}
 export default async function handler(req,res){
+ if(req.query?.journalRoute==='reviews')return reviewHandler(req,res);
  if(req.query?.journalRoute==='invite')return inviteHandler(req,res);
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
  // Readiness authenticates to PayPal and checks the ledger without creating an order.
