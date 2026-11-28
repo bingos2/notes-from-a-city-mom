@@ -960,7 +960,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .type-preset[data-preset=classic] strong{font-family:'DM Serif Display',Georgia,serif;font-weight:400}
 @media print{.type-presets{display:none!important}}
 :root{--qa-cream:#fbf4e8;--qa-brown:#46342b;--qa-rust:#9c6254}
-#bookstats{white-space:nowrap}#draftState{font-size:11px;color:#725b49}#resumeDraft,.mobile-only{display:none}#resumeDraft.available{display:inline-block}
+#bookstats{white-space:nowrap}#draftState{font-size:11px;color:#725b49}.mobile-only{display:none}
 #qaWarning{width:min(100%,730px);font-size:13px;color:#733518;background:#fff1dc;border:1px solid #ecd0a9;border-radius:10px;padding:8px 12px;margin:0 0 9px;line-height:1.4}
 #qaWarning .btn{padding:5px 9px;margin-left:8px}.stage-meta,.canvas-wrap,#qaWarning{flex-shrink:0}
 .canvas .ed[data-placeholder]:empty::before{content:attr(data-placeholder);color:#886f59;font-weight:400;pointer-events:none}
@@ -1029,7 +1029,6 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 .mobile-bar{display:none}.hide{display:none!important}
 @media print{#previewPop,#qaMeasure,#qaWarning,.fav-photo-toggle{display:none!important}.canvas [data-placeholder]:empty::before{content:none!important}.printed{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
-#replaceDraft{display:none}#replaceDraft.available{display:inline-block}
 #mobileBody{display:block;width:100%;border:1px solid #dcc9b3;border-radius:10px;padding:12px;font-size:16px;line-height:1.5;margin-bottom:12px}
 #writePop .record-panel{width:min(94vw,525px);max-height:92vh;overflow:auto}
 @media print{#writePop{display:none!important}}
@@ -1050,6 +1049,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .storage-alert{flex:0 0 auto;width:min(100%,730px);padding:8px 10px;margin:0 0 8px;border:1px solid #e2bb89;background:#fff2dc;color:#653719;border-radius:9px;font-size:12px;line-height:1.35;position:sticky;top:0;z-index:5}
 .storage-actions,.checkout-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .storage-actions .btn{font-size:11px;padding:4px 7px}
+.storage-alert.saved-book-choice{background:#fffdf7;border-color:#e5d7c6;color:#594438}
+.storage-alert.saved-book-choice #draftRestore{background:#ffe5a2;border-color:#d1ae68;color:#442d18;font-weight:800}
+@media (pointer:coarse){#draftAlert .btn{min-height:44px;padding-inline:10px}}
 #pdfRender{position:fixed;top:0;left:-2400px;width:680px;pointer-events:none}
 #pdfRender .canvas{transform:none;margin:0;box-shadow:none}
 .checkout-panel{max-height:94vh;overflow:auto}
@@ -1179,8 +1181,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 #canvas .photo-frame-wrap .photo.has:after{right:24px}
 @media(print){.photo-frame-tools,.photo-frame-grip{display:none!important}}
 </style></head><body>
-<div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn" id="resumeDraft">Continue in this browser</button><button class="btn" id="replaceDraft">Keep this version</button><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
-<div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftBackup">Save a copy</button><button class="btn" id="draftRestore" hidden>Continue in this browser</button><button class="btn" id="draftReplace" hidden>Start a new book</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-photo-dock" id="mobilePhotoDock" aria-label="Photo tray" hidden><strong>Photos</strong><div class="mobile-photo-items" id="mobilePhotoItems"></div></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
+<div class="app"><div class="top"><div class="brand">My Baby's Little Days<small>NOTES FROM A CITY MOM · JOURNAL STUDIO</small></div><div class="spacer"></div><span id="bookstats" class="top-meta"></span><button class="btn undo-main" id="undo" title="Undo last change (Ctrl+Z)" disabled>↶ Undo</button><button class="btn" id="editsettings">Book settings</button><button class="btn" id="save">Save a copy</button><button class="btn" id="recoverOrder" hidden>Recover order</button><span id="draftState" aria-live="polite"></span><button class="btn yellow" id="download">Preview my book · $9.90</button></div>
+<div class="workspace"><aside class="side"><h4>My book</h4><button id="addpage" class="btn yellow" aria-haspopup="dialog">+ Add page</button><div id="thumbnails"></div><div class="side-actions"><button id="duplicate" class="btn">Duplicate page</button><button id="delete" class="btn">Delete page</button><button id="restore" class="btn hide">Undo delete</button><button id="openproj" class="btn">Open a project file</button></div></aside><main class="stage"><div class="stage-meta"><span class="editor-paper"><label for="paperBackground">Background</label><select class="choose" id="paperBackground"><option value="cream">Soft cream</option><option value="white">White</option></select></span><span id="pgtitle" style="display:none"></span><span><button class="btn" id="prev">←</button> <span id="counter"></span> <button class="btn" id="next">→</button> &nbsp; <select class="choose" id="zoom" style="width:87px"><option value="auto">Fit</option><option value="0.8">80%</option><option value="1">100%</option></select></span></div><div id="draftAlert" class="storage-alert" hidden><span id="draftAlertText" role="status"></span><div class="storage-actions"><button class="btn" id="draftRestore" hidden>Continue my book</button><button class="btn" id="draftReplace" hidden>Start a new book</button><button class="btn" id="draftBackup" hidden>Save a copy</button></div></div><div id="qaWarning" class="hide" role="status"></div><div class="canvas-wrap"><div class="canvas" id="canvas"></div></div></main><aside class="right" id="right"><div class="tabs"><button class="tab active" data-tab="photos"><span>▧</span>Photos</button><button class="tab" data-tab="stickers"><span>♡</span>Stickers</button><button class="tab" data-tab="text"><span>T</span>Text</button><button class="tab" data-tab="layout"><span>▤</span>Pages</button></div><div class="tools" id="tools"></div></aside></div><div class="mobile-photo-dock" id="mobilePhotoDock" aria-label="Photo tray" hidden><strong>Photos</strong><div class="mobile-photo-items" id="mobilePhotoItems"></div></div><div class="mobile-bar"><button class="btn" id="mobilePages" aria-expanded="false">Pages</button><button class="btn" id="mobileTools" aria-expanded="false">Editing tools</button><button class="btn" id="mobileWrite">Write entry</button></div></div>
 <div class="start hide" id="start"><div class="start-card"><button type="button" id="closestart" class="close-start" aria-label="Close settings">×</button><div class="start-art"><div class="start-cover"><div class="big">My Baby's<br>Little Days</div><div style="font:600 12px 'Fredoka'">ordinary days, extraordinary love</div></div></div><div class="start-fields"><div class="hint">YOUR KEEPSAKE BOOK</div><h1>Let's make something lovely.</h1><p>Make a little book of memories to give your baby someday. You can change everything later.</p><label>Baby's name or nickname (optional)</label><input id="sname" placeholder="e.g. Charlie"><label>Baby's birthday (optional)</label><input type="date" id="sbirthday"><label>Paper size</label><select id="spaper"><option value="letter">US Letter · 8.5 × 11 in</option><option value="a4">A4 · 210 × 297 mm</option></select><button id="begin" class="btn yellow">Create my journal →</button><div class="hint" style="margin-top:16px">Your photos stay in this browser while editing.<br>Download your project file to keep working later.</div></div></div></div>
 <dialog id="pageLayoutDialog" class="photo-dialog page-layout-dialog" aria-labelledby="pageLayoutTitle" aria-describedby="pageLayoutHint">
  <div class="layout-dialog-head">
@@ -2333,10 +2335,13 @@ function saveProjectCopy(data,name='my-babys-little-days-project.json'){
 async function openJSON(file){try{const candidate=normalizeProject(JSON.parse(await file.text()));applyProject(candidate);toast('Saved project reopened')}catch(e){toast('This is not a compatible journal project. Your current draft is unchanged.')}}
 $('save').onclick=downloadJSON;$('openproj').onclick=()=>$('projectpicker').click();
 $('projectpicker').onchange=e=>{const f=e.target.files?.[0];e.target.value='';if(f)openJSON(f)};
-function draftNotice(message,needsBackup=false){
- $('draftState').textContent=message;
- $('draftAlert').hidden=!needsBackup;
- $('draftAlertText').textContent=needsBackup?message:'';
+function draftNotice(message,showAlert=false,showBackup=showAlert){
+ const alert=$('draftAlert');
+ $('draftState').textContent=showAlert?'':message;
+ alert.classList.toggle('saved-book-choice',showAlert&&!showBackup);
+ $('draftAlertText').textContent=showAlert?message:'';
+ $('draftBackup').hidden=!showBackup;
+ alert.hidden=!showAlert;
 }
 $('draftBackup').onclick=downloadJSON;
 let baselineRevision=null,draftBusy=false,forceDraftWrite=false,receiptLoading=true,draftChoice=null,draftChoiceOrigin=null;
@@ -2345,11 +2350,10 @@ function revisionOf(record){
 }
 function updateDraftLabels(){
  const label=sameJournalState(currentJournalState(),latestDraft)?'Start a new book':'Keep this version';
- for(const id of ['replaceDraft','draftReplace'])$(id).textContent=label;
+ $('draftReplace').textContent=label;
 }
 function draftButtons(record){
  previousDraft=record||null;
- for(const id of ['resumeDraft','replaceDraft'])$(id).classList.toggle('available',!!record);
  $('draftRestore').hidden=!record;$('draftReplace').hidden=!record;if(record)updateDraftLabels();
 }
 function initDraft(){
@@ -2365,7 +2369,11 @@ function initDraft(){
    const read=draftDB.transaction('journal').objectStore('journal').get('latest');
    read.onsuccess=()=>{
     const record=read.result||null;baselineRevision=revisionOf(record);draftReady=true;
-    if(record){draftButtons(record);draftNotice('You have a book saved in this browser. Continue here without opening a file, or start a new book.',true)}
+    if(record){
+     draftButtons(record);
+     if(sameJournalState(currentJournalState(),latestDraft))draftNotice('You have a book saved in this browser.',true,false);
+     else draftNotice('There’s a saved book and a version on this screen. Choose which one you want to keep.',true);
+    }
     else if(!sameJournalState(currentJournalState(),latestDraft))saveDraft();
     loadReceipt().finally(()=>{receiptLoading=false});
    };
@@ -2420,15 +2428,15 @@ $('draftChoicePop').onkeydown=e=>{
  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
  if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
 };
-$('resumeDraft').onclick=$('draftRestore').onclick=e=>openDraftChoice('restore',e.currentTarget);
-$('replaceDraft').onclick=$('draftReplace').onclick=e=>openDraftChoice('replace',e.currentTarget);
+$('draftRestore').onclick=e=>openDraftChoice('restore',e.currentTarget);
+$('draftReplace').onclick=e=>openDraftChoice('replace',e.currentTarget);
 let writingPage=null;
 $('mobileWrite').onclick=()=>{if(!['note','letter','photo','favorites'].includes(p().type)){toast('This page has no journal entry field.');return}
  writingPage=p().id;$('mobileBody').value=p().body;$('writePop').classList.remove('hide');$('mobileBody').focus();};
 function closeWriting(){$('writePop').classList.add('hide');writingPage=null}
 $('closeWriting').onclick=closeWriting;
 $('applyWriting').onclick=()=>{const pg=book.pages.find(x=>x.id===writingPage);if(pg){checkpoint();writeBody(pg,$('mobileBody').value);render()}closeWriting()};
-function queueDraft(){if(previousDraft){updateDraftLabels();if(!sameJournalState(currentJournalState(),latestDraft)&&$('draftAlertText').textContent.startsWith('You have a book'))draftNotice('There’s a saved book and a version on this screen. Choose which one you want to keep.',true)}clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,650)}
+function queueDraft(){if(previousDraft){updateDraftLabels();if(!sameJournalState(currentJournalState(),latestDraft)&&$('draftAlert').classList.contains('saved-book-choice'))draftNotice('There’s a saved book and a version on this screen. Choose which one you want to keep.',true)}clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,650)}
 function saveDraft(){
  if(previousDraft||draftBusy||!draftReady||!draftDB)return;
  const current=currentJournalState();if(sameJournalState(current,latestDraft)&&!forceDraftWrite)return;
