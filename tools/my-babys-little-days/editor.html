@@ -1076,6 +1076,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .invite-form label{display:block;font-weight:800;font-size:13px;margin-bottom:5px}.invite-entry{display:flex;gap:7px;flex-wrap:wrap}
 .invite-entry input{flex:1 1 150px;min-width:0;border-radius:6px;border:1px solid #d3baa0;padding:6px 8px;background:white;font-size:16px}
 #inviteMessage{font-size:12px;line-height:1.4;margin:5px 0 0;color:#52372c}
+.invite-recover{border:0;background:none;padding:0 4px;margin:3px 0 0 -4px;min-height:28px;color:#65452e;font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:3px;text-align:left}
+@media (pointer:coarse){.invite-recover{min-height:44px}}
 
 .photo img.photo-positioned{width:var(--img-w);height:var(--img-h);left:var(--img-left);top:var(--img-top);right:auto;bottom:auto;object-fit:fill}
 #canvas .photo.has:after{content:'Adjust crop';position:absolute;bottom:5px;right:5px;max-width:calc(100% - 10px);padding:4px 7px;border-radius:7px;background:#fffdf7;color:#4b342d;font:800 12px 'Nunito Sans',sans-serif;box-shadow:0 1px 5px #30201e44;pointer-events:none}
@@ -1202,6 +1204,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
  <label for="inviteCode">Invite code</label>
  <div class="invite-entry"><input id="inviteCode" type="text" maxlength="45" autocomplete="off" spellcheck="false" autocapitalize="characters" placeholder="BOOK-…" required><button class="btn" type="submit" id="inviteApply">Unlock free PDF</button></div>
  <p id="inviteMessage" role="status"></p>
+ <button type="button" class="invite-recover" id="inviteRecover" hidden>Recover order</button>
 </form><details class="print-guide" id="printGuide" hidden><summary>Print your book</summary><p>At home: choose the paper size in your PDF (A4 or US Letter). Select Fit if your printer clips the edges.</p><p>At a copy shop: send the downloaded PDF for document printing. Ask before ordering a bound photo book: the shop may require different margins, bleed, or a specific color format.</p></details><button id="closecheckout" class="btn" style="margin-top:18px">Back to my journal</button></div></div><div class="record-pop hide" id="recordpop"><div class="record-panel"><h2 id="recordtitle">Little memory</h2><input id="recordtext" type="text" maxlength="18" placeholder="e.g. First steps!" style="width:100%;padding:13px;border:1px solid #e7ddd0;border-radius:12px"><div class="hint" style="margin:6px 0 12px">Keep it short: up to 18 characters. Your note will appear inside the calendar day in the PDF.</div><div style="display:flex;gap:8px"><button class="btn yellow" id="recordsave">Save this memory</button><button class="btn" id="recordcancel">Cancel</button></div></div></div><div class="status hide" id="status"></div><input id="framepicker" class="hide" type="file" accept="image/*"><input id="projectpicker" class="hide" type="file" accept=".json,application/json"><div class="record-pop hide" id="draftChoicePop" role="dialog" aria-modal="true" aria-labelledby="draftChoiceTitle" aria-describedby="draftChoiceText"><div class="record-panel"><h2 id="draftChoiceTitle"></h2><p id="draftChoiceText"></p><div class="storage-actions"><button type="button" class="btn" id="draftChoiceSave"></button><button type="button" class="btn" id="draftChoiceCancel">Go back</button><button type="button" class="btn yellow" id="draftChoiceApply"></button></div></div></div><div id="printroot"></div><div id="qaMeasure" aria-hidden="true"></div><div id="pdfRender" aria-hidden="true"></div><div class="record-pop hide" id="previewPop" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><div class="preview-panel"><div class="preview-heading"><h2 id="previewTitle">Review your book</h2><button class="btn" id="closePreview">Back to edit</button></div><div id="previewStatus" role="status"></div><div class="preview-tools"><label for="previewZoom">Zoom</label><select id="previewZoom"><option value="fit">Fit page</option><option value="75">75%</option><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select><span id="previewScale" aria-hidden="true"></span></div><div id="previewStage" data-fit="true" role="region" aria-label="Book page preview" tabindex="0"><div id="previewFrame"></div></div><div class="preview-actions"><button class="btn" id="previewPrev" aria-label="Previous preview page">←</button><span id="previewCount" class="sr-preview" aria-live="polite"></span><select id="previewJump" aria-label="Go to preview page"></select><button class="btn" id="previewNext" aria-label="Next preview page">→</button><button class="btn" id="previewFix" hidden>Fix first issue</button><button class="btn yellow" id="previewContinue">Continue · $9.90</button></div></div></div><div class="record-pop hide" id="writePop" role="dialog" aria-modal="true" aria-labelledby="writeTitle"><div class="record-panel"><h2 id="writeTitle">Write your memory</h2><textarea id="mobileBody" rows="8" aria-label="Your memory"></textarea><div class="preview-actions"><button class="btn" id="closeWriting">Cancel</button><button class="btn yellow" id="applyWriting">Apply to page</button></div></div></div>
 <script>/*!
  * html2canvas 1.4.1 <https://html2canvas.hertzen.com>
@@ -2676,19 +2679,23 @@ function flushDownloadEvents(r,add=false){
  return telemetryQueue;
 }
 function resetInvite(){
+ clearInviteFeedback();
  $('inviteToggle').hidden=true;$('inviteForm').hidden=true;$('inviteCode').value='';$('inviteMessage').textContent='';
 }
 function presentInvite(){
  $('inviteToggle').hidden=false;
 }
+function clearInviteFeedback(){
+ $('inviteMessage').textContent='';const button=$('inviteRecover');button.hidden=true;button.onclick=null;
+}
 $('inviteToggle').onclick=()=>{
- $('inviteForm').hidden=!$('inviteForm').hidden;$('inviteMessage').textContent='';
+ $('inviteForm').hidden=!$('inviteForm').hidden;clearInviteFeedback();
  if(!$('inviteForm').hidden)$('inviteCode').focus();
 };
 async function inviteAPI(action,r,code){
  const resp=await fetch('/api/journal-invite',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,receiptId:r.id,receiptKey:r.key,...(code?{code}:{})})});
  const j=await resp.json().catch(()=>({}));
- if(!resp.ok)throw Error(j.error||'This invite could not be checked. Try again in this browser.');
+ if(!resp.ok){const error=Error(j.error||'This invite could not be checked. Try again in this browser.');error.inviteUsed=action==='redeem'&&resp.status===409;throw error}
  return j;
 }
 async function showInviteReceipt(r){
@@ -2728,6 +2735,7 @@ $('inviteForm').onsubmit=async e=>{
  const code=$('inviteCode').value.trim();
  if(!code)return;
  checkoutBusy=true;$('inviteApply').disabled=true;$('checkoutNow').disabled=true;
+ clearInviteFeedback();
  const message=$('inviteMessage');
  try{
   const pending=await receiptRequest('index');
@@ -2744,7 +2752,18 @@ $('inviteForm').onsubmit=async e=>{
   // The pre-existing local receipt can still recover via the server if this write fails.
   try{await writeReceipt(r);await updateReceiptMenu()}catch{}
   await showReceipt(r);
- }catch(err){message.textContent=err.message||'Couldn’t check that code. Try again.'}
+ }catch(err){
+  if(err.inviteUsed){
+   let saved=[];
+   try{saved=(await updateReceiptMenu()).filter(x=>x.kind==='invite'&&x.paid&&x.id!==preparedPDF?.id)}catch{}
+   message.textContent=saved.length
+    ?'This code already unlocked a PDF. Open Recover order to find your earlier download.'
+    :'This code already unlocked a PDF. On the same device and browser you used before, look for Recover order next to Save a copy at the top of the editor.';
+   if(saved.length){
+    const button=$('inviteRecover');button.onclick=()=>openRecovery(saved);button.hidden=false;
+   }
+  }else message.textContent=err.message||'Couldn’t check that code. Try again.';
+ }
  finally{checkoutBusy=false;$('inviteApply').disabled=false;$('checkoutNow').disabled=false}
 };
 
@@ -2763,17 +2782,18 @@ $('downloadPaid').onclick=()=>{
  $('paypal-msg').textContent='PDF download requested. If it did not save, open the PDF instead. You do not need to pay again.';
  if(r.kind!=='invite')flushDownloadEvents(r,true);
 };
-$('recoverOrder').onclick=async()=>{
+async function openRecovery(saved){
  if(checkoutBusy)return;
  checkoutPanel();
  try{
-  const items=await updateReceiptMenu();
+  const items=saved||await updateReceiptMenu();
   if(!items.length){$('paypal-msg').textContent='No order is saved in this browser.';return}
   const picker=$('orderPicker');
   picker.replaceChildren(...items.map(x=>new Option((x.kind==='invite'?'Invite PDF · ':x.paid?'Paid · ':x.orderId?'Order · ':'Prepared · ')+(x.orderId||new Date(x.created).toLocaleString()),x.id)));
   picker.hidden=items.length<2;await showReceipt(await receiptRequest('items',items[0].id));
  }catch(e){$('paypal-msg').textContent='Could not reopen this order on this device.'}
-};
+}
+$('recoverOrder').onclick=()=>openRecovery();
 $('orderPicker').onchange=async()=>{try{await showReceipt(await receiptRequest('items',$('orderPicker').value))}catch{}};
 $('download').onclick=openPreview;
 for(const id of ['closecheckout','closecheckoutx'])$(id).onclick=()=>{$('checkoutpop').classList.add('hide');$('download').focus()};
